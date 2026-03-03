@@ -105,34 +105,36 @@ hr {
   background: linear-gradient(145deg, #cd7f32, #9b5e2a);
 }
 
-/* STORY RING - MUCH THICKER */
+/* STORY RING - USING SOLID GRADIENTS INSTEAD OF CONIC FOR BETTER COMPATIBILITY */
 .story-ring {
   width: 85px;
   height: 85px;
   border-radius: 50%;
-  padding: 6px;  /* Increased from 4px to 6px for thicker ring */
+  padding: 6px;
   margin: 18px auto 12px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.25);
   position: relative;
   z-index: 5;
+  /* Fallback for download */
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   forced-color-adjust: none;
 }
 
+/* Using multiple backgrounds as fallback for conic gradients */
 .gold-ring { 
-  background: conic-gradient(#d4af37 0deg, #f9e27a 90deg, #d4af37 180deg, #b38b3a 270deg, #d4af37 360deg);
-  border: 2px solid rgba(212, 175, 55, 0.7); /* Added border for extra thickness */
+  background: linear-gradient(45deg, #d4af37, #f9e27a, #d4af37, #b38b3a, #d4af37);
+  border: 2px solid #d4af37;
 }
 
 .silver-ring { 
-  background: conic-gradient(#c0c0c0 0deg, #ffffff 90deg, #c0c0c0 180deg, #a0a0a0 270deg, #c0c0c0 360deg);
-  border: 2px solid rgba(192, 192, 192, 0.7);
+  background: linear-gradient(45deg, #c0c0c0, #ffffff, #c0c0c0, #a0a0a0, #c0c0c0);
+  border: 2px solid #c0c0c0;
 }
 
 .bronze-ring { 
-  background: conic-gradient(#cd7f32 0deg, #f2c18d 90deg, #cd7f32 180deg, #b56a2a 270deg, #cd7f32 360deg);
-  border: 2px solid rgba(205, 127, 50, 0.7);
+  background: linear-gradient(45deg, #cd7f32, #f2c18d, #cd7f32, #b56a2a, #cd7f32);
+  border: 2px solid #cd7f32;
 }
 
 .circle {
@@ -207,8 +209,18 @@ hr {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   cursor: pointer;
-  padding: 4px 0;
-  min-height: 28px;
+  padding: 10px 4px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: 10px;
+  transition: background-color 0.2s;
+}
+
+.name:active {
+  background-color: rgba(0, 122, 255, 0.1);
 }
 
 .party {
@@ -223,8 +235,18 @@ hr {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   cursor: pointer;
-  padding: 4px 0;
-  min-height: 26px;
+  padding: 10px 4px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: 10px;
+  transition: background-color 0.2s;
+}
+
+.party:active {
+  background-color: rgba(0, 122, 255, 0.1);
 }
 
 .votes {
@@ -239,8 +261,18 @@ hr {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   cursor: pointer;
-  padding: 4px 0;
-  min-height: 30px;
+  padding: 10px 4px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: 10px;
+  transition: background-color 0.2s;
+}
+
+.votes:active {
+  background-color: rgba(0, 122, 255, 0.1);
 }
 
 /* GOLD TEXT */
@@ -258,29 +290,29 @@ hr {
   color: #8a5529;
 }
 
-/* EDIT INPUT STYLES - MOBILE FRIENDLY */
+/* EDIT INPUT STYLES */
 .edit-input {
   width: 100%;
-  padding: 8px 4px !important;
-  font-size: inherit !important;
+  padding: 12px 8px !important;
+  font-size: 16px !important;
   font-weight: 900 !important;
-  color: inherit !important;
+  color: #000 !important;
   text-align: center !important;
-  background: rgba(255,255,255,0.9) !important;
-  border: 2px solid #007aff !important;
-  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 3px solid #007aff !important;
+  border-radius: 16px !important;
   outline: none !important;
   font-family: inherit !important;
   -webkit-appearance: none !important;
   appearance: none !important;
-  box-shadow: 0 4px 12px rgba(0,122,255,0.3) !important;
-  margin: 0 !important;
-  line-height: 1.3 !important;
-  min-height: 44px !important; /* Apple's minimum touch target */
+  box-shadow: 0 8px 20px rgba(0,122,255,0.4) !important;
+  margin: 4px 0 !important;
+  min-height: 52px !important;
+  display: block !important;
 }
 
 /* Remove old input styles */
-input {
+input:not(.imgUpload):not(#mapUpload):not(.edit-input) {
   display: none;
 }
 
@@ -369,10 +401,6 @@ input {
   display: block;
 }
 
-.map-image[src]:not([src=""]) + .map-placeholder {
-  display: none;
-}
-
 /* DOWNLOAD BUTTON */
 .download-wrapper {
   padding: 0 18px 18px 18px;
@@ -394,17 +422,12 @@ input {
   transition: all 0.15s ease;
   letter-spacing: 0.8px;
   border: 1px solid rgba(255,255,255,0.15);
-  min-height: 56px; /* Easy to tap */
-}
-
-#downloadBtn:hover {
-  background: #000000;
-  transform: scale(1.02);
+  min-height: 56px;
 }
 
 #downloadBtn:active {
   transform: scale(0.98);
-  background: #2c2c2e;
+  background: #000000;
 }
 
 html, body {
@@ -415,20 +438,5 @@ html, body {
 * {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-  forced-color-adjust: none;
 }
 
-/* Mobile touch optimizations */
-@media (max-width: 430px) {
-  .name, .party, .votes {
-    padding: 8px 0; /* Larger touch area */
-    min-height: 44px; /* Apple's minimum touch target */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .edit-input {
-    font-size: 16px !important; /* Prevents zoom on iOS */
-  }
-}
