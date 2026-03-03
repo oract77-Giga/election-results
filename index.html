@@ -37,9 +37,11 @@
           </div>
         </label>
         <div class="divider"></div>
-        <input type="text" placeholder="CANDIDATE NAME" class="name" value="THOMAS F.">
-        <input type="text" placeholder="PARTY" class="party" value="PROGRESS">
-        <input type="text" placeholder="00,000" class="votes" value="14,250">
+        <div class="text-container">
+          <div class="name gold-text">THOMAS F.</div>
+          <div class="party gold-text">PROGRESS</div>
+          <div class="votes gold-text">14,250</div>
+        </div>
       </div>
 
       <!-- 2nd place -->
@@ -55,9 +57,11 @@
           </div>
         </label>
         <div class="divider"></div>
-        <input type="text" placeholder="CANDIDATE NAME" class="name" value="LISA M.">
-        <input type="text" placeholder="PARTY" class="party" value="UNITY">
-        <input type="text" placeholder="00,000" class="votes" value="11,230">
+        <div class="text-container">
+          <div class="name silver-text">LISA M.</div>
+          <div class="party silver-text">UNITY</div>
+          <div class="votes silver-text">11,230</div>
+        </div>
       </div>
 
       <!-- 3rd place -->
@@ -73,9 +77,11 @@
           </div>
         </label>
         <div class="divider"></div>
-        <input type="text" placeholder="CANDIDATE NAME" class="name" value="JAMES K.">
-        <input type="text" placeholder="PARTY" class="party" value="HORIZON">
-        <input type="text" placeholder="00,000" class="votes" value="9,850">
+        <div class="text-container">
+          <div class="name bronze-text">JAMES K.</div>
+          <div class="party bronze-text">HORIZON</div>
+          <div class="votes bronze-text">9,850</div>
+        </div>
       </div>
     </div>
 
@@ -86,18 +92,18 @@
       <div class="map-title">REGION MAP</div>
       <label class="map-upload">
         <input type="file" id="mapUpload" accept="image/*">
-        <div class="map-placeholder">
-          <span class="plus">+</span>
-          <img id="mapPreview" alt="">
+        <div class="map-container">
+          <div class="map-placeholder">
+            <span class="plus">+</span>
+          </div>
+          <img id="mapPreview" class="map-image" alt="">
         </div>
       </label>
     </div>
 
-    <!-- NO DOWNLOAD BUTTON HERE - it's outside captureArea -->
-
   </div> <!-- end captureArea -->
   
-  <!-- DOWNLOAD BUTTON - outside capture area, won't appear in JPG -->
+  <!-- DOWNLOAD BUTTON - outside capture area -->
   <div class="download-wrapper">
     <button id="downloadBtn">Download JPG</button>
   </div>
