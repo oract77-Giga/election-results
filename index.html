@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Election Results — luxury</title>
+<link rel="stylesheet" href="stylr.css">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- CAPTURE AREA - button NOT included -->
+  <div class="container" id="captureArea">
+
+    <!-- header with live clock -->
+    <div class="top">
+      <h1>Election Results</h1>
+      <div id="clock">Updated --</div>
+    </div>
+
+    <hr>
+
+    <!-- cards row -->
+    <div class="cards">
+
+      <!-- 1st place -->
+      <div class="card gold">
+        <div class="rank">1st</div>
+        <label class="story">
+          <input type="file" class="imgUpload" accept="image/*">
+          <div class="story-ring gold-ring">
+            <div class="circle">
+              <span class="plus">+</span>
+              <img class="preview" alt="">
+            </div>
+          </div>
+        </label>
+        <div class="divider"></div>
+        <input type="text" placeholder="CANDIDATE NAME" class="name" value="THOMAS F.">
+        <input type="text" placeholder="PARTY" class="party" value="PROGRESS">
+        <input type="text" placeholder="00,000" class="votes" value="14,250">
+      </div>
+
+      <!-- 2nd place -->
+      <div class="card silver">
+        <div class="rank">2nd</div>
+        <label class="story">
+          <input type="file" class="imgUpload" accept="image/*">
+          <div class="story-ring silver-ring">
+            <div class="circle">
+              <span class="plus">+</span>
+              <img class="preview" alt="">
+            </div>
+          </div>
+        </label>
+        <div class="divider"></div>
+        <input type="text" placeholder="CANDIDATE NAME" class="name" value="LISA M.">
+        <input type="text" placeholder="PARTY" class="party" value="UNITY">
+        <input type="text" placeholder="00,000" class="votes" value="11,230">
+      </div>
+
+      <!-- 3rd place -->
+      <div class="card bronze">
+        <div class="rank">3rd</div>
+        <label class="story">
+          <input type="file" class="imgUpload" accept="image/*">
+          <div class="story-ring bronze-ring">
+            <div class="circle">
+              <span class="plus">+</span>
+              <img class="preview" alt="">
+            </div>
+          </div>
+        </label>
+        <div class="divider"></div>
+        <input type="text" placeholder="CANDIDATE NAME" class="name" value="JAMES K.">
+        <input type="text" placeholder="PARTY" class="party" value="HORIZON">
+        <input type="text" placeholder="00,000" class="votes" value="9,850">
+      </div>
+    </div>
+
+    <hr class="bottom-line">
+
+    <!-- MAP section -->
+    <div class="map-box">
+      <div class="map-title">REGION MAP</div>
+      <label class="map-upload">
+        <input type="file" id="mapUpload" accept="image/*">
+        <div class="map-placeholder">
+          <span class="plus">+</span>
+          <img id="mapPreview" alt="">
+        </div>
+      </label>
+    </div>
+
+    <!-- NO DOWNLOAD BUTTON HERE - it's outside captureArea -->
+
+  </div> <!-- end captureArea -->
+  
+  <!-- DOWNLOAD BUTTON - outside capture area, won't appear in JPG -->
+  <div class="download-wrapper">
+    <button id="downloadBtn">Download JPG</button>
+  </div>
+  
+</div> <!-- end wrapper -->
+
+<script src="script.js"></script>
+</body>
+</html>
