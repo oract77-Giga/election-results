@@ -38,26 +38,18 @@ h1 { font-size:22px; font-weight:700; color:#1c1c1e; letter-spacing:-0.5px; whit
 .address-icon { font-size:18px; flex-shrink:0; line-height:1; }
 .address-inner { flex:1; min-width:0; }
 .address-label { font-size:10px; font-weight:800; letter-spacing:1.5px; color:#8e8e93; text-transform:uppercase; margin-bottom:3px; }
-
-/* KEY FIX: contenteditable directly — no JS needed, works on all platforms */
 .address-field {
-  font-size:13px; font-weight:600; color:#1c1c1e;
-  min-height:20px; width:100%;
+  font-size:16px; font-weight:600; color:#1c1c1e;
+  min-height:22px; width:100%;
   border:none; outline:none;
   border-bottom:1.5px dashed #c7c7cc;
-  padding-bottom:2px; letter-spacing:0.1px;
+  padding-bottom:2px;
   background:transparent;
-  -webkit-user-modify: read-write-plaintext-only;
   word-break:break-word;
-  cursor:text;
-  /* prevent iOS zoom on focus */
-  font-size:16px;
+  cursor:text; display:block;
 }
-.address-field:empty::before {
-  content:attr(data-placeholder);
-  color:#aeaeb2; font-weight:500; pointer-events:none;
-}
-.address-field:focus { border-bottom:1.5px dashed #007aff; }
+.address-field:empty::before { content:attr(data-placeholder); color:#aeaeb2; font-weight:500; pointer-events:none; }
+.address-field:focus { border-bottom:1.5px dashed #007aff; outline:none; }
 
 hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
 
@@ -85,56 +77,70 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
   display:flex; align-items:center; justify-content:center;
 }
 .story-ring svg.ring-svg {
-  position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;
+  position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:3;
 }
 .circle {
   width:66px; height:66px; border-radius:50%; background:#f8f8fa;
   display:flex; align-items:center; justify-content:center;
-  overflow:hidden; position:relative; box-shadow:inset 0 2px 8px rgba(0,0,0,0.1); z-index:2;
+  overflow:hidden; position:relative;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.1); z-index:2;
 }
 .circle img { width:100%; height:100%; object-fit:cover; object-position:center; display:none; border-radius:50%; }
-.plus { font-size:28px; color:#aeaeb2; font-weight:300; line-height:1; }
-.imgUpload { position:absolute; opacity:0; width:0; height:0; pointer-events:none; }
-.story { display:block; cursor:pointer; }
+.plus { font-size:28px; color:#aeaeb2; font-weight:300; line-height:1; pointer-events:none; }
+
+/* 
+  iOS FIX: The <input type="file"> sits directly over the circle area,
+  fully transparent, so iOS sees a direct tap on the input itself.
+  No JS .click() needed — iOS trusts this natively.
+*/
+.photo-upload-btn {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:82px; height:82px;
+  border-radius:50%;
+  opacity:0;
+  cursor:pointer;
+  z-index:10;
+  font-size:16px; /* prevent iOS zoom */
+  /* must NOT be display:none or visibility:hidden — iOS ignores those */
+}
+
+.story-wrap {
+  position:relative;
+  display:inline-block;
+  width:82px;
+  margin:16px auto 10px;
+}
+
+/* Move story-ring inside story-wrap, reset its own margin */
+.story-wrap .story-ring {
+  margin:0;
+}
 
 .divider { height:1px; background:#d1d1d6; margin:10px 0 12px; opacity:0.6; }
 
-/* EDITABLE CANDIDATE TEXT — also contenteditable */
+/* EDITABLE CANDIDATE TEXT */
 .text-container { display:flex; flex-direction:column; gap:2px; width:100%; padding:0 2px; }
-
 .editable-field {
-  cursor:text;
-  padding:8px 4px;
-  min-height:40px;
+  cursor:text; padding:8px 4px; min-height:40px;
   display:flex; align-items:center; justify-content:center;
   background:transparent; border-radius:10px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  -webkit-tap-highlight-color:rgba(0,122,255,0.15);
-  touch-action:manipulation;
-  -webkit-font-smoothing:antialiased;
-  outline:none;
-  border:2px solid transparent;
+  -webkit-tap-highlight-color:rgba(0,122,255,0.1);
+  touch-action:manipulation; -webkit-font-smoothing:antialiased;
+  outline:none; border:2px solid transparent;
   transition:border-color 0.15s, background 0.15s;
-  /* prevent iOS zoom */
-  font-size:16px !important;
+  font-size:16px;
 }
 .editable-field:focus {
   background:rgba(0,122,255,0.05);
-  border:2px solid rgba(0,122,255,0.3);
-  border-radius:10px;
-  white-space:normal;
-  overflow:visible;
+  border:2px solid rgba(0,122,255,0.25);
+  white-space:normal; overflow:visible;
 }
-
-.name  { font-size:14px !important; font-weight:900; letter-spacing:0.2px; line-height:1.2; }
-.party { font-size:11px !important; font-weight:800; letter-spacing:1px;   line-height:1.2; }
-.votes { font-size:17px !important; font-weight:900; letter-spacing:0.1px; line-height:1.2; }
-
-/* override font-size:16px for display only (zoom prevention hack) */
-.name  { font-size:16px !important; }
-.party { font-size:16px !important; }
-.votes { font-size:16px !important; }
-
+.name  { font-weight:900; letter-spacing:0.2px; line-height:1.2; }
+.party { font-weight:800; letter-spacing:1px;   line-height:1.2; }
+.votes { font-weight:900; letter-spacing:0.1px; line-height:1.2; }
 .gold-text   { color:#9e741b; }
 .silver-text { color:#5c5c5f; }
 .bronze-text { color:#8a5529; }
@@ -148,22 +154,33 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
   margin-bottom:10px; border:1px solid rgba(255,255,255,0.9); width:100%;
 }
 .map-title { text-align:center; font-size:11px; letter-spacing:3px; color:#8e8e93; margin-bottom:12px; font-weight:800; text-transform:uppercase; }
-.map-upload { display:block; cursor:pointer; width:100%; }
-#mapUpload { position:absolute; opacity:0; width:0; height:0; pointer-events:none; }
+
+/* MAP UPLOAD — same iOS fix: input directly over tap area */
 .map-container {
   width:100%; height:155px; border-radius:18px; overflow:hidden;
-  position:relative; background:#f5f5f7; box-shadow:inset 0 2px 8px rgba(0,0,0,0.05);
+  position:relative; background:#f5f5f7;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.05);
 }
 .map-placeholder {
   width:100%; height:100%; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:6px;
   position:absolute; top:0; left:0; z-index:1; background:#f5f5f7;
+  pointer-events:none;
 }
-.map-placeholder .plus { font-size:36px; color:#aeaeb2; opacity:0.7; }
-.map-placeholder span.hint { font-size:11px; color:#c7c7cc; font-weight:600; letter-spacing:0.5px; }
+.map-placeholder .map-plus { font-size:36px; color:#aeaeb2; opacity:0.7; }
+.map-placeholder .hint { font-size:11px; color:#c7c7cc; font-weight:600; letter-spacing:0.5px; }
 #mapPreview {
   width:100%; height:100%; object-fit:cover; object-position:center;
   position:absolute; top:0; left:0; z-index:2; display:none; border-radius:18px;
+  pointer-events:none;
+}
+/* The map file input covers the entire map-container — direct tap, iOS-safe */
+#mapUpload {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  opacity:0; cursor:pointer; z-index:3;
+  font-size:16px;
+  border-radius:18px;
 }
 
 /* DOWNLOAD */
@@ -184,13 +201,11 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
 <div class="wrapper">
   <div class="container" id="captureArea">
 
-    <!-- HEADER -->
     <div class="top">
       <h1>Election Results</h1>
       <div id="clock">NPT --:--:-- --</div>
     </div>
 
-    <!-- ADDRESS BOX — contenteditable, no JS needed -->
     <div class="address-box">
       <div class="address-icon">📍</div>
       <div class="address-inner">
@@ -200,21 +215,20 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
           contenteditable="true"
           spellcheck="false"
           data-placeholder="Tap to enter election venue…"
-          id="addressField"
         ></div>
       </div>
     </div>
 
     <hr>
 
-    <!-- CARDS -->
     <div class="cards">
 
       <!-- 1st -->
       <div class="card gold">
         <div class="rank">1st</div>
-        <label class="story" onclick="this.querySelector('.imgUpload').click()">
-          <input type="file" class="imgUpload" accept="image/*">
+
+        <!-- story-wrap holds ring + invisible file input on top -->
+        <div class="story-wrap">
           <div class="story-ring">
             <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -232,7 +246,10 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
               <img class="preview" alt="">
             </div>
           </div>
-        </label>
+          <!-- Direct input over ring — iOS safe -->
+          <input type="file" accept="image/*" class="photo-upload-btn">
+        </div>
+
         <div class="divider"></div>
         <div class="text-container">
           <div class="editable-field name gold-text" contenteditable="true" spellcheck="false">THOMAS F.</div>
@@ -244,8 +261,7 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
       <!-- 2nd -->
       <div class="card silver">
         <div class="rank">2nd</div>
-        <label class="story" onclick="this.querySelector('.imgUpload').click()">
-          <input type="file" class="imgUpload" accept="image/*">
+        <div class="story-wrap">
           <div class="story-ring">
             <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -263,7 +279,8 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
               <img class="preview" alt="">
             </div>
           </div>
-        </label>
+          <input type="file" accept="image/*" class="photo-upload-btn">
+        </div>
         <div class="divider"></div>
         <div class="text-container">
           <div class="editable-field name silver-text" contenteditable="true" spellcheck="false">LISA M.</div>
@@ -275,8 +292,7 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
       <!-- 3rd -->
       <div class="card bronze">
         <div class="rank">3rd</div>
-        <label class="story" onclick="this.querySelector('.imgUpload').click()">
-          <input type="file" class="imgUpload" accept="image/*">
+        <div class="story-wrap">
           <div class="story-ring">
             <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -294,7 +310,8 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
               <img class="preview" alt="">
             </div>
           </div>
-        </label>
+          <input type="file" accept="image/*" class="photo-upload-btn">
+        </div>
         <div class="divider"></div>
         <div class="text-container">
           <div class="editable-field name bronze-text" contenteditable="true" spellcheck="false">JAMES K.</div>
@@ -307,22 +324,20 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
 
     <hr class="bottom-line">
 
-    <!-- MAP -->
     <div class="map-box">
       <div class="map-title">Region Map</div>
-      <label class="map-upload" onclick="document.getElementById('mapUpload').click()">
-        <input type="file" id="mapUpload" accept="image/*">
-        <div class="map-container">
-          <div class="map-placeholder" id="mapPlaceholder">
-            <span class="plus">+</span>
-            <span class="hint">TAP TO ADD MAP</span>
-          </div>
-          <img id="mapPreview" alt="">
+      <div class="map-container">
+        <div class="map-placeholder" id="mapPlaceholder">
+          <span class="map-plus">+</span>
+          <span class="hint">TAP TO ADD MAP</span>
         </div>
-      </label>
+        <img id="mapPreview" alt="">
+        <!-- Direct input over entire map area — iOS safe -->
+        <input type="file" id="mapUpload" accept="image/*">
+      </div>
     </div>
 
-  </div><!-- end captureArea -->
+  </div>
 
   <div class="download-wrapper">
     <button id="downloadBtn">⬇ Download HD Image</button>
@@ -330,49 +345,48 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
 </div>
 
 <script>
-(function() {
+(function () {
 
-  /* ── NEPALI TIME (NPT = UTC+5:45) ── */
-  function updateClock() {
+  /* NPT CLOCK */
+  function tick() {
     var now = new Date();
-    var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
-    var npt = new Date(utcMs + 345 * 60000); // +5h 45m
-    var h = npt.getHours();
-    var m = npt.getMinutes().toString().padStart(2,'0');
-    var s = npt.getSeconds().toString().padStart(2,'0');
+    var npt = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 345 * 60000);
+    var h = npt.getHours(), m = npt.getMinutes(), s = npt.getSeconds();
     var ampm = h >= 12 ? 'PM' : 'AM';
-    var h12 = (h % 12 || 12).toString().padStart(2,'0');
-    document.getElementById('clock').textContent = 'NPT ' + h12 + ':' + m + ':' + s + ' ' + ampm;
+    var h12 = (h % 12 || 12).toString().padStart(2, '0');
+    document.getElementById('clock').textContent =
+      'NPT ' + h12 + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0') + ' ' + ampm;
   }
-  setInterval(updateClock, 1000);
-  updateClock();
+  setInterval(tick, 1000);
+  tick();
 
-  /* ── PREVENT ENTER KEY creating <br> or <div> in contenteditable ── */
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && e.target.contentEditable === 'true') {
+  /* BLOCK ENTER → blur in all contenteditable */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.isContentEditable) {
       e.preventDefault();
       e.target.blur();
     }
   });
 
-  /* ── STRIP HTML paste — keep plain text only ── */
-  document.addEventListener('paste', function(e) {
-    if (e.target.contentEditable !== 'true') return;
+  /* PLAIN TEXT PASTE ONLY */
+  document.addEventListener('paste', function (e) {
+    if (!e.target.isContentEditable) return;
     e.preventDefault();
     var text = (e.clipboardData || window.clipboardData).getData('text/plain');
     document.execCommand('insertText', false, text);
   });
 
-  /* ── PROFILE IMAGE UPLOADS ── */
-  document.querySelectorAll('.imgUpload').forEach(function(input) {
-    input.addEventListener('change', function() {
+  /* PROFILE PHOTO UPLOADS
+     Each .photo-upload-btn input sits directly over the ring.
+     iOS fires the change event from a real tap — no JS .click() needed. */
+  document.querySelectorAll('.photo-upload-btn').forEach(function (input) {
+    input.addEventListener('change', function () {
       if (!this.files || !this.files[0]) return;
       var reader = new FileReader();
-      var self = this;
-      reader.onload = function(ev) {
-        var container = self.closest('.story');
-        var img  = container.querySelector('.preview');
-        var plus = container.querySelector('.plus');
+      var wrap = this.closest('.story-wrap');
+      reader.onload = function (ev) {
+        var img  = wrap.querySelector('.preview');
+        var plus = wrap.querySelector('.plus');
         img.src = ev.target.result;
         img.style.display = 'block';
         plus.style.display = 'none';
@@ -381,69 +395,68 @@ hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
     });
   });
 
-  /* ── MAP UPLOAD ── */
-  document.getElementById('mapUpload').addEventListener('change', function() {
+  /* MAP UPLOAD — same pattern, input covers container */
+  document.getElementById('mapUpload').addEventListener('change', function () {
     if (!this.files || !this.files[0]) return;
     var reader = new FileReader();
-    reader.onload = function(ev) {
-      var preview     = document.getElementById('mapPreview');
-      var placeholder = document.getElementById('mapPlaceholder');
+    reader.onload = function (ev) {
+      var preview = document.getElementById('mapPreview');
+      var ph      = document.getElementById('mapPlaceholder');
       preview.src = ev.target.result;
       preview.style.display = 'block';
-      if (placeholder) placeholder.style.display = 'none';
+      if (ph) ph.style.display = 'none';
     };
     reader.readAsDataURL(this.files[0]);
   });
 
-  /* ── HD DOWNLOAD ── */
-  document.getElementById('downloadBtn').addEventListener('click', function() {
+  /* HD DOWNLOAD */
+  document.getElementById('downloadBtn').addEventListener('click', function () {
     var btn = this;
     btn.textContent = 'Preparing…';
     btn.disabled = true;
 
-    // Blur any active contenteditable so cursor doesn't appear in screenshot
-    if (document.activeElement && document.activeElement.contentEditable === 'true') {
+    if (document.activeElement && document.activeElement.isContentEditable) {
       document.activeElement.blur();
     }
 
-    var el = document.getElementById('captureArea');
-
-    html2canvas(el, {
+    html2canvas(document.getElementById('captureArea'), {
       scale: 4,
       backgroundColor: '#f2f2f4',
       allowTaint: true,
       useCORS: true,
       logging: false,
-      onclone: function(clonedDoc) {
-        // Map fill fix
+      onclone: function (clonedDoc) {
+        /* Map fill */
         var mp = clonedDoc.getElementById('mapPreview');
         if (mp && mp.getAttribute('src')) {
-          mp.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center;position:absolute;top:0;left:0;z-index:2;display:block;border-radius:18px;';
+          mp.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center;' +
+            'position:absolute;top:0;left:0;z-index:2;display:block;border-radius:18px;';
         }
-        // Remove focus outlines in clone
-        clonedDoc.querySelectorAll('[contenteditable]').forEach(function(el) {
+        /* Hide file inputs in screenshot */
+        clonedDoc.querySelectorAll('input[type="file"]').forEach(function (el) {
+          el.style.display = 'none';
+        });
+        /* Clean contenteditable borders */
+        clonedDoc.querySelectorAll('[contenteditable]').forEach(function (el) {
           el.style.outline = 'none';
           el.style.border = '2px solid transparent';
           el.style.background = 'transparent';
           el.removeAttribute('contenteditable');
         });
-        // Address placeholder color fix
-        var addr = clonedDoc.getElementById('addressField');
-        if (addr && addr.textContent.trim() === '') {
-          addr.textContent = '';
-        }
       }
-    }).then(function(canvas) {
-      var link = document.createElement('a');
-      var d = new Date();
-      var ds = d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0') + '-' + d.getDate().toString().padStart(2,'0');
-      link.download = 'election-results-' + ds + '.jpg';
-      link.href = canvas.toDataURL('image/jpeg', 0.97);
-      link.click();
-    }).catch(function(err) {
+    }).then(function (canvas) {
+      var d  = new Date();
+      var ds = d.getFullYear() + '-' +
+               (d.getMonth() + 1).toString().padStart(2, '0') + '-' +
+               d.getDate().toString().padStart(2, '0');
+      var a = document.createElement('a');
+      a.download = 'election-results-' + ds + '.jpg';
+      a.href = canvas.toDataURL('image/jpeg', 0.97);
+      a.click();
+    }).catch(function (err) {
       console.error(err);
       alert('Download failed. Please try again.');
-    }).finally(function() {
+    }).finally(function () {
       btn.textContent = '⬇ Download HD Image';
       btn.disabled = false;
     });
