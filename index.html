@@ -6,410 +6,177 @@
 <title>Election Results</title>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
 body {
-  background: #e9e9ec;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  background:#e9e9ec;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  display:flex; justify-content:center; align-items:flex-start; min-height:100vh;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
+html,body { overflow-x:hidden; }
 
-html, body { overflow-x: hidden; }
+.wrapper { width:100%; max-width:430px; background:#f2f2f4; }
+.container { background:#f2f2f4; padding:18px 18px 12px 18px; display:flex; flex-direction:column; }
 
-.wrapper {
-  width: 100%;
-  max-width: 430px;
-  background: #f2f2f4;
-}
-
-.container {
-  background: #f2f2f4;
-  padding: 18px 18px 12px 18px;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── HEADER ── */
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  gap: 10px;
-}
-
-h1 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1c1c1e;
-  letter-spacing: -0.5px;
-  white-space: nowrap;
-}
-
+/* HEADER */
+.top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; }
+h1 { font-size:22px; font-weight:700; color:#1c1c1e; letter-spacing:-0.5px; white-space:nowrap; }
 #clock {
-  font-size: 12px;
-  color: #1c1c1e;
-  font-weight: 600;
-  background: rgba(142,142,147,0.15);
-  padding: 6px 11px;
-  border-radius: 30px;
-  border: 1px solid rgba(0,0,0,0.05);
-  white-space: nowrap;
+  font-size:12px; color:#1c1c1e; font-weight:600;
+  background:rgba(142,142,147,0.15); padding:6px 11px;
+  border-radius:30px; border:1px solid rgba(0,0,0,0.05); white-space:nowrap;
 }
 
-/* ── ADDRESS BOX ── */
+/* ADDRESS BOX */
 .address-box {
-  background: #fff;
-  border-radius: 18px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
-  border: 1px solid rgba(255,255,255,0.9);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  background:#fff; border-radius:18px; padding:12px 14px; margin-bottom:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.04);
+  border:1px solid rgba(255,255,255,0.9);
+  display:flex; align-items:center; gap:10px;
 }
+.address-icon { font-size:18px; flex-shrink:0; line-height:1; }
+.address-inner { flex:1; min-width:0; }
+.address-label { font-size:10px; font-weight:800; letter-spacing:1.5px; color:#8e8e93; text-transform:uppercase; margin-bottom:3px; }
 
-.address-icon {
-  font-size: 18px;
-  flex-shrink: 0;
-  line-height: 1;
+/* KEY FIX: contenteditable directly — no JS needed, works on all platforms */
+.address-field {
+  font-size:13px; font-weight:600; color:#1c1c1e;
+  min-height:20px; width:100%;
+  border:none; outline:none;
+  border-bottom:1.5px dashed #c7c7cc;
+  padding-bottom:2px; letter-spacing:0.1px;
+  background:transparent;
+  -webkit-user-modify: read-write-plaintext-only;
+  word-break:break-word;
+  cursor:text;
+  /* prevent iOS zoom on focus */
+  font-size:16px;
 }
-
-.address-label {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: #8e8e93;
-  text-transform: uppercase;
-  margin-bottom: 2px;
+.address-field:empty::before {
+  content:attr(data-placeholder);
+  color:#aeaeb2; font-weight:500; pointer-events:none;
 }
+.address-field:focus { border-bottom:1.5px dashed #007aff; }
 
-.address-text {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1c1c1e;
-  cursor: pointer;
-  min-height: 20px;
-  border-bottom: 1.5px dashed #c7c7cc;
-  padding-bottom: 1px;
-  letter-spacing: 0.1px;
-}
+hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
 
-.address-text:empty::before {
-  content: "Tap to enter election venue…";
-  color: #aeaeb2;
-  font-weight: 500;
-}
-
-/* ── DIVIDER ── */
-hr {
-  border: none;
-  height: 1px;
-  background: #d1d1d6;
-  margin: 0 0 14px 0;
-}
-
-/* ── CARDS ── */
-.cards {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
+/* CARDS */
+.cards { display:flex; gap:10px; margin-bottom:8px; }
 .card {
-  flex: 1;
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 14px 6px 18px 6px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.12), 0 5px 10px rgba(0,0,0,0.05);
-  text-align: center;
-  position: relative;
-  border: 1px solid rgba(255,255,255,0.8);
+  flex:1; background:#fff; border-radius:24px; padding:14px 6px 18px 6px;
+  box-shadow:0 15px 30px rgba(0,0,0,0.12),0 5px 10px rgba(0,0,0,0.05);
+  text-align:center; position:relative; border:1px solid rgba(255,255,255,0.8);
 }
-
 .rank {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  padding: 5px 10px;
-  border-radius: 30px;
-  font-size: 11px;
-  font-weight: 800;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  z-index: 10;
-  letter-spacing: 0.3px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  position:absolute; top:8px; left:8px; padding:5px 10px; border-radius:30px;
+  font-size:11px; font-weight:800; color:#fff;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2); z-index:10;
+  letter-spacing:0.3px; text-shadow:0 1px 2px rgba(0,0,0,0.2);
 }
+.gold   .rank { background:linear-gradient(145deg,#d4af37,#b38b3a); }
+.silver .rank { background:linear-gradient(145deg,#b0b0b5,#78787d); }
+.bronze .rank { background:linear-gradient(145deg,#cd7f32,#9b5e2a); }
 
-.gold   .rank { background: linear-gradient(145deg, #d4af37, #b38b3a); }
-.silver .rank { background: linear-gradient(145deg, #b0b0b5, #78787d); }
-.bronze .rank { background: linear-gradient(145deg, #cd7f32, #9b5e2a); }
-
-/* ── STORY RING — SVG-based for perfect rendering ── */
+/* STORY RING */
 .story-ring {
-  width: 82px;
-  height: 82px;
-  border-radius: 50%;
-  margin: 16px auto 10px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width:82px; height:82px; border-radius:50%;
+  margin:16px auto 10px; position:relative;
+  display:flex; align-items:center; justify-content:center;
 }
-
 .story-ring svg.ring-svg {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
+  position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;
 }
-
 .circle {
-  width: 66px;
-  height: 66px;
-  border-radius: 50%;
-  background: #f8f8fa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
-  z-index: 2;
+  width:66px; height:66px; border-radius:50%; background:#f8f8fa;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; position:relative; box-shadow:inset 0 2px 8px rgba(0,0,0,0.1); z-index:2;
 }
+.circle img { width:100%; height:100%; object-fit:cover; object-position:center; display:none; border-radius:50%; }
+.plus { font-size:28px; color:#aeaeb2; font-weight:300; line-height:1; }
+.imgUpload { position:absolute; opacity:0; width:0; height:0; pointer-events:none; }
+.story { display:block; cursor:pointer; }
 
-.circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: none;
-  border-radius: 50%;
-}
+.divider { height:1px; background:#d1d1d6; margin:10px 0 12px; opacity:0.6; }
 
-.plus {
-  font-size: 28px;
-  color: #aeaeb2;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.imgUpload {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.story {
-  display: block;
-  cursor: pointer;
-}
-
-.divider {
-  height: 1px;
-  background: #d1d1d6;
-  margin: 10px 0 12px;
-  opacity: 0.6;
-}
-
-/* ── EDITABLE TEXT ── */
-.text-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 100%;
-  padding: 0 2px;
-}
+/* EDITABLE CANDIDATE TEXT — also contenteditable */
+.text-container { display:flex; flex-direction:column; gap:2px; width:100%; padding:0 2px; }
 
 .editable-field {
-  cursor: pointer;
-  padding: 8px 4px;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border-radius: 10px;
-  transition: background-color 0.15s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-tap-highlight-color: rgba(0,122,255,0.15);
-  touch-action: manipulation;
-  -webkit-font-smoothing: antialiased;
+  cursor:text;
+  padding:8px 4px;
+  min-height:40px;
+  display:flex; align-items:center; justify-content:center;
+  background:transparent; border-radius:10px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  -webkit-tap-highlight-color:rgba(0,122,255,0.15);
+  touch-action:manipulation;
+  -webkit-font-smoothing:antialiased;
+  outline:none;
+  border:2px solid transparent;
+  transition:border-color 0.15s, background 0.15s;
+  /* prevent iOS zoom */
+  font-size:16px !important;
+}
+.editable-field:focus {
+  background:rgba(0,122,255,0.05);
+  border:2px solid rgba(0,122,255,0.3);
+  border-radius:10px;
+  white-space:normal;
+  overflow:visible;
 }
 
-.editable-field:active { background-color: rgba(0,122,255,0.1); }
+.name  { font-size:14px !important; font-weight:900; letter-spacing:0.2px; line-height:1.2; }
+.party { font-size:11px !important; font-weight:800; letter-spacing:1px;   line-height:1.2; }
+.votes { font-size:17px !important; font-weight:900; letter-spacing:0.1px; line-height:1.2; }
 
-.name  { font-size: 14px; font-weight: 900; letter-spacing: 0.2px; line-height: 1.2; }
-.party { font-size: 11px; font-weight: 800; letter-spacing: 1px; line-height: 1.2; }
-.votes { font-size: 17px; font-weight: 900; letter-spacing: 0.1px; line-height: 1.2; }
+/* override font-size:16px for display only (zoom prevention hack) */
+.name  { font-size:16px !important; }
+.party { font-size:16px !important; }
+.votes { font-size:16px !important; }
 
-.gold-text   { color: #9e741b; }
-.silver-text { color: #5c5c5f; }
-.bronze-text { color: #8a5529; }
+.gold-text   { color:#9e741b; }
+.silver-text { color:#5c5c5f; }
+.bronze-text { color:#8a5529; }
 
-/* ── EDIT INPUT ── */
-.edit-input {
-  width: 100%;
-  padding: 10px 6px !important;
-  font-size: 15px !important;
-  font-weight: 900 !important;
-  color: #000 !important;
-  text-align: center !important;
-  background: #ffffff !important;
-  border: 2.5px solid #007aff !important;
-  border-radius: 14px !important;
-  outline: none !important;
-  font-family: inherit !important;
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  box-shadow: 0 6px 18px rgba(0,122,255,0.35) !important;
-  margin: 3px 0 !important;
-  min-height: 48px !important;
-  display: block !important;
-}
+.bottom-line { margin:14px 0 16px 0; opacity:0.6; }
 
-input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
-
-.bottom-line { margin: 14px 0 16px 0; opacity: 0.6; }
-
-/* ── MAP BOX ── */
+/* MAP */
 .map-box {
-  background: #ffffff;
-  border-radius: 28px;
-  padding: 16px;
-  box-shadow: 0 20px 35px rgba(0,0,0,0.12), 0 8px 15px rgba(0,0,0,0.06);
-  margin-bottom: 10px;
-  border: 1px solid rgba(255,255,255,0.9);
-  width: 100%;
+  background:#fff; border-radius:28px; padding:16px;
+  box-shadow:0 20px 35px rgba(0,0,0,0.12),0 8px 15px rgba(0,0,0,0.06);
+  margin-bottom:10px; border:1px solid rgba(255,255,255,0.9); width:100%;
 }
-
-.map-title {
-  text-align: center;
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: #8e8e93;
-  margin-bottom: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.map-upload {
-  display: block;
-  cursor: pointer;
-  width: 100%;
-}
-
-#mapUpload {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
+.map-title { text-align:center; font-size:11px; letter-spacing:3px; color:#8e8e93; margin-bottom:12px; font-weight:800; text-transform:uppercase; }
+.map-upload { display:block; cursor:pointer; width:100%; }
+#mapUpload { position:absolute; opacity:0; width:0; height:0; pointer-events:none; }
 .map-container {
-  width: 100%;
-  height: 155px;
-  border-radius: 18px;
-  overflow: hidden;
-  position: relative;
-  background: #f5f5f7;
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+  width:100%; height:155px; border-radius:18px; overflow:hidden;
+  position:relative; background:#f5f5f7; box-shadow:inset 0 2px 8px rgba(0,0,0,0.05);
 }
-
 .map-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  position: absolute;
-  top: 0; left: 0;
-  z-index: 1;
-  background: #f5f5f7;
+  width:100%; height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:6px;
+  position:absolute; top:0; left:0; z-index:1; background:#f5f5f7;
 }
-
-.map-placeholder .plus { font-size: 36px; color: #aeaeb2; opacity: 0.7; }
-.map-placeholder span.hint { font-size: 11px; color: #c7c7cc; font-weight: 600; letter-spacing: 0.5px; }
-
+.map-placeholder .plus { font-size:36px; color:#aeaeb2; opacity:0.7; }
+.map-placeholder span.hint { font-size:11px; color:#c7c7cc; font-weight:600; letter-spacing:0.5px; }
 #mapPreview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  position: absolute;
-  top: 0; left: 0;
-  z-index: 2;
-  display: none;
-  border-radius: 18px;
+  width:100%; height:100%; object-fit:cover; object-position:center;
+  position:absolute; top:0; left:0; z-index:2; display:none; border-radius:18px;
 }
 
-/* ── DOWNLOAD ── */
-.download-wrapper {
-  padding: 0 18px 18px 18px;
-  background: #f2f2f4;
-}
-
+/* DOWNLOAD */
+.download-wrapper { padding:0 18px 18px 18px; background:#f2f2f4; }
 #downloadBtn {
-  width: 100%;
-  padding: 18px 0;
-  border: none;
-  background: #1c1c1e;
-  color: white;
-  font-weight: 800;
-  font-size: 17px;
-  border-radius: 45px;
-  cursor: pointer;
-  box-shadow: 0 20px 30px rgba(0,0,0,0.22);
-  transition: all 0.15s ease;
-  letter-spacing: 0.8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  min-height: 56px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  width:100%; padding:18px 0; border:none; background:#1c1c1e; color:#fff;
+  font-weight:800; font-size:17px; border-radius:45px; cursor:pointer;
+  box-shadow:0 20px 30px rgba(0,0,0,0.22); transition:all 0.15s ease;
+  letter-spacing:0.8px; border:1px solid rgba(255,255,255,0.1);
+  min-height:56px; -webkit-tap-highlight-color:transparent; touch-action:manipulation;
 }
-
-#downloadBtn:active {
-  transform: scale(0.98);
-  background: #000;
-}
-
-/* ── ADDRESS INLINE INPUT ── */
-.address-edit-input {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1c1c1e;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid #007aff;
-  outline: none;
-  width: 100%;
-  padding: 2px 0;
-  font-family: inherit;
-  -webkit-appearance: none;
-  appearance: none;
-}
+#downloadBtn:active { transform:scale(0.98); background:#000; }
+#downloadBtn:disabled { opacity:0.6; }
 </style>
 </head>
 <body>
@@ -420,15 +187,21 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
     <!-- HEADER -->
     <div class="top">
       <h1>Election Results</h1>
-      <div id="clock">Updated --:--:--</div>
+      <div id="clock">NPT --:--:-- --</div>
     </div>
 
-    <!-- ADDRESS BOX -->
+    <!-- ADDRESS BOX — contenteditable, no JS needed -->
     <div class="address-box">
       <div class="address-icon">📍</div>
-      <div style="flex:1; min-width:0;">
+      <div class="address-inner">
         <div class="address-label">Venue</div>
-        <div class="address-text" id="addressText" contenteditable="false">Tap to enter election venue…</div>
+        <div
+          class="address-field"
+          contenteditable="true"
+          spellcheck="false"
+          data-placeholder="Tap to enter election venue…"
+          id="addressField"
+        ></div>
       </div>
     </div>
 
@@ -440,9 +213,9 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
       <!-- 1st -->
       <div class="card gold">
         <div class="rank">1st</div>
-        <label class="story">
+        <label class="story" onclick="this.querySelector('.imgUpload').click()">
           <input type="file" class="imgUpload" accept="image/*">
-          <div class="story-ring" id="ring1">
+          <div class="story-ring">
             <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -452,7 +225,7 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
                   <stop offset="100%" stop-color="#f0d060"/>
                 </linearGradient>
               </defs>
-              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#goldGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="220 30"/>
+              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
             </svg>
             <div class="circle">
               <span class="plus">+</span>
@@ -462,18 +235,18 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
         </label>
         <div class="divider"></div>
         <div class="text-container">
-          <div class="editable-field name gold-text" data-field="name">THOMAS F.</div>
-          <div class="editable-field party gold-text" data-field="party">PROGRESS</div>
-          <div class="editable-field votes gold-text" data-field="votes">14,250</div>
+          <div class="editable-field name gold-text" contenteditable="true" spellcheck="false">THOMAS F.</div>
+          <div class="editable-field party gold-text" contenteditable="true" spellcheck="false">PROGRESS</div>
+          <div class="editable-field votes gold-text" contenteditable="true" spellcheck="false" inputmode="numeric">14,250</div>
         </div>
       </div>
 
       <!-- 2nd -->
       <div class="card silver">
         <div class="rank">2nd</div>
-        <label class="story">
+        <label class="story" onclick="this.querySelector('.imgUpload').click()">
           <input type="file" class="imgUpload" accept="image/*">
-          <div class="story-ring" id="ring2">
+          <div class="story-ring">
             <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -483,7 +256,7 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
                   <stop offset="100%" stop-color="#d0d0d5"/>
                 </linearGradient>
               </defs>
-              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#silverGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="220 30"/>
+              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#silverGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
             </svg>
             <div class="circle">
               <span class="plus">+</span>
@@ -493,18 +266,18 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
         </label>
         <div class="divider"></div>
         <div class="text-container">
-          <div class="editable-field name silver-text" data-field="name">LISA M.</div>
-          <div class="editable-field party silver-text" data-field="party">UNITY</div>
-          <div class="editable-field votes silver-text" data-field="votes">11,230</div>
+          <div class="editable-field name silver-text" contenteditable="true" spellcheck="false">LISA M.</div>
+          <div class="editable-field party silver-text" contenteditable="true" spellcheck="false">UNITY</div>
+          <div class="editable-field votes silver-text" contenteditable="true" spellcheck="false" inputmode="numeric">11,230</div>
         </div>
       </div>
 
       <!-- 3rd -->
       <div class="card bronze">
         <div class="rank">3rd</div>
-        <label class="story">
+        <label class="story" onclick="this.querySelector('.imgUpload').click()">
           <input type="file" class="imgUpload" accept="image/*">
-          <div class="story-ring" id="ring3">
+          <div class="story-ring">
             <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -514,7 +287,7 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
                   <stop offset="100%" stop-color="#e8a060"/>
                 </linearGradient>
               </defs>
-              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#bronzeGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="220 30"/>
+              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#bronzeGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
             </svg>
             <div class="circle">
               <span class="plus">+</span>
@@ -524,9 +297,9 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
         </label>
         <div class="divider"></div>
         <div class="text-container">
-          <div class="editable-field name bronze-text" data-field="name">JAMES K.</div>
-          <div class="editable-field party bronze-text" data-field="party">HORIZON</div>
-          <div class="editable-field votes bronze-text" data-field="votes">9,850</div>
+          <div class="editable-field name bronze-text" contenteditable="true" spellcheck="false">JAMES K.</div>
+          <div class="editable-field party bronze-text" contenteditable="true" spellcheck="false">HORIZON</div>
+          <div class="editable-field votes bronze-text" contenteditable="true" spellcheck="false" inputmode="numeric">9,850</div>
         </div>
       </div>
 
@@ -537,10 +310,10 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
     <!-- MAP -->
     <div class="map-box">
       <div class="map-title">Region Map</div>
-      <label class="map-upload">
+      <label class="map-upload" onclick="document.getElementById('mapUpload').click()">
         <input type="file" id="mapUpload" accept="image/*">
         <div class="map-container">
-          <div class="map-placeholder">
+          <div class="map-placeholder" id="mapPlaceholder">
             <span class="plus">+</span>
             <span class="hint">TAP TO ADD MAP</span>
           </div>
@@ -559,68 +332,47 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
 <script>
 (function() {
 
-  // ── NEPALI TIME (NPT = UTC+5:45) ──
+  /* ── NEPALI TIME (NPT = UTC+5:45) ── */
   function updateClock() {
-    const now = new Date();
-    // NPT offset: +5h 45m = 345 minutes
-    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-    const npt = new Date(utc + 345 * 60000);
-    const h = npt.getHours().toString().padStart(2,'0');
-    const m = npt.getMinutes().toString().padStart(2,'0');
-    const s = npt.getSeconds().toString().padStart(2,'0');
-    const ampm = npt.getHours() >= 12 ? 'PM' : 'AM';
-    const h12 = (npt.getHours() % 12 || 12).toString().padStart(2,'0');
-    document.getElementById('clock').textContent = `NPT ${h12}:${m}:${s} ${ampm}`;
+    var now = new Date();
+    var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+    var npt = new Date(utcMs + 345 * 60000); // +5h 45m
+    var h = npt.getHours();
+    var m = npt.getMinutes().toString().padStart(2,'0');
+    var s = npt.getSeconds().toString().padStart(2,'0');
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var h12 = (h % 12 || 12).toString().padStart(2,'0');
+    document.getElementById('clock').textContent = 'NPT ' + h12 + ':' + m + ':' + s + ' ' + ampm;
   }
   setInterval(updateClock, 1000);
   updateClock();
 
-  // ── ADDRESS EDITABLE ──
-  const addressText = document.getElementById('addressText');
-  const placeholder = 'Tap to enter election venue…';
-
-  function initAddress() {
-    if (addressText.textContent.trim() === '' || addressText.textContent === placeholder) {
-      addressText.textContent = placeholder;
-      addressText.style.color = '#aeaeb2';
+  /* ── PREVENT ENTER KEY creating <br> or <div> in contenteditable ── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.target.contentEditable === 'true') {
+      e.preventDefault();
+      e.target.blur();
     }
-  }
-  initAddress();
+  });
 
-  function editAddress() {
-    const cur = addressText.textContent === placeholder ? '' : addressText.textContent;
-    const inp = document.createElement('input');
-    inp.className = 'address-edit-input';
-    inp.type = 'text';
-    inp.value = cur;
-    inp.placeholder = placeholder;
-    addressText.style.display = 'none';
-    addressText.parentNode.appendChild(inp);
-    setTimeout(() => { inp.focus(); inp.select(); }, 30);
+  /* ── STRIP HTML paste — keep plain text only ── */
+  document.addEventListener('paste', function(e) {
+    if (e.target.contentEditable !== 'true') return;
+    e.preventDefault();
+    var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+    document.execCommand('insertText', false, text);
+  });
 
-    function save() {
-      const val = inp.value.trim();
-      addressText.textContent = val || placeholder;
-      addressText.style.color = val ? '#1c1c1e' : '#aeaeb2';
-      addressText.style.display = '';
-      inp.remove();
-    }
-    inp.addEventListener('blur', save);
-    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }});
-  }
-
-  addressText.addEventListener('click', editAddress);
-  addressText.addEventListener('touchend', function(e) { e.preventDefault(); editAddress(); });
-
-  // ── PROFILE IMAGE UPLOADS ──
-  document.querySelectorAll('.imgUpload').forEach(input => {
+  /* ── PROFILE IMAGE UPLOADS ── */
+  document.querySelectorAll('.imgUpload').forEach(function(input) {
     input.addEventListener('change', function() {
       if (!this.files || !this.files[0]) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const container = this.closest('.story');
-        const img = container.querySelector('.preview');
-        const plus = container.querySelector('.plus');
+      var reader = new FileReader();
+      var self = this;
+      reader.onload = function(ev) {
+        var container = self.closest('.story');
+        var img  = container.querySelector('.preview');
+        var plus = container.querySelector('.plus');
         img.src = ev.target.result;
         img.style.display = 'block';
         plus.style.display = 'none';
@@ -629,83 +381,32 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
     });
   });
 
-  // ── MAP UPLOAD ──
-  const mapInput = document.getElementById('mapUpload');
-  const mapPreview = document.getElementById('mapPreview');
-  const mapPlaceholder = document.querySelector('.map-placeholder');
-
-  mapInput.addEventListener('change', function() {
+  /* ── MAP UPLOAD ── */
+  document.getElementById('mapUpload').addEventListener('change', function() {
     if (!this.files || !this.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      mapPreview.src = ev.target.result;
-      mapPreview.style.display = 'block';
-      if (mapPlaceholder) mapPlaceholder.style.display = 'none';
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var preview     = document.getElementById('mapPreview');
+      var placeholder = document.getElementById('mapPlaceholder');
+      preview.src = ev.target.result;
+      preview.style.display = 'block';
+      if (placeholder) placeholder.style.display = 'none';
     };
     reader.readAsDataURL(this.files[0]);
   });
 
-  // ── EDITABLE CANDIDATE FIELDS ──
-  function setupEditable() {
-    document.querySelectorAll('.editable-field').forEach(el => {
-      const fresh = el.cloneNode(true);
-      el.parentNode.replaceChild(fresh, el);
-
-      function startEdit(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (fresh.parentNode.querySelector('.edit-input')) return;
-
-        const cur = fresh.textContent.trim();
-        const isVotes = fresh.classList.contains('votes');
-
-        const inp = document.createElement('input');
-        inp.type = 'text';
-        inp.value = cur;
-        inp.className = 'edit-input';
-        if (isVotes) { inp.inputMode = 'numeric'; inp.pattern = '[0-9,]*'; }
-
-        fresh.style.display = 'none';
-        fresh.parentNode.insertBefore(inp, fresh.nextSibling);
-
-        setTimeout(() => { inp.focus(); inp.select(); }, 30);
-
-        function save() {
-          let val = inp.value.trim() || cur;
-          if (isVotes) {
-            const n = val.replace(/,/g, '');
-            if (!isNaN(n) && n.length > 0) val = Number(n).toLocaleString();
-          }
-          fresh.textContent = val;
-          fresh.style.display = 'flex';
-          inp.remove();
-        }
-
-        inp.addEventListener('blur', save);
-        inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }});
-        inp.addEventListener('touchstart', e => e.stopPropagation(), { passive: false });
-      }
-
-      fresh.addEventListener('click', startEdit);
-      fresh.addEventListener('touchend', startEdit, { passive: false });
-    });
-  }
-
-  setTimeout(setupEditable, 100);
-
-  // Format initial vote numbers
-  document.querySelectorAll('.votes').forEach(el => {
-    const n = parseInt(el.textContent.replace(/,/g,''));
-    if (!isNaN(n)) el.textContent = n.toLocaleString();
-  });
-
-  // ── HD DOWNLOAD ──
+  /* ── HD DOWNLOAD ── */
   document.getElementById('downloadBtn').addEventListener('click', function() {
-    const btn = this;
+    var btn = this;
     btn.textContent = 'Preparing…';
     btn.disabled = true;
 
-    const el = document.getElementById('captureArea');
+    // Blur any active contenteditable so cursor doesn't appear in screenshot
+    if (document.activeElement && document.activeElement.contentEditable === 'true') {
+      document.activeElement.blur();
+    }
+
+    var el = document.getElementById('captureArea');
 
     html2canvas(el, {
       scale: 4,
@@ -714,17 +415,41 @@ input:not(.imgUpload):not(#mapUpload):not(.edit-input) { display: none; }
       useCORS: true,
       logging: false,
       onclone: function(clonedDoc) {
-        // Ensure map fills container in clone
-        const mp = clonedDoc.getElementById('mapPreview');
-        if (mp && mp.src && mp.src !== window.location.href) {
+        // Map fill fix
+        var mp = clonedDoc.getElementById('mapPreview');
+        if (mp && mp.getAttribute('src')) {
           mp.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center;position:absolute;top:0;left:0;z-index:2;display:block;border-radius:18px;';
         }
-        // Bold all text
-        clonedDoc.querySelectorAll('.editable-field, .name, .party, .votes').forEach(t => {
-          t.style.fontWeight = '900';
+        // Remove focus outlines in clone
+        clonedDoc.querySelectorAll('[contenteditable]').forEach(function(el) {
+          el.style.outline = 'none';
+          el.style.border = '2px solid transparent';
+          el.style.background = 'transparent';
+          el.removeAttribute('contenteditable');
         });
-        // Address color fix
-        const addr = clonedDoc.getElementById('addressText');
-        if (addr) { addr.style.display = 'block'; }
+        // Address placeholder color fix
+        var addr = clonedDoc.getElementById('addressField');
+        if (addr && addr.textContent.trim() === '') {
+          addr.textContent = '';
+        }
       }
-    }).
+    }).then(function(canvas) {
+      var link = document.createElement('a');
+      var d = new Date();
+      var ds = d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0') + '-' + d.getDate().toString().padStart(2,'0');
+      link.download = 'election-results-' + ds + '.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.97);
+      link.click();
+    }).catch(function(err) {
+      console.error(err);
+      alert('Download failed. Please try again.');
+    }).finally(function() {
+      btn.textContent = '⬇ Download HD Image';
+      btn.disabled = false;
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
