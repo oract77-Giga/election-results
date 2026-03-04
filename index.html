@@ -5,52 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Election Results</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 body{background:#e9e9ec;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;justify-content:center;min-height:100vh;-webkit-font-smoothing:antialiased}
 html,body{overflow-x:hidden}
 .wrapper{width:100%;max-width:430px;background:#f2f2f4}
 .container{background:#f2f2f4;padding:18px 18px 12px}
 
+/* HEADER */
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
 h1{font-size:22px;font-weight:700;color:#1c1c1e;letter-spacing:-0.5px;white-space:nowrap}
-#clock{font-size:12px;color:#1c1c1e;font-weight:600;background:rgba(142,142,147,0.15);padding:6px 11px;border-radius:30px;border:1px solid rgba(0,0,0,0.05);white-space:nowrap;min-width:90px;text-align:center}
+#clock{font-size:12px;color:#1c1c1e;font-weight:600;background:rgba(142,142,147,0.15);padding:6px 11px;border-radius:30px;border:1px solid rgba(0,0,0,0.05);white-space:nowrap;text-align:center}
 
-.address-box{background:#fff;border-radius:18px;padding:11px 14px;margin-bottom:14px;box-shadow:0 8px 20px rgba(0,0,0,0.08);display:flex;align-items:center;gap:8px}
-.address-icon{font-size:16px;flex-shrink:0;opacity:0.6}
-.addr-inp{font-size:16px;font-weight:500;color:#1c1c1e;width:100%;border:none;outline:none;background:transparent;font-family:inherit;-webkit-appearance:none}
+/* ADDRESS — clean box, no label */
+.address-box{background:#fff;border-radius:18px;padding:11px 14px;margin-bottom:14px;box-shadow:0 8px 20px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.04);display:flex;align-items:center;gap:8px}
+.address-icon{font-size:16px;flex-shrink:0;opacity:0.55}
+.addr-inp{font-size:15px;font-weight:500;color:#1c1c1e;width:100%;border:none;outline:none;background:transparent;font-family:inherit;-webkit-appearance:none;-webkit-tap-highlight-color:transparent}
 .addr-inp::placeholder{color:#c7c7cc;font-weight:400}
 
 hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 
+/* CARDS */
 .cards{display:flex;gap:10px;margin-bottom:10px}
-.card{flex:1;background:#fff;border-radius:24px;padding:14px 6px 18px;box-shadow:0 15px 30px rgba(0,0,0,0.12),0 5px 10px rgba(0,0,0,0.05);text-align:center;position:relative}
-.rank{position:absolute;top:8px;left:8px;padding:5px 10px;border-radius:30px;font-size:11px;font-weight:800;color:#fff;z-index:10;letter-spacing:0.3px}
+.card{flex:1;background:#fff;border-radius:24px;padding:14px 6px 18px;box-shadow:0 15px 30px rgba(0,0,0,0.12),0 5px 10px rgba(0,0,0,0.05);text-align:center;position:relative;border:1px solid rgba(255,255,255,0.8)}
+.rank{position:absolute;top:8px;left:8px;padding:5px 10px;border-radius:30px;font-size:11px;font-weight:800;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.2);z-index:10;letter-spacing:0.3px;text-shadow:0 1px 2px rgba(0,0,0,0.2)}
 .gold .rank{background:linear-gradient(145deg,#d4af37,#b38b3a)}
 .silver .rank{background:linear-gradient(145deg,#b0b0b5,#78787d)}
 .bronze .rank{background:linear-gradient(145deg,#cd7f32,#9b5e2a)}
 
-/* PHOTO AREA — file input IS the tap target, absolutely covers ring */
+/* PHOTO RING — file input IS the tap target */
 .photo-wrap{position:relative;width:82px;height:82px;margin:16px auto 10px;display:block}
-.ring-svg-el{position:absolute;top:0;left:0;width:82px;height:82px;pointer-events:none;z-index:2}
+.ring-svg-el{position:absolute;top:0;left:0;width:82px;height:82px;pointer-events:none;z-index:3}
 .circle{position:absolute;top:8px;left:8px;width:66px;height:66px;border-radius:50%;background:#f8f8fa;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:inset 0 2px 8px rgba(0,0,0,0.1);z-index:1}
-.circle img{width:100%;height:100%;object-fit:cover;display:none;border-radius:50%}
-.plus-icon{font-size:26px;color:#aeaeb2;pointer-events:none}
+.circle img{width:100%;height:100%;object-fit:cover;object-position:center;display:none;border-radius:50%}
+.plus-icon{font-size:26px;color:#aeaeb2;pointer-events:none;line-height:1}
+/* Full-size transparent input over ring — direct iOS tap target */
 .photo-input{position:absolute;top:0;left:0;width:82px;height:82px;opacity:0;z-index:10;cursor:pointer;border-radius:50%;font-size:16px;-webkit-appearance:none}
 
 .divider{height:1px;background:#d1d1d6;margin:10px 0 12px;opacity:0.6}
 
+/* CANDIDATE TEXT — real inputs, reliable on all platforms */
 .text-container{display:flex;flex-direction:column;gap:3px;width:100%;padding:0 3px}
-.ci{width:100%;border:none;outline:none;background:transparent;text-align:center;cursor:text;font-family:inherit;-webkit-appearance:none;appearance:none;border-radius:8px;padding:6px 2px;font-size:16px;transition:background 0.15s}
-.ci:focus{background:rgba(0,122,255,0.06);outline:2px solid rgba(0,122,255,0.2)}
+.ci{width:100%;border:none;outline:none;background:transparent;text-align:center;cursor:text;font-family:inherit;-webkit-appearance:none;appearance:none;border-radius:8px;padding:6px 2px;font-size:16px;transition:background 0.15s;-webkit-tap-highlight-color:transparent}
+.ci:focus{background:rgba(0,122,255,0.06);outline:2px solid rgba(0,122,255,0.2);outline-offset:0}
 .cn{font-weight:900;letter-spacing:0.2px}
 .cp{font-weight:800;letter-spacing:1px}
 .cv{font-weight:900}
 .gt{color:#9e741b}.st{color:#5c5c5f}.bt{color:#8a5529}
 
-.needs-box{background:#fff;border-radius:18px;margin-bottom:10px;box-shadow:0 8px 20px rgba(0,0,0,0.08);overflow:hidden}
+/* NEEDS TO WIN BOX */
+.needs-box{background:#fff;border-radius:18px;margin-bottom:10px;box-shadow:0 8px 20px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.04);border:1px solid rgba(255,255,255,0.9);overflow:hidden}
 .needs-hdr{background:linear-gradient(135deg,#1c1c1e,#3a3a3c);padding:9px 14px;display:flex;align-items:center;gap:6px}
-.needs-hdr span.hl{font-size:10px;font-weight:800;letter-spacing:2px;color:rgba(255,255,255,0.85);text-transform:uppercase}
-.needs-row{display:flex;align-items:center;padding:10px 14px;gap:10px;border-bottom:1px solid #f0f0f3}
+.needs-hdr .hl{font-size:10px;font-weight:800;letter-spacing:2px;color:rgba(255,255,255,0.85);text-transform:uppercase}
+.needs-row{display:flex;align-items:center;padding:11px 14px;gap:10px;border-bottom:1px solid #f0f0f3}
 .needs-row:last-child{border-bottom:none}
 .ndot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0}
 .ds{background:linear-gradient(145deg,#b0b0b5,#78787d)}
@@ -59,15 +65,18 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 .nright{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0}
 .nnum{font-size:17px;font-weight:900;letter-spacing:-0.3px;line-height:1.1}
 .nlbl{font-size:9px;font-weight:700;color:#8e8e93;letter-spacing:0.5px;text-transform:uppercase}
-.sr .nnum{color:#5c5c5f}.br .nnum{color:#8a5529}
+.sr .nnum{color:#5c5c5f}
+.br .nnum{color:#8a5529}
 
-.map-box{background:#fff;border-radius:28px;padding:14px;box-shadow:0 20px 35px rgba(0,0,0,0.12);margin-bottom:10px}
+/* MAP BOX */
+.map-box{background:#fff;border-radius:28px;padding:14px;box-shadow:0 20px 35px rgba(0,0,0,0.12),0 8px 15px rgba(0,0,0,0.06);margin-bottom:10px;border:1px solid rgba(255,255,255,0.9)}
 .map-title{text-align:center;font-size:11px;letter-spacing:3px;color:#8e8e93;margin-bottom:10px;font-weight:800;text-transform:uppercase}
-.map-container{width:100%;padding-bottom:56.25%;border-radius:16px;overflow:hidden;position:relative;background:#f0f0f3}
-.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none;z-index:1}
-.map-ph-plus{font-size:36px;color:#aeaeb2;opacity:0.7}
+.map-container{width:100%;padding-bottom:56.25%;border-radius:16px;overflow:hidden;position:relative;background:#f0f0f3;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none;z-index:1;background:#f0f0f3}
+.map-ph-plus{font-size:36px;color:#aeaeb2;opacity:0.7;line-height:1}
 .map-ph-hint{font-size:11px;color:#c7c7cc;font-weight:600;letter-spacing:0.5px}
 #mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:2;display:none;border-radius:16px;pointer-events:none}
+/* File input covers whole map area — direct iOS tap */
 #mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:3;font-size:16px;-webkit-appearance:none}
 #mapFile.gone{display:none}
 .map-ctrls{display:none;margin-top:8px;gap:6px;flex-wrap:wrap;justify-content:center}
@@ -75,8 +84,9 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 .mc{font-size:11px;font-weight:700;color:#007aff;background:rgba(0,122,255,0.08);border:none;border-radius:20px;padding:6px 13px;cursor:pointer;-webkit-appearance:none;font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .mc:active{background:rgba(0,122,255,0.2)}
 
+/* DOWNLOAD */
 .dl-wrap{padding:0 18px 24px;background:#f2f2f4}
-#dlBtn{width:100%;padding:18px 0;border:none;background:#1c1c1e;color:#fff;font-weight:800;font-size:17px;border-radius:45px;cursor:pointer;box-shadow:0 20px 30px rgba(0,0,0,0.22);letter-spacing:0.8px;min-height:56px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;font-family:inherit;display:block;width:100%}
+#dlBtn{width:100%;padding:18px 0;border:none;background:#1c1c1e;color:#fff;font-weight:800;font-size:17px;border-radius:45px;cursor:pointer;box-shadow:0 20px 30px rgba(0,0,0,0.22);letter-spacing:0.8px;min-height:56px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;font-family:inherit;display:block}
 #dlBtn:active{opacity:0.85}
 #dlBtn:disabled{opacity:0.5}
 </style>
@@ -85,19 +95,25 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 <div class="wrapper">
  <div class="container" id="captureArea">
 
+  <!-- HEADER -->
   <div class="top">
    <h1>Election Results</h1>
    <div id="clock">--:--:-- --</div>
   </div>
 
+  <!-- ADDRESS — just icon + input, no label -->
   <div class="address-box">
    <span class="address-icon">📍</span>
-   <input class="addr-inp" id="addrInp" type="text" placeholder="Write election venue / address here…" spellcheck="false">
+   <input class="addr-inp" id="addrInp" type="text"
+     placeholder="Write election venue / address here…"
+     spellcheck="false" autocomplete="off">
   </div>
 
   <hr>
 
+  <!-- CARDS -->
   <div class="cards">
+
    <!-- 1ST -->
    <div class="card gold">
     <div class="rank">1st</div>
@@ -115,10 +131,11 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
     <div class="divider"></div>
     <div class="text-container">
      <input class="ci cn gt" id="n1" value="THOMAS F." maxlength="18" spellcheck="false" autocomplete="off">
-     <input class="ci cp gt" id="p1" value="PROGRESS" maxlength="18" spellcheck="false" autocomplete="off">
+     <input class="ci cp gt" id="p1" value="PROGRESS"  maxlength="18" spellcheck="false" autocomplete="off">
      <input class="ci cv gt" id="v1" value="14250" maxlength="10" inputmode="numeric" autocomplete="off">
     </div>
    </div>
+
    <!-- 2ND -->
    <div class="card silver">
     <div class="rank">2nd</div>
@@ -135,11 +152,12 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
     </div>
     <div class="divider"></div>
     <div class="text-container">
-     <input class="ci cn st" id="n2" value="LISA M." maxlength="18" spellcheck="false" autocomplete="off">
-     <input class="ci cp st" id="p2" value="UNITY" maxlength="18" spellcheck="false" autocomplete="off">
+     <input class="ci cn st" id="n2" value="LISA M."   maxlength="18" spellcheck="false" autocomplete="off">
+     <input class="ci cp st" id="p2" value="UNITY"     maxlength="18" spellcheck="false" autocomplete="off">
      <input class="ci cv st" id="v2" value="11230" maxlength="10" inputmode="numeric" autocomplete="off">
     </div>
    </div>
+
    <!-- 3RD -->
    <div class="card bronze">
     <div class="rank">3rd</div>
@@ -156,12 +174,13 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
     </div>
     <div class="divider"></div>
     <div class="text-container">
-     <input class="ci cn bt" id="n3" value="JAMES K." maxlength="18" spellcheck="false" autocomplete="off">
-     <input class="ci cp bt" id="p3" value="HORIZON" maxlength="18" spellcheck="false" autocomplete="off">
-     <input class="ci cv bt" id="v3" value="9850" maxlength="10" inputmode="numeric" autocomplete="off">
+     <input class="ci cn bt" id="n3" value="JAMES K."  maxlength="18" spellcheck="false" autocomplete="off">
+     <input class="ci cp bt" id="p3" value="HORIZON"   maxlength="18" spellcheck="false" autocomplete="off">
+     <input class="ci cv bt" id="v3" value="9850"  maxlength="10" inputmode="numeric" autocomplete="off">
     </div>
    </div>
-  </div>
+
+  </div><!-- /cards -->
 
   <!-- NEEDS TO WIN -->
   <div class="needs-box">
@@ -184,7 +203,10 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
   <div class="map-box">
    <div class="map-title">Region Map</div>
    <div class="map-container" id="mapWrap">
-    <div class="map-ph" id="mapPH"><div class="map-ph-plus">+</div><div class="map-ph-hint">TAP TO ADD MAP</div></div>
+    <div class="map-ph" id="mapPH">
+     <div class="map-ph-plus">+</div>
+     <div class="map-ph-hint">TAP TO ADD MAP</div>
+    </div>
     <img id="mapImg" alt="">
     <input type="file" accept="image/*" id="mapFile">
    </div>
@@ -196,232 +218,198 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
     <button type="button" class="mc" id="mL">←</button>
     <button type="button" class="mc" id="mR">→</button>
     <button type="button" class="mc" id="mRst">Reset</button>
-    <button type="button" class="mc" id="mChg">Change Photo</button>
+    <button type="button" class="mc" id="mChg">Change</button>
    </div>
   </div>
 
- </div>
+ </div><!-- /captureArea -->
  <div class="dl-wrap">
   <button type="button" id="dlBtn">⬇ Download Image</button>
  </div>
 </div>
 
 <script>
-/* ===== CLOCK — NPT UTC+5:45 ===== */
-(function clock() {
-  function tick() {
-    var now = new Date();
-    var ms  = now.getTime() + now.getTimezoneOffset() * 60000 + 345 * 60000;
-    var npt = new Date(ms);
-    var h = npt.getHours(), m = npt.getMinutes(), s = npt.getSeconds();
-    var ap = h >= 12 ? 'PM' : 'AM';
-    var h12 = h % 12 || 12;
-    document.getElementById('clock').textContent =
-      (h12 < 10?'0':'')+h12+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s+' '+ap+' NPT';
-  }
-  tick();
-  setInterval(tick, 1000);
-})();
-
-/* ===== NEEDS TO WIN — fires on every keystroke ===== */
-function gv(id) {
-  var v = document.getElementById(id).value.replace(/[^0-9]/g,'');
-  return v ? parseInt(v,10) : 0;
+/* ============================================================
+   CLOCK — NPT (UTC+5:45)
+============================================================ */
+function tickClock() {
+  var now = new Date();
+  var npt = new Date(now.getTime() + now.getTimezoneOffset()*60000 + 345*60000);
+  var h=npt.getHours(), m=npt.getMinutes(), s=npt.getSeconds();
+  var ap=h>=12?'PM':'AM', h12=h%12||12;
+  document.getElementById('clock').textContent=
+    (h12<10?'0':'')+h12+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s+' '+ap+' NPT';
 }
-function upd() {
-  var v1 = gv('v1'), v2 = gv('v2'), v3 = gv('v3');
-  document.getElementById('nn2').textContent = document.getElementById('n2').value || '2nd';
-  document.getElementById('nn3').textContent = document.getElementById('n3').value || '3rd';
-  document.getElementById('nv2').textContent = Math.max(0, v1-v2+1).toLocaleString();
-  document.getElementById('nv3').textContent = Math.max(0, v1-v3+1).toLocaleString();
+tickClock();
+setInterval(tickClock,1000);
+
+/* ============================================================
+   VOTES — format display & live needs-to-win update
+============================================================ */
+function rawV(id){
+  return parseInt(document.getElementById(id).value.replace(/[^0-9]/g,''),10)||0;
 }
-/* attach to ALL relevant fields */
-['v1','v2','v3','n2','n3'].forEach(function(id) {
-  var el = document.getElementById(id);
-  el.addEventListener('input',  upd);
-  el.addEventListener('keyup',  upd);
-  el.addEventListener('change', upd);
-});
-upd();
+function updateNeeds(){
+  var v1=rawV('v1'), v2=rawV('v2'), v3=rawV('v3');
+  document.getElementById('nn2').textContent = document.getElementById('n2').value||'2nd Place';
+  document.getElementById('nn3').textContent = document.getElementById('n3').value||'3rd Place';
+  document.getElementById('nv2').textContent = Math.max(0,v1-v2+1).toLocaleString();
+  document.getElementById('nv3').textContent = Math.max(0,v1-v3+1).toLocaleString();
+}
 
-/* select all on focus */
-document.querySelectorAll('.ci,.addr-inp').forEach(function(inp) {
-  inp.addEventListener('focus', function(){ var s=this; setTimeout(function(){ s.select(); },0); });
+/* Attach to vote + name inputs — every keystroke updates the box */
+['v1','v2','v3'].forEach(function(id){
+  var el=document.getElementById(id);
+  el.addEventListener('input',  updateNeeds);
+  el.addEventListener('keyup',  updateNeeds);
+  el.addEventListener('change', updateNeeds);
+});
+['n2','n3'].forEach(function(id){
+  var el=document.getElementById(id);
+  el.addEventListener('input',  updateNeeds);
+  el.addEventListener('keyup',  updateNeeds);
+});
+updateNeeds();
+
+/* Select all on focus for quick editing */
+document.querySelectorAll('.ci,.addr-inp').forEach(function(inp){
+  inp.addEventListener('focus',function(){
+    var t=this; setTimeout(function(){ t.select(); },0);
+  });
 });
 
-/* ===== PHOTO UPLOAD — direct input tap, iOS safe ===== */
-function bindPhoto(fileId, imgId, circleId) {
-  document.getElementById(fileId).addEventListener('change', function() {
-    var f = this.files && this.files[0];
-    if (!f) return;
-    var r = new FileReader();
-    var imgEl = document.getElementById(imgId);
-    var circEl= document.getElementById(circleId);
-    r.onload = function(e) {
-      imgEl.src = e.target.result;
-      imgEl.style.display = 'block';
-      var p = circEl.querySelector('.plus-icon');
-      if (p) p.style.display = 'none';
+/* ============================================================
+   PHOTO UPLOADS
+   Input sits directly over ring (opacity:0, full 82×82px).
+   iOS sees a genuine tap on the input — no JS .click() needed.
+============================================================ */
+function bindPhoto(fileId,imgId,circId){
+  document.getElementById(fileId).addEventListener('change',function(){
+    var f=this.files&&this.files[0]; if(!f)return;
+    var rd=new FileReader();
+    var imgEl=document.getElementById(imgId);
+    var cEl=document.getElementById(circId);
+    rd.onload=function(e){
+      imgEl.src=e.target.result;
+      imgEl.style.display='block';
+      var p=cEl.querySelector('.plus-icon');
+      if(p)p.style.display='none';
     };
-    r.readAsDataURL(f);
-    this.value = '';
+    rd.readAsDataURL(f);
+    this.value=''; /* allow re-picking same file */
   });
 }
 bindPhoto('ph1','img1','c1');
 bindPhoto('ph2','img2','c2');
 bindPhoto('ph3','img3','c3');
 
-/* ===== MAP ===== */
-var ms2 = {x:0,y:0,sc:1};
-function apM() {
-  var img = document.getElementById('mapImg');
-  img.style.transformOrigin = 'center center';
-  img.style.transform = 'translate('+ms2.x+'px,'+ms2.y+'px) scale('+ms2.sc+')';
+/* ============================================================
+   MAP — upload + pan + zoom
+============================================================ */
+var ms={x:0,y:0,sc:1};
+function applyMap(){
+  var img=document.getElementById('mapImg');
+  img.style.transformOrigin='center center';
+  img.style.transform='translate('+ms.x+'px,'+ms.y+'px) scale('+ms.sc+')';
 }
-document.getElementById('mapFile').addEventListener('change', function() {
-  var f = this.files && this.files[0];
-  if (!f) return;
-  var r = new FileReader();
-  r.onload = function(e) {
-    var img = document.getElementById('mapImg');
-    ms2={x:0,y:0,sc:1};
-    img.src = e.target.result;
-    img.style.display = 'block';
-    apM();
-    document.getElementById('mapPH').style.display  = 'none';
+document.getElementById('mapFile').addEventListener('change',function(){
+  var f=this.files&&this.files[0]; if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(e){
+    var img=document.getElementById('mapImg');
+    ms={x:0,y:0,sc:1};
+    img.src=e.target.result;
+    img.style.display='block';
+    applyMap();
+    document.getElementById('mapPH').style.display='none';
     document.getElementById('mapCtrls').classList.add('on');
     document.getElementById('mapFile').classList.add('gone');
   };
-  r.readAsDataURL(f);
-  this.value = '';
+  rd.readAsDataURL(f);
+  this.value='';
 });
-function mc2(id,fn){ document.getElementById(id).addEventListener('click',fn); }
-mc2('mZI', function(){ ms2.sc=Math.min(ms2.sc+0.15,4); apM(); });
-mc2('mZO', function(){ ms2.sc=Math.max(ms2.sc-0.15,0.4); apM(); });
-mc2('mU',  function(){ ms2.y-=12; apM(); });
-mc2('mD',  function(){ ms2.y+=12; apM(); });
-mc2('mL',  function(){ ms2.x-=12; apM(); });
-mc2('mR',  function(){ ms2.x+=12; apM(); });
-mc2('mRst',function(){ ms2={x:0,y:0,sc:1}; apM(); });
-mc2('mChg',function(){
-  var inp = document.getElementById('mapFile');
+function mcBtn(id,fn){ document.getElementById(id).addEventListener('click',fn); }
+mcBtn('mZI',function(){ ms.sc=Math.min(ms.sc+0.15,4);  applyMap(); });
+mcBtn('mZO',function(){ ms.sc=Math.max(ms.sc-0.15,0.4); applyMap(); });
+mcBtn('mU', function(){ ms.y-=12; applyMap(); });
+mcBtn('mD', function(){ ms.y+=12; applyMap(); });
+mcBtn('mL', function(){ ms.x-=12; applyMap(); });
+mcBtn('mR', function(){ ms.x+=12; applyMap(); });
+mcBtn('mRst',function(){ ms={x:0,y:0,sc:1}; applyMap(); });
+mcBtn('mChg',function(){
+  var inp=document.getElementById('mapFile');
   inp.classList.remove('gone');
-  inp.value = '';
-  setTimeout(function(){ inp.click(); }, 50);
+  inp.value='';
+  setTimeout(function(){ inp.click(); },50);
 });
+/* touch drag on map */
 var drag=null;
-document.getElementById('mapImg').addEventListener('touchstart',function(e){drag={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
-document.getElementById('mapImg').addEventListener('touchmove',function(e){
+var mapEl=document.getElementById('mapImg');
+mapEl.addEventListener('touchstart',function(e){ drag={x:e.touches[0].clientX,y:e.touches[0].clientY}; },{passive:true});
+mapEl.addEventListener('touchmove',function(e){
   if(!drag)return;
-  ms2.x+=e.touches[0].clientX-drag.x; ms2.y+=e.touches[0].clientY-drag.y;
+  ms.x+=e.touches[0].clientX-drag.x; ms.y+=e.touches[0].clientY-drag.y;
   drag={x:e.touches[0].clientX,y:e.touches[0].clientY};
-  apM();
+  applyMap();
 },{passive:true});
-document.getElementById('mapImg').addEventListener('touchend',function(){drag=null;});
+mapEl.addEventListener('touchend',function(){ drag=null; });
 
-/* ===== DOWNLOAD — pure native canvas, zero dependencies ===== */
-document.getElementById('dlBtn').addEventListener('click', function() {
-  var btn = this;
-  btn.disabled = true;
-  btn.textContent = 'Preparing…';
-  if (document.activeElement) document.activeElement.blur();
+/* ============================================================
+   DOWNLOAD — uses dom-to-image-more (self-contained, no CDN issues)
+   Falls back to native canvas if unavailable
+============================================================ */
+document.getElementById('dlBtn').addEventListener('click',function(){
+  var btn=this;
+  btn.disabled=true;
+  btn.textContent='Preparing…';
+  if(document.activeElement) document.activeElement.blur();
 
-  /* Small delay so keyboard is dismissed and layout is settled */
-  setTimeout(function() {
-    downloadImage(btn);
-  }, 300);
+  /* Hide controls before capture */
+  var ctrls=document.getElementById('mapCtrls');
+  var wasOn=ctrls.classList.contains('on');
+  ctrls.style.display='none';
+
+  setTimeout(function(){ doCapture(btn,ctrls,wasOn); },200);
 });
 
-function downloadImage(btn) {
-  /* Collect all data we need to draw */
-  var W = 430, SCALE = 3;
-  var CW = W * SCALE;
+function doCapture(btn,ctrls,wasOn){
+  var area=document.getElementById('captureArea');
+  var W=area.offsetWidth, H=area.offsetHeight;
+  var SCALE=3;
 
-  /* We'll measure actual rendered height from the DOM */
-  var area = document.getElementById('captureArea');
-  var areaH = area.getBoundingClientRect().height;
-  var CH = Math.ceil(areaH * SCALE);
+  /* Build a canvas by drawing the visible area */
+  var canvas=document.createElement('canvas');
+  canvas.width=W*SCALE; canvas.height=H*SCALE;
+  var ctx=canvas.getContext('2d');
+  ctx.scale(SCALE,SCALE);
 
-  var canvas = document.createElement('canvas');
-  canvas.width  = CW;
-  canvas.height = CH;
-  var ctx = canvas.getContext('2d');
+  /* ---- draw background ---- */
+  ctx.fillStyle='#f2f2f4';
+  ctx.fillRect(0,0,W,H);
 
-  /* Draw background */
-  ctx.fillStyle = '#f2f2f4';
-  ctx.fillRect(0, 0, CW, CH);
+  var pad=18;
 
-  /* Use foreignObject via SVG → Image approach */
-  var xml = new XMLSerializer().serializeToString(area);
-  /* Inline all images as data URLs — they're already data URLs from FileReader */
-
-  var svgStr = '<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+areaH+'">' +
-    '<foreignObject width="100%" height="100%">' +
-    '<html xmlns="http://www.w3.org/1999/xhtml">' +
-    getInlineStyles() +
-    '<body style="margin:0;padding:0;background:#f2f2f4;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased">' +
-    area.innerHTML +
-    '</body></html></foreignObject></svg>';
-
-  var blob = new Blob([svgStr], {type:'image/svg+xml;charset=utf-8'});
-  var url  = URL.createObjectURL(blob);
-  var img  = new Image();
-
-  img.onload = function() {
-    ctx.drawImage(img, 0, 0, CW, CH);
-    URL.revokeObjectURL(url);
-
-    try {
-      /* Try direct download */
-      canvas.toBlob(function(blob2) {
-        var a = document.createElement('a');
-        var burl = URL.createObjectURL(blob2);
-        a.href = burl;
-        a.download = 'election-results.jpg';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function(){ URL.revokeObjectURL(burl); document.body.removeChild(a); }, 1000);
-      }, 'image/jpeg', 0.95);
-    } catch(e) {
-      /* Fallback: open in new tab (works on iOS) */
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-      var w = window.open('', '_blank');
-      if (w) {
-        w.document.write('<img src="'+dataUrl+'" style="max-width:100%;display:block"><p style="font-family:sans-serif;padding:10px">Long-press the image and choose Save Image</p>');
-      } else {
-        /* Last resort: same tab */
-        window.location.href = dataUrl;
-      }
-    }
-
-    btn.textContent = '⬇ Download Image';
-    btn.disabled = false;
-  };
-
-  img.onerror = function() {
-    URL.revokeObjectURL(url);
-    /* SVG foreignObject failed (cross-origin or security) — fall back to simpler canvas draw */
-    drawSimpleCanvas(canvas, ctx, CW, CH, W, areaH, btn);
-  };
-
-  img.src = url;
-}
-
-function getInlineStyles() {
-  /* Collect all stylesheets from the page into one <style> block */
-  var css = '';
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    try {
-      var rules = sheets[i].cssRules || sheets[i].rules;
-      if (!rules) continue;
-      for (var j = 0; j < rules.length; j++) {
-        css += rules[j].cssText + '\n';
-      }
-    } catch(e) {}
+  /* helper: rounded rect */
+  function rr(x,y,w,h,r,fill,stroke,lw){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+    ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h-r);
+    ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.lineTo(x+r,y+h);
+    ctx.arcTo(x,y+h,x,y+h-r,r); ctx.lineTo(x,y+r);
+    ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+    if(fill){ctx.fillStyle=fill;ctx.fill();}
+    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();}
   }
-  return '<style>'+css+'</style>';
-}
 
-function drawSimpleCanvas(canvas, ctx, CW, CH, W, H, btn) {
-  /* Fallback: draw a simplified 
+  /* helper: shadow rect */
+  function shadowRR(x,y,w,h,r,fill){
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.13)';
+    ctx.shadowBlur=20; ctx.shadowOffsetY=8;
+    rr(x,y,w,h,r,fill);
+    ctx.restore();
+  }
+
+  /* helper: text */
+  function tx(text,x,y,sz,wt,col,align){
+    ctx.fo
