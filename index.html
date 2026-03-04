@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Election Results - Dynamic Positions</title>
+<title>Election Results - Save Menu</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#e9e9ec;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;justify-content:center;min-height:100vh;}
@@ -12,9 +11,12 @@ body{background:#e9e9ec;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 .container{background:#f2f2f4;padding:18px}
 
 /* HEADER */
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
 h1{font-size:22px;font-weight:700;color:#1c1c1e}
 #clock{font-size:12px;color:#1c1c1e;font-weight:600;background:rgba(142,142,147,0.15);padding:6px 11px;border-radius:30px;white-space:nowrap}
+
+/* SAVE MENU BUTTON */
+.menu-btn{background:#007aff;color:#fff;border:none;border-radius:30px;padding:8px 15px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:10px;width:100%}
 
 /* ADDRESS */
 .address-box{background:#fff;border-radius:18px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
@@ -44,14 +46,14 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 
 .divider{height:1px;background:#ddd;margin:8px 0 10px}
 
-/* TEXT INPUTS */
+/* TEXT INPUTS - FIXED: darker for better visibility in download */
 .ci{width:100%;border:none;background:transparent;text-align:center;font-size:13px;padding:4px 0;outline:none}
-.cn{font-weight:800}
-.cp{font-weight:700;font-size:11px;letter-spacing:0.5px}
-.cv{font-size:15px;font-weight:900}
-.gt{color:#9e741b}
-.st{color:#5c5c5f}
-.bt{color:#8a5529}
+.cn{font-weight:900;color:#000}
+.cp{font-weight:800;font-size:12px;letter-spacing:0.8px}
+.cv{font-size:16px;font-weight:900}
+.gt{color:#9e741b;font-weight:900}
+.st{color:#2c2c2e;font-weight:900}
+.bt{color:#6b3f1a;font-weight:900}
 
 /* NEEDS TO WIN */
 .needs-box{background:#fff;border-radius:18px;margin-bottom:12px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
@@ -61,10 +63,10 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 .ndot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff}
 .ndot.silver{background:#8e8e93}
 .ndot.bronze{background:#9b5e2a}
-.nname{font-size:12px;font-weight:700;flex:1}
+.nname{font-size:12px;font-weight:800;flex:1}
 .nright{display:flex;flex-direction:column;align-items:flex-end}
 .nnum{font-size:15px;font-weight:900}
-.nlbl{font-size:8px;color:#8e8e93}
+.nlbl{font-size:8px;color:#8e8e93;font-weight:600}
 
 /* MAP BOX */
 .map-box{background:#fff;border-radius:20px;padding:14px;margin-bottom:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
@@ -75,10 +77,23 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 .map-ph-hint{font-size:10px;color:#aaa;margin-top:5px}
 #mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none;cursor:move;transition:transform 0.05s;z-index:2}
 #mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:3}
+
+/* MAP CONTROLS - These will be hidden in download */
 .map-controls{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:10px}
 .map-btn{background:#f0f0f3;border:none;border-radius:30px;padding:6px 12px;font-size:11px;font-weight:600;color:#1c1c1e;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.05)}
 .map-btn:active{background:#e0e0e3}
-.map-btn.primary{background:#007aff;color:#fff}
+
+/* SAVE MENU MODAL */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center}
+.modal-content{background:#fff;border-radius:28px;width:90%;max-width:380px;max-height:80vh;overflow-y:auto;padding:20px}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:15px;color:#1c1c1e}
+.location-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid #eee;cursor:pointer}
+.location-item:hover{background:#f5f5f7}
+.location-name{font-weight:600;font-size:14px}
+.location-date{font-size:11px;color:#8e8e93}
+.delete-btn{color:#ff3b30;font-size:14px;padding:5px}
+.save-input{width:100%;padding:12px;border:1px solid #ddd;border-radius:16px;margin-bottom:10px;font-size:14px}
+.modal-btn{background:#007aff;color:#fff;border:none;border-radius:30px;padding:12px;font-weight:600;width:100%;margin-top:10px}
 
 /* DOWNLOAD */
 .dl-wrap{padding:18px;background:#f2f2f4}
@@ -95,6 +110,9 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
    <div id="clock">--:--:-- AM</div>
   </div>
 
+  <!-- SAVE MENU BUTTON -->
+  <button class="menu-btn" onclick="openSaveMenu()">📋 LOCATIONS MENU</button>
+
   <!-- ADDRESS -->
   <div class="address-box">
    <span class="address-icon">📍</span>
@@ -103,9 +121,9 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 
   <hr>
 
-  <!-- CARDS - Positions will swap dynamically -->
+  <!-- CARDS -->
   <div class="cards" id="cardsContainer">
-   <!-- Card 1 (will show 1st place) -->
+   <!-- Card 1 -->
    <div class="card gold" id="card1">
     <div class="rank">1st</div>
     <div class="photo-wrap">
@@ -123,7 +141,7 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
     <input class="ci cv gt" id="v1" value="14250" oninput="updateAll()" onblur="formatVote(this)">
    </div>
 
-   <!-- Card 2 (will show 2nd place) -->
+   <!-- Card 2 -->
    <div class="card silver" id="card2">
     <div class="rank">2nd</div>
     <div class="photo-wrap">
@@ -141,7 +159,7 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
     <input class="ci cv st" id="v2" value="11230" oninput="updateAll()" onblur="formatVote(this)">
    </div>
 
-   <!-- Card 3 (will show 3rd place) -->
+   <!-- Card 3 -->
    <div class="card bronze" id="card3">
     <div class="rank">3rd</div>
     <div class="photo-wrap">
@@ -183,7 +201,7 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 
   <hr>
 
-  <!-- MAP -->
+  <!-- MAP with CONTROLS (will be hidden in download) -->
   <div class="map-box">
    <div class="map-title">REGION MAP</div>
    <div class="map-container" id="mapContainer">
@@ -194,6 +212,8 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
     <img id="mapImg" alt="" draggable="false">
     <input type="file" accept="image/*" id="mapFile" onchange="uploadMap(this)">
    </div>
+   
+   <!-- MAP CONTROLS - These will be hidden in download -->
    <div class="map-controls" id="mapControls" style="display:none">
     <button class="map-btn" id="zoomInBtn" onclick="mapZoom(0.2)">➕ Zoom In</button>
     <button class="map-btn" id="zoomOutBtn" onclick="mapZoom(-0.2)">➖ Zoom Out</button>
@@ -202,7 +222,7 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
    </div>
   </div>
 
- </div>
+ </div> <!-- end captureArea -->
 
  <!-- DOWNLOAD BUTTON -->
  <div class="dl-wrap">
@@ -210,8 +230,19 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
  </div>
 </div>
 
+<!-- SAVE MENU MODAL -->
+<div class="modal" id="saveModal" onclick="if(event.target===this) closeSaveMenu()">
+ <div class="modal-content">
+  <div class="modal-title">📍 Saved Locations</div>
+  <div id="locationsList"></div>
+  <input type="text" class="save-input" id="newLocationName" placeholder="Enter location name">
+  <button class="modal-btn" onclick="saveCurrentLocation()">💾 Save Current Location</button>
+  <button class="modal-btn" style="background:#8e8e93;margin-top:5px" onclick="closeSaveMenu()">Close</button>
+ </div>
+</div>
+
 <script>
-// ===== NEPAL TIME (12hr AM/PM) =====
+// ===== NEPAL TIME =====
 function updateNepalTime() {
   const now = new Date();
   const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -231,14 +262,14 @@ function updateNepalTime() {
 updateNepalTime();
 setInterval(updateNepalTime, 1000);
 
-// ===== CANDIDATE DATA STORAGE =====
+// ===== CANDIDATE DATA =====
 let candidates = [
   { id: 1, name: '', party: '', votes: 0, img: '', cardPos: 1 },
   { id: 2, name: '', party: '', votes: 0, img: '', cardPos: 2 },
   { id: 3, name: '', party: '', votes: 0, img: '', cardPos: 3 }
 ];
 
-// ===== PHOTO UPLOAD WITH CARD TRACKING =====
+// ===== PHOTO UPLOAD =====
 function uploadPhoto(input, imgId, cardNum) {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
@@ -247,11 +278,9 @@ function uploadPhoto(input, imgId, cardNum) {
       img.src = e.target.result;
       img.style.display = 'block';
       
-      // Hide plus sign
       const plus = img.parentElement.querySelector('.plus');
       if (plus) plus.style.display = 'none';
       
-      // Store image in candidate data
       const candidateIndex = candidates.findIndex(c => c.cardPos === cardNum);
       if (candidateIndex !== -1) {
         candidates[candidateIndex].img = e.target.result;
@@ -261,15 +290,14 @@ function uploadPhoto(input, imgId, cardNum) {
   }
 }
 
-// ===== GET RAW VOTE NUMBERS =====
+// ===== GET RAW VOTES =====
 function getRawVote(id) {
   const el = document.getElementById(id);
   return parseInt(el.value.replace(/[^0-9]/g, '')) || 0;
 }
 
-// ===== UPDATE ALL (CORE FUNCTION) =====
+// ===== UPDATE ALL =====
 function updateAll() {
-  // 1. Get current values from inputs (by card position)
   candidates[0].name = document.getElementById('n1').value;
   candidates[0].party = document.getElementById('p1').value;
   candidates[0].votes = getRawVote('v1');
@@ -282,77 +310,60 @@ function updateAll() {
   candidates[2].party = document.getElementById('p3').value;
   candidates[2].votes = getRawVote('v3');
   
-  // 2. Sort by votes (highest first)
   const sorted = [...candidates].sort((a, b) => b.votes - a.votes);
   
-  // 3. Update card positions based on vote ranking
   for (let i = 0; i < 3; i++) {
-    sorted[i].cardPos = i + 1; // 1st, 2nd, 3rd
+    sorted[i].cardPos = i + 1;
   }
   
-  // 4. Update the UI to reflect new positions
   updateCardUI(sorted);
-  
-  // 5. Update needs-to-win box
   updateNeedsToWin(sorted);
 }
 
-// ===== UPDATE CARD UI WITH NEW POSITIONS =====
 function updateCardUI(sorted) {
-  // Map each candidate to its new card position
   const card1Candidate = sorted.find(c => c.cardPos === 1);
   const card2Candidate = sorted.find(c => c.cardPos === 2);
   const card3Candidate = sorted.find(c => c.cardPos === 3);
   
-  // Update Card 1 (1st place)
   document.getElementById('n1').value = card1Candidate.name;
   document.getElementById('p1').value = card1Candidate.party;
   document.getElementById('v1').value = card1Candidate.votes.toLocaleString();
   
-  // Update Card 2 (2nd place)
   document.getElementById('n2').value = card2Candidate.name;
   document.getElementById('p2').value = card2Candidate.party;
   document.getElementById('v2').value = card2Candidate.votes.toLocaleString();
   
-  // Update Card 3 (3rd place)
   document.getElementById('n3').value = card3Candidate.name;
   document.getElementById('p3').value = card3Candidate.party;
   document.getElementById('v3').value = card3Candidate.votes.toLocaleString();
   
-  // Update photos if they exist
   if (card1Candidate.img) {
-    const img1 = document.getElementById('img1');
-    img1.src = card1Candidate.img;
-    img1.style.display = 'block';
+    document.getElementById('img1').src = card1Candidate.img;
+    document.getElementById('img1').style.display = 'block';
     document.querySelector('#circle1 .plus').style.display = 'none';
   }
   
   if (card2Candidate.img) {
-    const img2 = document.getElementById('img2');
-    img2.src = card2Candidate.img;
-    img2.style.display = 'block';
+    document.getElementById('img2').src = card2Candidate.img;
+    document.getElementById('img2').style.display = 'block';
     document.querySelector('#circle2 .plus').style.display = 'none';
   }
   
   if (card3Candidate.img) {
-    const img3 = document.getElementById('img3');
-    img3.src = card3Candidate.img;
-    img3.style.display = 'block';
+    document.getElementById('img3').src = card3Candidate.img;
+    document.getElementById('img3').style.display = 'block';
     document.querySelector('#circle3 .plus').style.display = 'none';
   }
 }
 
-// ===== UPDATE NEEDS TO WIN =====
 function updateNeedsToWin(sorted) {
   const first = sorted[0];
   const second = sorted[1];
   const third = sorted[2];
   
-  // Update names
   document.getElementById('needsName2').textContent = second.name || '2nd Place';
   document.getElementById('needsName3').textContent = third.name || '3rd Place';
   
-  // Calculate votes needed
   const need2 = Math.max(0, first.votes - second.votes + 1);
   const need3 = Math.max(0, first.votes - third.votes + 1);
   
@@ -360,7 +371,6 @@ function updateNeedsToWin(sorted) {
   document.getElementById('needsVotes3').textContent = need3.toLocaleString();
 }
 
-// ===== FORMAT VOTE ON BLUR =====
 function formatVote(input) {
   const num = parseInt(input.value.replace(/[^0-9]/g, '')) || 0;
   input.value = num.toLocaleString();
@@ -416,7 +426,7 @@ function changeMap() {
   document.getElementById('mapFile').click();
 }
 
-// Touch events for map
+// Touch events
 const mapImg = document.getElementById('mapImg');
 
 mapImg.addEventListener('touchstart', function(e) {
@@ -464,45 +474,52 @@ mapImg.addEventListener('touchmove', function(e) {
   }
 });
 
-// ===== DOWNLOAD IMAGE =====
-function downloadImage() {
-  const btn = document.getElementById('dlBtn');
-  btn.textContent = 'Processing...';
-  btn.disabled = true;
-  
-  const element = document.getElementById('captureArea');
-  
-  html2canvas(element, {
-    scale: 2,
-    backgroundColor: '#f2f2f4',
-    logging: false,
-    allowTaint: true,
-    useCORS: true
-  }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = 'election-results.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
-    link.click();
-    
-    btn.textContent = '⬇ Download JPG';
-    btn.disabled = false;
-  }).catch(error => {
-    alert('Download failed. Please try again.');
-    btn.textContent = '⬇ Download JPG';
-    btn.disabled = false;
-  });
+// ===== SAVE MENU FUNCTIONS =====
+function openSaveMenu() {
+  document.getElementById('saveModal').style.display = 'flex';
+  loadLocationsList();
 }
 
-// ===== INITIAL UPDATE =====
-setTimeout(() => {
-  // Store initial images if any
-  candidates[0].img = document.getElementById('img1').src || '';
-  candidates[1].img = document.getElementById('img2').src || '';
-  candidates[2].img = document.getElementById('img3').src || '';
-  updateAll();
-}, 100);
-</script>
+function closeSaveMenu() {
+  document.getElementById('saveModal').style.display = 'none';
+}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body>
-</html>
+function loadLocationsList() {
+  const listDiv = document.getElementById('locationsList');
+  listDiv.innerHTML = '';
+  
+  for(let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if(key.startsWith('election_')) {
+      const data = JSON.parse(localStorage.getItem(key));
+      const locationName = key.replace('election_', '');
+      
+      const item = document.createElement('div');
+      item.className = 'location-item';
+      item.innerHTML = `
+        <div style="flex:1" onclick="loadLocation('${locationName}')">
+          <div class="location-name">${locationName}</div>
+          <div class="location-date">${data.savedDate || ''}</div>
+        </div>
+        <div class="delete-btn" onclick="deleteLocation('${locationName}'); event.stopPropagation()">✕</div>
+      `;
+      listDiv.appendChild(item);
+    }
+  }
+  
+  if(listDiv.innerHTML === '') {
+    listDiv.innerHTML = '<div style="padding:20px;text-align:center;color:#8e8e93">No saved locations</div>';
+  }
+}
+
+function saveCurrentLocation() {
+  const locationName = document.getElementById('newLocationName').value.trim();
+  if(!locationName) {
+    alert('Please enter a location name');
+    return;
+  }
+  
+  const locationData = {
+    name: locationName,
+    candidates: [
+      { name: n1.value, party:
