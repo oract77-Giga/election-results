@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Election Results</title>
+<title>Election Results - Dynamic Positions</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#e9e9ec;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;justify-content:center;min-height:100vh;}
@@ -13,18 +14,18 @@ body{background:#e9e9ec;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 /* HEADER */
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
 h1{font-size:22px;font-weight:700;color:#1c1c1e}
-#clock{font-size:12px;color:#1c1c1e;font-weight:600;background:rgba(142,142,147,0.15);padding:6px 11px;border-radius:30px}
+#clock{font-size:12px;color:#1c1c1e;font-weight:600;background:rgba(142,142,147,0.15);padding:6px 11px;border-radius:30px;white-space:nowrap}
 
 /* ADDRESS */
-.address-box{background:#fff;border-radius:18px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.address-box{background:#fff;border-radius:18px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
 .address-icon{font-size:16px}
 .addr-inp{font-size:15px;border:none;outline:none;background:transparent;width:100%}
 
 hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 
 /* CARDS */
-.cards{display:flex;gap:8px;margin-bottom:10px}
-.card{flex:1;background:#fff;border-radius:20px;padding:12px 4px 16px;text-align:center;position:relative;box-shadow:0 10px 20px rgba(0,0,0,0.1)}
+.cards{display:flex;gap:8px;margin-bottom:10px;transition:all 0.3s ease}
+.card{flex:1;background:#fff;border-radius:20px;padding:12px 4px 16px;text-align:center;position:relative;box-shadow:0 10px 20px rgba(0,0,0,0.1);transition:all 0.3s ease}
 .rank{position:absolute;top:6px;left:6px;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:800;color:#fff}
 .gold .rank{background:#b38b3a}
 .silver .rank{background:#8e8e93}
@@ -53,7 +54,7 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 .bt{color:#8a5529}
 
 /* NEEDS TO WIN */
-.needs-box{background:#fff;border-radius:18px;margin-bottom:12px;overflow:hidden}
+.needs-box{background:#fff;border-radius:18px;margin-bottom:12px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
 .needs-hdr{background:#2c2c2e;padding:8px 12px;color:#fff;font-size:10px;font-weight:800;letter-spacing:1px}
 .needs-row{display:flex;align-items:center;padding:10px 12px;gap:8px;border-bottom:1px solid #eee}
 .needs-row:last-child{border-bottom:none}
@@ -65,29 +66,33 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 .nnum{font-size:15px;font-weight:900}
 .nlbl{font-size:8px;color:#8e8e93}
 
-/* MAP */
-.map-box{background:#fff;border-radius:20px;padding:14px;margin-bottom:10px}
+/* MAP BOX */
+.map-box{background:#fff;border-radius:20px;padding:14px;margin-bottom:10px;box-shadow:0 5px 15px rgba(0,0,0,0.05)}
 .map-title{text-align:center;font-size:11px;letter-spacing:2px;color:#8e8e93;margin-bottom:10px;font-weight:700}
-.map-container{width:100%;height:140px;border-radius:16px;overflow:hidden;position:relative;background:#f0f0f3}
-.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f0f0f3}
+.map-container{width:100%;height:160px;border-radius:16px;overflow:hidden;position:relative;background:#f0f0f3;touch-action:none}
+.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f0f0f3;z-index:1}
 .map-ph-plus{font-size:36px;color:#aaa}
-.map-ph-hint{font-size:10px;color:#aaa}
-#mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
-#mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.map-ph-hint{font-size:10px;color:#aaa;margin-top:5px}
+#mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none;cursor:move;transition:transform 0.05s;z-index:2}
+#mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:3}
+.map-controls{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.map-btn{background:#f0f0f3;border:none;border-radius:30px;padding:6px 12px;font-size:11px;font-weight:600;color:#1c1c1e;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.05)}
+.map-btn:active{background:#e0e0e3}
+.map-btn.primary{background:#007aff;color:#fff}
 
 /* DOWNLOAD */
 .dl-wrap{padding:18px;background:#f2f2f4}
-#dlBtn{width:100%;padding:16px;border:none;background:#1c1c1e;color:#fff;font-weight:700;font-size:16px;border-radius:40px;cursor:pointer}
+#dlBtn{width:100%;padding:16px;border:none;background:#1c1c1e;color:#fff;font-weight:700;font-size:16px;border-radius:40px;cursor:pointer;box-shadow:0 10px 20px rgba(0,0,0,0.2)}
 </style>
 </head>
 <body>
 <div class="wrapper">
  <div class="container" id="captureArea">
 
-  <!-- HEADER -->
+  <!-- HEADER with NEPAL TIME -->
   <div class="top">
    <h1>Election Results</h1>
-   <div id="clock">--:--:--</div>
+   <div id="clock">--:--:-- AM</div>
   </div>
 
   <!-- ADDRESS -->
@@ -98,69 +103,67 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 
   <hr>
 
-  <!-- CARDS -->
-  <div class="cards">
-
-   <!-- 1ST -->
-   <div class="card gold">
+  <!-- CARDS - Positions will swap dynamically -->
+  <div class="cards" id="cardsContainer">
+   <!-- Card 1 (will show 1st place) -->
+   <div class="card gold" id="card1">
     <div class="rank">1st</div>
     <div class="photo-wrap">
      <div class="ring-bg gold-ring">
-      <div class="circle">
+      <div class="circle" id="circle1">
        <span class="plus">+</span>
        <img id="img1" alt="">
       </div>
      </div>
-     <input type="file" accept="image/*" class="photo-input" id="ph1" onchange="uploadPhoto(this, 'img1')">
+     <input type="file" accept="image/*" class="photo-input" id="ph1" onchange="uploadPhoto(this, 'img1', 1)">
     </div>
     <div class="divider"></div>
-    <input class="ci cn gt" id="n1" value="THOMAS F." oninput="updateNames()">
-    <input class="ci cp gt" id="p1" value="PROGRESS">
-    <input class="ci cv gt" id="v1" value="14250" oninput="updateVotes()">
+    <input class="ci cn gt" id="n1" value="THOMAS F." oninput="updateAll()">
+    <input class="ci cp gt" id="p1" value="PROGRESS" oninput="updateAll()">
+    <input class="ci cv gt" id="v1" value="14250" oninput="updateAll()" onblur="formatVote(this)">
    </div>
 
-   <!-- 2ND -->
-   <div class="card silver">
+   <!-- Card 2 (will show 2nd place) -->
+   <div class="card silver" id="card2">
     <div class="rank">2nd</div>
     <div class="photo-wrap">
      <div class="ring-bg silver-ring">
-      <div class="circle">
+      <div class="circle" id="circle2">
        <span class="plus">+</span>
        <img id="img2" alt="">
       </div>
      </div>
-     <input type="file" accept="image/*" class="photo-input" id="ph2" onchange="uploadPhoto(this, 'img2')">
+     <input type="file" accept="image/*" class="photo-input" id="ph2" onchange="uploadPhoto(this, 'img2', 2)">
     </div>
     <div class="divider"></div>
-    <input class="ci cn st" id="n2" value="LISA M." oninput="updateNames()">
-    <input class="ci cp st" id="p2" value="UNITY">
-    <input class="ci cv st" id="v2" value="11230" oninput="updateVotes()">
+    <input class="ci cn st" id="n2" value="LISA M." oninput="updateAll()">
+    <input class="ci cp st" id="p2" value="UNITY" oninput="updateAll()">
+    <input class="ci cv st" id="v2" value="11230" oninput="updateAll()" onblur="formatVote(this)">
    </div>
 
-   <!-- 3RD -->
-   <div class="card bronze">
+   <!-- Card 3 (will show 3rd place) -->
+   <div class="card bronze" id="card3">
     <div class="rank">3rd</div>
     <div class="photo-wrap">
      <div class="ring-bg bronze-ring">
-      <div class="circle">
+      <div class="circle" id="circle3">
        <span class="plus">+</span>
        <img id="img3" alt="">
       </div>
      </div>
-     <input type="file" accept="image/*" class="photo-input" id="ph3" onchange="uploadPhoto(this, 'img3')">
+     <input type="file" accept="image/*" class="photo-input" id="ph3" onchange="uploadPhoto(this, 'img3', 3)">
     </div>
     <div class="divider"></div>
-    <input class="ci cn bt" id="n3" value="JAMES K." oninput="updateNames()">
-    <input class="ci cp bt" id="p3" value="HORIZON">
-    <input class="ci cv bt" id="v3" value="9850" oninput="updateVotes()">
+    <input class="ci cn bt" id="n3" value="JAMES K." oninput="updateAll()">
+    <input class="ci cp bt" id="p3" value="HORIZON" oninput="updateAll()">
+    <input class="ci cv bt" id="v3" value="9850" oninput="updateAll()" onblur="formatVote(this)">
    </div>
-
   </div>
 
   <!-- NEEDS TO WIN -->
   <div class="needs-box">
    <div class="needs-hdr">🗳 VOTES NEEDED TO WIN</div>
-   <div class="needs-row">
+   <div class="needs-row" id="needRow2">
     <div class="ndot silver">2</div>
     <div class="nname" id="needsName2">LISA M.</div>
     <div class="nright">
@@ -168,7 +171,7 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
      <div class="nlbl">votes needed</div>
     </div>
    </div>
-   <div class="needs-row">
+   <div class="needs-row" id="needRow3">
     <div class="ndot bronze">3</div>
     <div class="nname" id="needsName3">JAMES K.</div>
     <div class="nright">
@@ -183,13 +186,19 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
   <!-- MAP -->
   <div class="map-box">
    <div class="map-title">REGION MAP</div>
-   <div class="map-container">
+   <div class="map-container" id="mapContainer">
     <div class="map-ph" id="mapPH">
      <div class="map-ph-plus">+</div>
      <div class="map-ph-hint">Tap to add map</div>
     </div>
-    <img id="mapImg" alt="">
+    <img id="mapImg" alt="" draggable="false">
     <input type="file" accept="image/*" id="mapFile" onchange="uploadMap(this)">
+   </div>
+   <div class="map-controls" id="mapControls" style="display:none">
+    <button class="map-btn" id="zoomInBtn" onclick="mapZoom(0.2)">➕ Zoom In</button>
+    <button class="map-btn" id="zoomOutBtn" onclick="mapZoom(-0.2)">➖ Zoom Out</button>
+    <button class="map-btn" id="resetMapBtn" onclick="resetMap()">⟲ Reset</button>
+    <button class="map-btn" id="changeMapBtn" onclick="changeMap()">🖼 Change</button>
    </div>
   </div>
 
@@ -202,19 +211,35 @@ hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 </div>
 
 <script>
-// ===== CLOCK =====
-function updateClock() {
+// ===== NEPAL TIME (12hr AM/PM) =====
+function updateNepalTime() {
   const now = new Date();
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  const seconds = now.getSeconds().toString().padStart(2, '0');
-  document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const npt = new Date(utc + (345 * 60000));
+  
+  let hours = npt.getHours();
+  const minutes = npt.getMinutes().toString().padStart(2, '0');
+  const seconds = npt.getSeconds().toString().padStart(2, '0');
+  
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  const hoursStr = hours.toString().padStart(2, '0');
+  
+  document.getElementById('clock').textContent = `${hoursStr}:${minutes}:${seconds} ${ampm} NPT`;
 }
-updateClock();
-setInterval(updateClock, 1000);
+updateNepalTime();
+setInterval(updateNepalTime, 1000);
 
-// ===== PHOTO UPLOAD =====
-function uploadPhoto(input, imgId) {
+// ===== CANDIDATE DATA STORAGE =====
+let candidates = [
+  { id: 1, name: '', party: '', votes: 0, img: '', cardPos: 1 },
+  { id: 2, name: '', party: '', votes: 0, img: '', cardPos: 2 },
+  { id: 3, name: '', party: '', votes: 0, img: '', cardPos: 3 }
+];
+
+// ===== PHOTO UPLOAD WITH CARD TRACKING =====
+function uploadPhoto(input, imgId, cardNum) {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -225,12 +250,130 @@ function uploadPhoto(input, imgId) {
       // Hide plus sign
       const plus = img.parentElement.querySelector('.plus');
       if (plus) plus.style.display = 'none';
+      
+      // Store image in candidate data
+      const candidateIndex = candidates.findIndex(c => c.cardPos === cardNum);
+      if (candidateIndex !== -1) {
+        candidates[candidateIndex].img = e.target.result;
+      }
     };
     reader.readAsDataURL(input.files[0]);
   }
 }
 
-// ===== MAP UPLOAD =====
+// ===== GET RAW VOTE NUMBERS =====
+function getRawVote(id) {
+  const el = document.getElementById(id);
+  return parseInt(el.value.replace(/[^0-9]/g, '')) || 0;
+}
+
+// ===== UPDATE ALL (CORE FUNCTION) =====
+function updateAll() {
+  // 1. Get current values from inputs (by card position)
+  candidates[0].name = document.getElementById('n1').value;
+  candidates[0].party = document.getElementById('p1').value;
+  candidates[0].votes = getRawVote('v1');
+  
+  candidates[1].name = document.getElementById('n2').value;
+  candidates[1].party = document.getElementById('p2').value;
+  candidates[1].votes = getRawVote('v2');
+  
+  candidates[2].name = document.getElementById('n3').value;
+  candidates[2].party = document.getElementById('p3').value;
+  candidates[2].votes = getRawVote('v3');
+  
+  // 2. Sort by votes (highest first)
+  const sorted = [...candidates].sort((a, b) => b.votes - a.votes);
+  
+  // 3. Update card positions based on vote ranking
+  for (let i = 0; i < 3; i++) {
+    sorted[i].cardPos = i + 1; // 1st, 2nd, 3rd
+  }
+  
+  // 4. Update the UI to reflect new positions
+  updateCardUI(sorted);
+  
+  // 5. Update needs-to-win box
+  updateNeedsToWin(sorted);
+}
+
+// ===== UPDATE CARD UI WITH NEW POSITIONS =====
+function updateCardUI(sorted) {
+  // Map each candidate to its new card position
+  const card1Candidate = sorted.find(c => c.cardPos === 1);
+  const card2Candidate = sorted.find(c => c.cardPos === 2);
+  const card3Candidate = sorted.find(c => c.cardPos === 3);
+  
+  // Update Card 1 (1st place)
+  document.getElementById('n1').value = card1Candidate.name;
+  document.getElementById('p1').value = card1Candidate.party;
+  document.getElementById('v1').value = card1Candidate.votes.toLocaleString();
+  
+  // Update Card 2 (2nd place)
+  document.getElementById('n2').value = card2Candidate.name;
+  document.getElementById('p2').value = card2Candidate.party;
+  document.getElementById('v2').value = card2Candidate.votes.toLocaleString();
+  
+  // Update Card 3 (3rd place)
+  document.getElementById('n3').value = card3Candidate.name;
+  document.getElementById('p3').value = card3Candidate.party;
+  document.getElementById('v3').value = card3Candidate.votes.toLocaleString();
+  
+  // Update photos if they exist
+  if (card1Candidate.img) {
+    const img1 = document.getElementById('img1');
+    img1.src = card1Candidate.img;
+    img1.style.display = 'block';
+    document.querySelector('#circle1 .plus').style.display = 'none';
+  }
+  
+  if (card2Candidate.img) {
+    const img2 = document.getElementById('img2');
+    img2.src = card2Candidate.img;
+    img2.style.display = 'block';
+    document.querySelector('#circle2 .plus').style.display = 'none';
+  }
+  
+  if (card3Candidate.img) {
+    const img3 = document.getElementById('img3');
+    img3.src = card3Candidate.img;
+    img3.style.display = 'block';
+    document.querySelector('#circle3 .plus').style.display = 'none';
+  }
+}
+
+// ===== UPDATE NEEDS TO WIN =====
+function updateNeedsToWin(sorted) {
+  const first = sorted[0];
+  const second = sorted[1];
+  const third = sorted[2];
+  
+  // Update names
+  document.getElementById('needsName2').textContent = second.name || '2nd Place';
+  document.getElementById('needsName3').textContent = third.name || '3rd Place';
+  
+  // Calculate votes needed
+  const need2 = Math.max(0, first.votes - second.votes + 1);
+  const need3 = Math.max(0, first.votes - third.votes + 1);
+  
+  document.getElementById('needsVotes2').textContent = need2.toLocaleString();
+  document.getElementById('needsVotes3').textContent = need3.toLocaleString();
+}
+
+// ===== FORMAT VOTE ON BLUR =====
+function formatVote(input) {
+  const num = parseInt(input.value.replace(/[^0-9]/g, '')) || 0;
+  input.value = num.toLocaleString();
+  updateAll();
+}
+
+// ===== MAP FUNCTIONS =====
+let mapScale = 1;
+let mapX = 0;
+let mapY = 0;
+let isDragging = false;
+let startX, startY;
+
 function uploadMap(input) {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
@@ -239,43 +382,89 @@ function uploadMap(input) {
       img.src = e.target.result;
       img.style.display = 'block';
       
-      // Hide placeholder
+      mapScale = 1;
+      mapX = 0;
+      mapY = 0;
+      updateMapTransform();
+      
       document.getElementById('mapPH').style.display = 'none';
+      document.getElementById('mapControls').style.display = 'flex';
     };
     reader.readAsDataURL(input.files[0]);
+    input.value = '';
   }
 }
 
-// ===== VOTE CALCULATIONS (AUTOMATIC) =====
-function getVote(id) {
-  const val = document.getElementById(id).value;
-  return parseInt(val.replace(/[^0-9]/g, '')) || 0;
+function updateMapTransform() {
+  const img = document.getElementById('mapImg');
+  img.style.transform = `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
 }
 
-function updateVotes() {
-  const v1 = getVote('v1');
-  const v2 = getVote('v2');
-  const v3 = getVote('v3');
-  
-  // Calculate votes needed
-  const need2 = Math.max(0, v1 - v2 + 1);
-  const need3 = Math.max(0, v1 - v3 + 1);
-  
-  // Update display
-  document.getElementById('needsVotes2').textContent = need2.toLocaleString();
-  document.getElementById('needsVotes3').textContent = need3.toLocaleString();
+function mapZoom(delta) {
+  mapScale = Math.max(0.5, Math.min(3, mapScale + delta));
+  updateMapTransform();
 }
 
-function updateNames() {
-  document.getElementById('needsName2').textContent = document.getElementById('n2').value || '2nd Place';
-  document.getElementById('needsName3').textContent = document.getElementById('n3').value || '3rd Place';
+function resetMap() {
+  mapScale = 1;
+  mapX = 0;
+  mapY = 0;
+  updateMapTransform();
 }
 
-// Initial update
-updateVotes();
-updateNames();
+function changeMap() {
+  document.getElementById('mapFile').click();
+}
 
-// ===== DOWNLOAD IMAGE (SIMPLE) =====
+// Touch events for map
+const mapImg = document.getElementById('mapImg');
+
+mapImg.addEventListener('touchstart', function(e) {
+  if (!mapImg.src) return;
+  e.preventDefault();
+  isDragging = true;
+  startX = e.touches[0].clientX - mapX;
+  startY = e.touches[0].clientY - mapY;
+}, { passive: false });
+
+mapImg.addEventListener('touchmove', function(e) {
+  if (!isDragging) return;
+  e.preventDefault();
+  mapX = e.touches[0].clientX - startX;
+  mapY = e.touches[0].clientY - startY;
+  updateMapTransform();
+}, { passive: false });
+
+mapImg.addEventListener('touchend', function() {
+  isDragging = false;
+});
+
+// Pinch zoom
+let initialDistance = null;
+let initialScale = 1;
+
+mapImg.addEventListener('touchstart', function(e) {
+  if (e.touches.length === 2) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    initialDistance = Math.sqrt(dx * dx + dy * dy);
+    initialScale = mapScale;
+  }
+});
+
+mapImg.addEventListener('touchmove', function(e) {
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const currentDistance = Math.sqrt(dx * dx + dy * dy);
+    const scaleChange = currentDistance / initialDistance;
+    mapScale = Math.max(0.5, Math.min(3, initialScale * scaleChange));
+    updateMapTransform();
+  }
+});
+
+// ===== DOWNLOAD IMAGE =====
 function downloadImage() {
   const btn = document.getElementById('dlBtn');
   btn.textContent = 'Processing...';
@@ -283,13 +472,13 @@ function downloadImage() {
   
   const element = document.getElementById('captureArea');
   
-  // Use html2canvas from CDN
   html2canvas(element, {
     scale: 2,
     backgroundColor: '#f2f2f4',
-    logging: false
+    logging: false,
+    allowTaint: true,
+    useCORS: true
   }).then(canvas => {
-    // Create download link
     const link = document.createElement('a');
     link.download = 'election-results.jpg';
     link.href = canvas.toDataURL('image/jpeg', 0.95);
@@ -304,14 +493,14 @@ function downloadImage() {
   });
 }
 
-// Auto-format votes with commas on blur
-document.querySelectorAll('.cv').forEach(input => {
-  input.addEventListener('blur', function() {
-    const num = parseInt(this.value.replace(/[^0-9]/g, '')) || 0;
-    this.value = num.toLocaleString();
-    updateVotes();
-  });
-});
+// ===== INITIAL UPDATE =====
+setTimeout(() => {
+  // Store initial images if any
+  candidates[0].img = document.getElementById('img1').src || '';
+  candidates[1].img = document.getElementById('img2').src || '';
+  candidates[2].img = document.getElementById('img3').src || '';
+  updateAll();
+}, 100);
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
