@@ -1,483 +1,423 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Election Results</title>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-body {
-  background:#e9e9ec;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  display:flex; justify-content:center; align-items:flex-start; min-height:100vh;
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-}
-html,body { overflow-x:hidden; }
-.wrapper { width:100%; max-width:430px; background:#f2f2f4; }
-.container { background:#f2f2f4; padding:18px 18px 12px 18px; display:flex; flex-direction:column; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:#e9e9ec;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;justify-content:center;min-height:100vh;-webkit-font-smoothing:antialiased}
+html,body{overflow-x:hidden}
+.wrapper{width:100%;max-width:430px;background:#f2f2f4}
+.container{background:#f2f2f4;padding:18px 18px 12px}
 
 /* HEADER */
-.top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; }
-h1 { font-size:22px; font-weight:700; color:#1c1c1e; letter-spacing:-0.5px; white-space:nowrap; }
-#clock {
-  font-size:12px; color:#1c1c1e; font-weight:600;
-  background:rgba(142,142,147,0.15); padding:6px 11px;
-  border-radius:30px; border:1px solid rgba(0,0,0,0.05); white-space:nowrap;
-}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+h1{font-size:22px;font-weight:700;color:#1c1c1e;letter-spacing:-0.5px;white-space:nowrap}
+#clock{font-size:12px;color:#1c1c1e;font-weight:600;background:rgba(142,142,147,0.15);padding:6px 11px;border-radius:30px;border:1px solid rgba(0,0,0,0.05);white-space:nowrap;min-width:80px;text-align:center}
 
-/* ADDRESS BOX */
-.address-box {
-  background:#fff; border-radius:18px; padding:11px 14px; margin-bottom:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.04);
-  border:1px solid rgba(255,255,255,0.9);
-  display:flex; align-items:center; gap:8px;
-}
-.address-icon { font-size:16px; flex-shrink:0; opacity:0.6; }
-.address-field {
-  font-size:14px; font-weight:500; color:#1c1c1e;
-  min-height:20px; width:100%;
-  border:none; outline:none; background:transparent;
-  word-break:break-word; cursor:text; display:block; line-height:1.4;
-}
-.address-field:empty::before { content:attr(data-placeholder); color:#c7c7cc; font-weight:400; pointer-events:none; }
-.address-field:focus { outline:none; }
+/* ADDRESS */
+.address-box{background:#fff;border-radius:18px;padding:11px 14px;margin-bottom:14px;box-shadow:0 8px 20px rgba(0,0,0,0.08);border:1px solid rgba(255,255,255,0.9);display:flex;align-items:center;gap:8px}
+.address-icon{font-size:16px;flex-shrink:0;opacity:0.6}
+.address-field{font-size:15px;font-weight:500;color:#1c1c1e;min-height:22px;width:100%;border:none;outline:none;background:transparent;word-break:break-word;cursor:text;-webkit-user-select:text;user-select:text}
+.address-field:empty::before{content:attr(data-placeholder);color:#c7c7cc;font-weight:400;pointer-events:none}
 
-hr { border:none; height:1px; background:#d1d1d6; margin:0 0 14px 0; }
+hr{border:none;height:1px;background:#d1d1d6;margin:0 0 14px}
 
 /* CARDS */
-.cards { display:flex; gap:10px; margin-bottom:10px; }
-.card {
-  flex:1; background:#fff; border-radius:24px; padding:14px 6px 18px 6px;
-  box-shadow:0 15px 30px rgba(0,0,0,0.12),0 5px 10px rgba(0,0,0,0.05);
-  text-align:center; position:relative; border:1px solid rgba(255,255,255,0.8);
-}
-.rank {
-  position:absolute; top:8px; left:8px; padding:5px 10px; border-radius:30px;
-  font-size:11px; font-weight:800; color:#fff;
-  box-shadow:0 4px 10px rgba(0,0,0,0.2); z-index:10;
-  letter-spacing:0.3px; text-shadow:0 1px 2px rgba(0,0,0,0.2);
-}
-.gold   .rank { background:linear-gradient(145deg,#d4af37,#b38b3a); }
-.silver .rank { background:linear-gradient(145deg,#b0b0b5,#78787d); }
-.bronze .rank { background:linear-gradient(145deg,#cd7f32,#9b5e2a); }
+.cards{display:flex;gap:10px;margin-bottom:10px}
+.card{flex:1;background:#fff;border-radius:24px;padding:14px 6px 18px;box-shadow:0 15px 30px rgba(0,0,0,0.12),0 5px 10px rgba(0,0,0,0.05);text-align:center;position:relative;border:1px solid rgba(255,255,255,0.8)}
+.rank{position:absolute;top:8px;left:8px;padding:5px 10px;border-radius:30px;font-size:11px;font-weight:800;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.2);z-index:10;letter-spacing:0.3px}
+.gold .rank{background:linear-gradient(145deg,#d4af37,#b38b3a)}
+.silver .rank{background:linear-gradient(145deg,#b0b0b5,#78787d)}
+.bronze .rank{background:linear-gradient(145deg,#cd7f32,#9b5e2a)}
 
-/* STORY RING */
-.story-wrap { position:relative; display:block; width:82px; margin:16px auto 10px; }
-.story-ring {
-  width:82px; height:82px; border-radius:50%;
-  position:relative; display:flex; align-items:center; justify-content:center;
-}
-.story-ring svg.ring-svg {
-  position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:3;
-}
-.circle {
-  width:66px; height:66px; border-radius:50%; background:#f8f8fa;
-  display:flex; align-items:center; justify-content:center;
-  overflow:hidden; position:relative;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,0.1); z-index:2;
-}
-.circle img { width:100%; height:100%; object-fit:cover; object-position:center; display:none; border-radius:50%; }
-.plus { font-size:28px; color:#aeaeb2; font-weight:300; line-height:1; pointer-events:none; }
-.photo-upload-btn {
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  width:82px; height:82px; border-radius:50%;
-  opacity:0; cursor:pointer; z-index:10; font-size:16px;
-}
+/* PHOTO RING */
+/* The file input IS the clickable element - full size, opacity 0, on top */
+.photo-wrap{position:relative;width:82px;height:82px;margin:16px auto 10px;display:block}
+.ring-svg-el{position:absolute;top:0;left:0;width:82px;height:82px;pointer-events:none;z-index:2}
+.circle{position:absolute;top:8px;left:8px;width:66px;height:66px;border-radius:50%;background:#f8f8fa;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:inset 0 2px 8px rgba(0,0,0,0.1);z-index:1}
+.circle img{width:100%;height:100%;object-fit:cover;object-position:center;display:none;border-radius:50%}
+.plus-icon{font-size:26px;color:#aeaeb2;font-weight:300;pointer-events:none;line-height:1}
+/* The actual file input - covers entire 82x82 area, fully transparent */
+.photo-input{position:absolute;top:0;left:0;width:82px;height:82px;opacity:0;z-index:10;cursor:pointer;border-radius:50%;-webkit-appearance:none;font-size:16px}
 
-.divider { height:1px; background:#d1d1d6; margin:10px 0 12px; opacity:0.6; }
+.divider{height:1px;background:#d1d1d6;margin:10px 0 12px;opacity:0.6}
 
-/* EDITABLE TEXT */
-.text-container { display:flex; flex-direction:column; gap:2px; width:100%; padding:0 2px; }
-.editable-field {
-  cursor:text; padding:8px 4px; min-height:40px;
-  display:flex; align-items:center; justify-content:center;
-  background:transparent; border-radius:10px;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  -webkit-tap-highlight-color:rgba(0,122,255,0.1);
-  touch-action:manipulation; -webkit-font-smoothing:antialiased;
-  outline:none; border:2px solid transparent;
-  transition:border-color 0.15s, background 0.15s; font-size:16px;
+/* CANDIDATE TEXT - use input fields instead of contenteditable for reliability */
+.text-container{display:flex;flex-direction:column;gap:3px;width:100%;padding:0 3px}
+.cand-input{
+  width:100%;border:none;outline:none;background:transparent;
+  text-align:center;cursor:text;font-family:inherit;
+  -webkit-appearance:none;appearance:none;
+  border-radius:8px;padding:6px 2px;
+  transition:background 0.15s;
+  /* prevent iOS zoom: must be 16px+ */
+  font-size:16px;
 }
-.editable-field:focus {
-  background:rgba(0,122,255,0.05); border:2px solid rgba(0,122,255,0.25);
-  white-space:normal; overflow:visible;
-}
-.name  { font-weight:900; letter-spacing:0.2px; line-height:1.2; }
-.party { font-weight:800; letter-spacing:1px;   line-height:1.2; }
-.votes { font-weight:900; letter-spacing:0.1px; line-height:1.2; }
-.gold-text   { color:#9e741b; }
-.silver-text { color:#5c5c5f; }
-.bronze-text { color:#8a5529; }
+.cand-input:focus{background:rgba(0,122,255,0.06);outline:2px solid rgba(0,122,255,0.25);outline-offset:0}
+.cand-name{font-weight:900;letter-spacing:0.2px}
+.cand-party{font-weight:800;letter-spacing:1px}
+.cand-votes{font-weight:900;letter-spacing:0.1px}
+.gold-text{color:#9e741b}
+.silver-text{color:#5c5c5f}
+.bronze-text{color:#8a5529}
 
 /* NEEDS TO WIN BOX */
-.needs-box {
-  background:#fff; border-radius:18px; padding:0; margin-bottom:10px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.08),0 2px 6px rgba(0,0,0,0.04);
-  border:1px solid rgba(255,255,255,0.9);
-  overflow:hidden;
-}
-.needs-header {
-  background:linear-gradient(135deg,#1c1c1e,#3a3a3c);
-  padding:8px 14px;
-  display:flex; align-items:center; gap:6px;
-}
-.needs-header-text {
-  font-size:10px; font-weight:800; letter-spacing:2px;
-  color:rgba(255,255,255,0.85); text-transform:uppercase;
-}
-.needs-rows { display:flex; flex-direction:column; }
-.needs-row {
-  display:flex; align-items:center;
-  padding:10px 14px; gap:10px;
-  border-bottom:1px solid #f0f0f3;
-}
-.needs-row:last-child { border-bottom:none; }
+.needs-box{background:#fff;border-radius:18px;margin-bottom:10px;box-shadow:0 8px 20px rgba(0,0,0,0.08);border:1px solid rgba(255,255,255,0.9);overflow:hidden}
+.needs-header{background:linear-gradient(135deg,#1c1c1e,#3a3a3c);padding:9px 14px;display:flex;align-items:center;gap:6px}
+.needs-header span{font-size:10px;font-weight:800;letter-spacing:2px;color:rgba(255,255,255,0.85);text-transform:uppercase}
+.needs-row{display:flex;align-items:center;padding:10px 14px;gap:10px;border-bottom:1px solid #f0f0f3}
+.needs-row:last-child{border-bottom:none}
+.needs-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0}
+.dot-silver{background:linear-gradient(145deg,#b0b0b5,#78787d)}
+.dot-bronze{background:linear-gradient(145deg,#cd7f32,#9b5e2a)}
+.needs-name{font-size:12px;font-weight:800;color:#1c1c1e;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.needs-right{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0}
+.needs-num{font-size:17px;font-weight:900;letter-spacing:-0.3px;line-height:1.1}
+.needs-label{font-size:9px;font-weight:700;color:#8e8e93;letter-spacing:0.5px;text-transform:uppercase}
+.silver-row .needs-num{color:#5c5c5f}
+.bronze-row .needs-num{color:#8a5529}
 
-/* rank dot */
-.needs-dot {
-  width:28px; height:28px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:10px; font-weight:800; color:#fff; flex-shrink:0;
-  text-shadow:0 1px 2px rgba(0,0,0,0.2);
-}
-.dot-silver { background:linear-gradient(145deg,#b0b0b5,#78787d); }
-.dot-bronze { background:linear-gradient(145deg,#cd7f32,#9b5e2a); }
-
-.needs-name {
-  font-size:12px; font-weight:800; color:#1c1c1e;
-  flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-.needs-right { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; }
-.needs-votes-num {
-  font-size:16px; font-weight:900; color:#1c1c1e; letter-spacing:-0.3px; line-height:1.1;
-}
-.needs-votes-label {
-  font-size:9px; font-weight:700; color:#8e8e93; letter-spacing:0.5px; text-transform:uppercase;
-}
-/* colour accent per rank */
-.needs-row.silver-row .needs-votes-num { color:#5c5c5f; }
-.needs-row.bronze-row .needs-votes-num { color:#8a5529; }
-
-/* MAP BOX */
-.map-box {
-  background:#fff; border-radius:28px; padding:14px;
-  box-shadow:0 20px 35px rgba(0,0,0,0.12),0 8px 15px rgba(0,0,0,0.06);
-  margin-bottom:10px; border:1px solid rgba(255,255,255,0.9); width:100%;
-}
-.map-title { text-align:center; font-size:11px; letter-spacing:3px; color:#8e8e93; margin-bottom:10px; font-weight:800; text-transform:uppercase; }
-.map-container {
-  width:100%; padding-bottom:56.25%;
-  border-radius:16px; overflow:hidden;
-  position:relative; background:#f0f0f3;
-  box-shadow:0 4px 16px rgba(0,0,0,0.08);
-}
-.map-placeholder {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-  z-index:1; background:#f0f0f3; pointer-events:none;
-}
-.map-placeholder .map-plus { font-size:36px; color:#aeaeb2; opacity:0.7; }
-.map-placeholder .hint { font-size:11px; color:#c7c7cc; font-weight:600; letter-spacing:0.5px; }
-#mapPreview {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  object-fit:cover; object-position:center;
-  z-index:2; display:none; border-radius:16px; pointer-events:none;
-}
-.map-controls { display:none; margin-top:8px; gap:6px; flex-wrap:wrap; justify-content:center; }
-.map-controls.visible { display:flex; }
-.map-ctrl-btn {
-  font-size:11px; font-weight:700; color:#007aff;
-  background:rgba(0,122,255,0.08); border:none;
-  border-radius:20px; padding:5px 12px; cursor:pointer;
-  -webkit-tap-highlight-color:transparent; touch-action:manipulation; letter-spacing:0.3px;
-  /* iOS: must be real button element, not div */
-  -webkit-appearance:none; appearance:none;
-}
-.map-ctrl-btn:active { background:rgba(0,122,255,0.18); }
-#mapUpload {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  opacity:0; cursor:pointer; z-index:3; font-size:16px; border-radius:16px;
-}
-#mapUpload.hidden { display:none; }
+/* MAP */
+.map-box{background:#fff;border-radius:28px;padding:14px;box-shadow:0 20px 35px rgba(0,0,0,0.12);margin-bottom:10px;border:1px solid rgba(255,255,255,0.9)}
+.map-title{text-align:center;font-size:11px;letter-spacing:3px;color:#8e8e93;margin-bottom:10px;font-weight:800;text-transform:uppercase}
+.map-container{width:100%;padding-bottom:56.25%;border-radius:16px;overflow:hidden;position:relative;background:#f0f0f3;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.map-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#f0f0f3;pointer-events:none;z-index:1}
+.map-ph-plus{font-size:36px;color:#aeaeb2;opacity:0.7;line-height:1}
+.map-ph-hint{font-size:11px;color:#c7c7cc;font-weight:600;letter-spacing:0.5px}
+#mapPreview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:2;display:none;border-radius:16px;pointer-events:none;transition:transform 0.1s}
+/* Map file input covers whole container */
+#mapInput{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:3;font-size:16px;-webkit-appearance:none}
+#mapInput.hidden{pointer-events:none;display:none}
+.map-ctrls{display:none;margin-top:8px;gap:6px;flex-wrap:wrap;justify-content:center}
+.map-ctrls.show{display:flex}
+.mc{font-size:11px;font-weight:700;color:#007aff;background:rgba(0,122,255,0.08);border:none;border-radius:20px;padding:6px 13px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;font-family:inherit}
+.mc:active{background:rgba(0,122,255,0.2)}
 
 /* DOWNLOAD */
-.download-wrapper { padding:0 18px 18px 18px; background:#f2f2f4; }
-#downloadBtn {
-  width:100%; padding:18px 0; border:none; background:#1c1c1e; color:#fff;
-  font-weight:800; font-size:17px; border-radius:45px; cursor:pointer;
-  box-shadow:0 20px 30px rgba(0,0,0,0.22); transition:all 0.15s ease;
-  letter-spacing:0.8px; border:1px solid rgba(255,255,255,0.1);
-  min-height:56px; -webkit-tap-highlight-color:transparent; touch-action:manipulation;
-  -webkit-appearance:none; appearance:none;
-}
-#downloadBtn:active { transform:scale(0.98); background:#000; }
-#downloadBtn:disabled { opacity:0.6; }
+.dl-wrap{padding:0 18px 18px;background:#f2f2f4}
+#dlBtn{width:100%;padding:18px 0;border:none;background:#1c1c1e;color:#fff;font-weight:800;font-size:17px;border-radius:45px;cursor:pointer;box-shadow:0 20px 30px rgba(0,0,0,0.22);letter-spacing:0.8px;min-height:56px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;font-family:inherit;display:block;width:100%}
+#dlBtn:active{transform:scale(0.98);background:#000}
+#dlBtn:disabled{opacity:0.5}
 </style>
 </head>
 <body>
 <div class="wrapper">
-  <div class="container" id="captureArea">
+ <div class="container" id="captureArea">
 
-    <div class="top">
-      <h1>Election Results</h1>
-      <div id="clock">NPT --:--:-- --</div>
-    </div>
-
-    <div class="address-box">
-      <span class="address-icon">📍</span>
-      <div class="address-field" contenteditable="true" spellcheck="false"
-        data-placeholder="Write election venue / address here…"></div>
-    </div>
-
-    <hr>
-
-    <div class="cards">
-
-      <!-- 1st -->
-      <div class="card gold">
-        <div class="rank">1st</div>
-        <div class="story-wrap">
-          <div class="story-ring">
-            <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#f9e27a"/>
-                  <stop offset="35%" stop-color="#d4af37"/>
-                  <stop offset="65%" stop-color="#b38b3a"/>
-                  <stop offset="100%" stop-color="#f0d060"/>
-                </linearGradient>
-              </defs>
-              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
-            </svg>
-            <div class="circle">
-              <span class="plus">+</span>
-              <img class="preview" alt="">
-            </div>
-          </div>
-          <input type="file" accept="image/*" class="photo-upload-btn">
-        </div>
-        <div class="divider"></div>
-        <div class="text-container">
-          <div class="editable-field name gold-text" contenteditable="true" spellcheck="false" id="name1">THOMAS F.</div>
-          <div class="editable-field party gold-text" contenteditable="true" spellcheck="false">PROGRESS</div>
-          <div class="editable-field votes gold-text" contenteditable="true" spellcheck="false" inputmode="numeric" id="votes1">14,250</div>
-        </div>
-      </div>
-
-      <!-- 2nd -->
-      <div class="card silver">
-        <div class="rank">2nd</div>
-        <div class="story-wrap">
-          <div class="story-ring">
-            <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#e8e8e8"/>
-                  <stop offset="35%" stop-color="#b0b0b5"/>
-                  <stop offset="65%" stop-color="#78787d"/>
-                  <stop offset="100%" stop-color="#d0d0d5"/>
-                </linearGradient>
-              </defs>
-              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#silverGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
-            </svg>
-            <div class="circle">
-              <span class="plus">+</span>
-              <img class="preview" alt="">
-            </div>
-          </div>
-          <input type="file" accept="image/*" class="photo-upload-btn">
-        </div>
-        <div class="divider"></div>
-        <div class="text-container">
-          <div class="editable-field name silver-text" contenteditable="true" spellcheck="false" id="name2">LISA M.</div>
-          <div class="editable-field party silver-text" contenteditable="true" spellcheck="false">UNITY</div>
-          <div class="editable-field votes silver-text" contenteditable="true" spellcheck="false" inputmode="numeric" id="votes2">11,230</div>
-        </div>
-      </div>
-
-      <!-- 3rd -->
-      <div class="card bronze">
-        <div class="rank">3rd</div>
-        <div class="story-wrap">
-          <div class="story-ring">
-            <svg class="ring-svg" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#f2c18d"/>
-                  <stop offset="35%" stop-color="#cd7f32"/>
-                  <stop offset="65%" stop-color="#9b5e2a"/>
-                  <stop offset="100%" stop-color="#e8a060"/>
-                </linearGradient>
-              </defs>
-              <circle cx="41" cy="41" r="39" fill="none" stroke="url(#bronzeGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
-            </svg>
-            <div class="circle">
-              <span class="plus">+</span>
-              <img class="preview" alt="">
-            </div>
-          </div>
-          <input type="file" accept="image/*" class="photo-upload-btn">
-        </div>
-        <div class="divider"></div>
-        <div class="text-container">
-          <div class="editable-field name bronze-text" contenteditable="true" spellcheck="false" id="name3">JAMES K.</div>
-          <div class="editable-field party bronze-text" contenteditable="true" spellcheck="false">HORIZON</div>
-          <div class="editable-field votes bronze-text" contenteditable="true" spellcheck="false" inputmode="numeric" id="votes3">9,850</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- NEEDS TO WIN BOX -->
-    <div class="needs-box">
-      <div class="needs-header">
-        <span style="font-size:14px;">🗳️</span>
-        <span class="needs-header-text">Votes Needed to Win</span>
-      </div>
-      <div class="needs-rows">
-        <div class="needs-row silver-row">
-          <div class="needs-dot dot-silver">2</div>
-          <div class="needs-name" id="needsName2">LISA M.</div>
-          <div class="needs-right">
-            <div class="needs-votes-num" id="needsVotes2">3,021</div>
-            <div class="needs-votes-label">votes needed</div>
-          </div>
-        </div>
-        <div class="needs-row bronze-row">
-          <div class="needs-dot dot-bronze">3</div>
-          <div class="needs-name" id="needsName3">JAMES K.</div>
-          <div class="needs-right">
-            <div class="needs-votes-num" id="needsVotes3">4,401</div>
-            <div class="needs-votes-label">votes needed</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <hr style="margin:4px 0 14px 0; opacity:0.6;">
-
-    <!-- MAP BOX -->
-    <div class="map-box">
-      <div class="map-title">Region Map</div>
-      <div class="map-container" id="mapContainer">
-        <div class="map-placeholder" id="mapPlaceholder">
-          <span class="map-plus">+</span>
-          <span class="hint">TAP TO ADD MAP</span>
-        </div>
-        <img id="mapPreview" alt="">
-        <input type="file" id="mapUpload" accept="image/*">
-      </div>
-      <div class="map-controls" id="mapControls">
-        <button type="button" class="map-ctrl-btn" id="mapZoomIn">＋ Zoom</button>
-        <button type="button" class="map-ctrl-btn" id="mapZoomOut">－ Zoom</button>
-        <button type="button" class="map-ctrl-btn" id="mapUp">↑</button>
-        <button type="button" class="map-ctrl-btn" id="mapDown">↓</button>
-        <button type="button" class="map-ctrl-btn" id="mapLeft">←</button>
-        <button type="button" class="map-ctrl-btn" id="mapRight">→</button>
-        <button type="button" class="map-ctrl-btn" id="mapReset">Reset</button>
-        <button type="button" class="map-ctrl-btn" id="mapChange">Change</button>
-      </div>
-    </div>
-
-  </div><!-- end captureArea -->
-
-  <div class="download-wrapper">
-    <button type="button" id="downloadBtn">⬇ Download HD Image</button>
+  <!-- HEADER -->
+  <div class="top">
+   <h1>Election Results</h1>
+   <div id="clock">--:--:-- --</div>
   </div>
+
+  <!-- ADDRESS -->
+  <div class="address-box">
+   <span class="address-icon">📍</span>
+   <div class="address-field" contenteditable="true" spellcheck="false"
+        data-placeholder="Write election venue / address here…"
+        id="addressField"></div>
+  </div>
+
+  <hr>
+
+  <!-- CARDS -->
+  <div class="cards">
+
+   <!-- 1st -->
+   <div class="card gold">
+    <div class="rank">1st</div>
+    <div class="photo-wrap">
+     <svg class="ring-svg-el" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="gG" x1="0%" y1="0%" x2="100%" y2="100%">
+       <stop offset="0%" stop-color="#f9e27a"/><stop offset="40%" stop-color="#d4af37"/>
+       <stop offset="70%" stop-color="#b38b3a"/><stop offset="100%" stop-color="#f0d060"/>
+      </linearGradient></defs>
+      <circle cx="41" cy="41" r="39" fill="none" stroke="url(#gG)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
+     </svg>
+     <div class="circle" id="circle1">
+      <span class="plus-icon">+</span>
+      <img id="img1" alt="">
+     </div>
+     <input type="file" accept="image/*" class="photo-input" id="photo1">
+    </div>
+    <div class="divider"></div>
+    <div class="text-container">
+     <input class="cand-input cand-name gold-text" id="name1" value="THOMAS F." maxlength="20" spellcheck="false">
+     <input class="cand-input cand-party gold-text" id="party1" value="PROGRESS" maxlength="20" spellcheck="false">
+     <input class="cand-input cand-votes gold-text" id="votes1" value="14,250" maxlength="12" inputmode="numeric" spellcheck="false">
+    </div>
+   </div>
+
+   <!-- 2nd -->
+   <div class="card silver">
+    <div class="rank">2nd</div>
+    <div class="photo-wrap">
+     <svg class="ring-svg-el" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="sG" x1="0%" y1="0%" x2="100%" y2="100%">
+       <stop offset="0%" stop-color="#e8e8e8"/><stop offset="40%" stop-color="#b0b0b5"/>
+       <stop offset="70%" stop-color="#78787d"/><stop offset="100%" stop-color="#d0d0d5"/>
+      </linearGradient></defs>
+      <circle cx="41" cy="41" r="39" fill="none" stroke="url(#sG)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
+     </svg>
+     <div class="circle" id="circle2">
+      <span class="plus-icon">+</span>
+      <img id="img2" alt="">
+     </div>
+     <input type="file" accept="image/*" class="photo-input" id="photo2">
+    </div>
+    <div class="divider"></div>
+    <div class="text-container">
+     <input class="cand-input cand-name silver-text" id="name2" value="LISA M." maxlength="20" spellcheck="false">
+     <input class="cand-input cand-party silver-text" id="party2" value="UNITY" maxlength="20" spellcheck="false">
+     <input class="cand-input cand-votes silver-text" id="votes2" value="11,230" maxlength="12" inputmode="numeric" spellcheck="false">
+    </div>
+   </div>
+
+   <!-- 3rd -->
+   <div class="card bronze">
+    <div class="rank">3rd</div>
+    <div class="photo-wrap">
+     <svg class="ring-svg-el" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="bG" x1="0%" y1="0%" x2="100%" y2="100%">
+       <stop offset="0%" stop-color="#f2c18d"/><stop offset="40%" stop-color="#cd7f32"/>
+       <stop offset="70%" stop-color="#9b5e2a"/><stop offset="100%" stop-color="#e8a060"/>
+      </linearGradient></defs>
+      <circle cx="41" cy="41" r="39" fill="none" stroke="url(#bG)" stroke-width="5" stroke-linecap="round" stroke-dasharray="215 35"/>
+     </svg>
+     <div class="circle" id="circle3">
+      <span class="plus-icon">+</span>
+      <img id="img3" alt="">
+     </div>
+     <input type="file" accept="image/*" class="photo-input" id="photo3">
+    </div>
+    <div class="divider"></div>
+    <div class="text-container">
+     <input class="cand-input cand-name bronze-text" id="name3" value="JAMES K." maxlength="20" spellcheck="false">
+     <input class="cand-input cand-party bronze-text" id="party3" value="HORIZON" maxlength="20" spellcheck="false">
+     <input class="cand-input cand-votes bronze-text" id="votes3" value="9,850" maxlength="12" inputmode="numeric" spellcheck="false">
+    </div>
+   </div>
+
+  </div><!-- /cards -->
+
+  <!-- NEEDS TO WIN -->
+  <div class="needs-box">
+   <div class="needs-header">
+    <span>🗳</span>
+    <span>Votes Needed to Win</span>
+   </div>
+   <div class="needs-row silver-row">
+    <div class="needs-dot dot-silver">2</div>
+    <div class="needs-name" id="nName2">LISA M.</div>
+    <div class="needs-right">
+     <div class="needs-num" id="nVotes2">3,021</div>
+     <div class="needs-label">votes needed</div>
+    </div>
+   </div>
+   <div class="needs-row bronze-row">
+    <div class="needs-dot dot-bronze">3</div>
+    <div class="needs-name" id="nName3">JAMES K.</div>
+    <div class="needs-right">
+     <div class="needs-num" id="nVotes3">4,401</div>
+     <div class="needs-label">votes needed</div>
+    </div>
+   </div>
+  </div>
+
+  <hr style="margin:4px 0 14px;opacity:0.6">
+
+  <!-- MAP -->
+  <div class="map-box">
+   <div class="map-title">Region Map</div>
+   <div class="map-container" id="mapContainer">
+    <div class="map-placeholder" id="mapPH">
+     <div class="map-ph-plus">+</div>
+     <div class="map-ph-hint">TAP TO ADD MAP</div>
+    </div>
+    <img id="mapPreview" alt="">
+    <input type="file" accept="image/*" id="mapInput">
+   </div>
+   <div class="map-ctrls" id="mapCtrls">
+    <button type="button" class="mc" id="mZI">＋ Zoom</button>
+    <button type="button" class="mc" id="mZO">－ Zoom</button>
+    <button type="button" class="mc" id="mU">↑</button>
+    <button type="button" class="mc" id="mD">↓</button>
+    <button type="button" class="mc" id="mL">←</button>
+    <button type="button" class="mc" id="mR">→</button>
+    <button type="button" class="mc" id="mRst">Reset</button>
+    <button type="button" class="mc" id="mChg">Change</button>
+   </div>
+  </div>
+
+ </div><!-- /captureArea -->
+ <div class="dl-wrap">
+  <button type="button" id="dlBtn">⬇ Download HD Image</button>
+ </div>
 </div>
 
 <script>
-(function () {
+/* ============================================================
+   CLOCK — NPT (UTC+5:45)
+============================================================ */
+function tickClock() {
+  var now = new Date();
+  var npt = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 345 * 60000);
+  var h = npt.getHours(), mi = npt.getMinutes(), s = npt.getSeconds();
+  var ap = h >= 12 ? 'PM' : 'AM';
+  var h12 = h % 12 || 12;
+  document.getElementById('clock').textContent =
+    (h12 < 10 ? '0' : '') + h12 + ':' +
+    (mi < 10 ? '0' : '') + mi + ':' +
+    (s  < 10 ? '0' : '') + s  + ' ' + ap;
+}
+tickClock();
+setInterval(tickClock, 1000);
 
-  /* ── NPT CLOCK ── */
-  function tick() {
-    var now = new Date();
-    var npt = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 345 * 60000);
-    var h = npt.getHours(), m = npt.getMinutes(), s = npt.getSeconds();
-    var ampm = h >= 12 ? 'PM' : 'AM';
-    var h12 = (h % 12 || 12).toString().padStart(2, '0');
-    document.getElementById('clock').textContent =
-      'NPT ' + h12 + ':' + m.toString().padStart(2,'0') + ':' + s.toString().padStart(2,'0') + ' ' + ampm;
-  }
-  setInterval(tick, 1000); tick();
+/* ============================================================
+   NEEDS TO WIN — live update
+============================================================ */
+function parseVotes(id) {
+  var raw = document.getElementById(id).value.replace(/[^0-9]/g, '');
+  return raw ? parseInt(raw, 10) : 0;
+}
+function fmtNum(n) { return n.toLocaleString(); }
 
-  /* ── BLOCK ENTER → blur ── */
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && e.target.isContentEditable) { e.preventDefault(); e.target.blur(); }
-  });
+function updateNeeds() {
+  var v1 = parseVotes('votes1');
+  var v2 = parseVotes('votes2');
+  var v3 = parseVotes('votes3');
+  var need2 = Math.max(0, v1 - v2 + 1);
+  var need3 = Math.max(0, v1 - v3 + 1);
+  document.getElementById('nName2').textContent  = document.getElementById('name2').value || 'Candidate 2';
+  document.getElementById('nName3').textContent  = document.getElementById('name3').value || 'Candidate 3';
+  document.getElementById('nVotes2').textContent = fmtNum(need2);
+  document.getElementById('nVotes3').textContent = fmtNum(need3);
+}
 
-  /* ── PLAIN TEXT PASTE ── */
-  document.addEventListener('paste', function (e) {
-    if (!e.target.isContentEditable) return;
-    e.preventDefault();
-    document.execCommand('insertText', false,
-      (e.clipboardData || window.clipboardData).getData('text/plain'));
-  });
+/* Format votes on blur (add commas) */
+function fmtVotesField(inp) {
+  var raw = inp.value.replace(/[^0-9]/g, '');
+  if (raw) inp.value = parseInt(raw, 10).toLocaleString();
+}
 
-  /* ── NEEDS TO WIN: live update ── */
-  function parseV(id) {
-    return parseInt(document.getElementById(id).textContent.replace(/[^0-9]/g, '')) || 0;
-  }
-  function getName(id) {
-    return document.getElementById(id).textContent.trim() || '—';
-  }
+['votes1','votes2','votes3'].forEach(function(id) {
+  var el = document.getElementById(id);
+  /* live update as user types */
+  el.addEventListener('input', updateNeeds);
+  el.addEventListener('keyup', updateNeeds);
+  /* format on blur */
+  el.addEventListener('blur', function() { fmtVotesField(this); updateNeeds(); });
+  /* select all on focus for easy editing */
+  el.addEventListener('focus', function() { this.select(); });
+});
 
-  function updateNeeds() {
-    var v1 = parseV('votes1');
-    var v2 = parseV('votes2');
-    var v3 = parseV('votes3');
+['name2','name3'].forEach(function(id) {
+  var el = document.getElementById(id);
+  el.addEventListener('input', updateNeeds);
+  el.addEventListener('keyup', updateNeeds);
+});
 
-    /* votes needed = (leader votes) - (their votes) + 1 */
-    var need2 = Math.max(0, v1 - v2 + 1);
-    var need3 = Math.max(0, v1 - v3 + 1);
+/* select all on focus for all inputs */
+document.querySelectorAll('.cand-input').forEach(function(inp) {
+  inp.addEventListener('focus', function() { this.select(); });
+});
 
-    document.getElementById('needsName2').textContent  = getName('name2');
-    document.getElementById('needsName3').textContent  = getName('name3');
-    document.getElementById('needsVotes2').textContent = need2.toLocaleString();
-    document.getElementById('needsVotes3').textContent = need3.toLocaleString();
-  }
+updateNeeds();
 
-  /* attach input + blur on all relevant fields */
-  ['votes1','votes2','votes3','name2','name3'].forEach(function(id) {
-    var el = document.getElementById(id);
-    el.addEventListener('input', updateNeeds);
-    el.addEventListener('blur',  updateNeeds);
-  });
-  updateNeeds();
+/* ============================================================
+   PHOTO UPLOADS — iOS/Android safe
+   Input sits directly over ring, opacity:0, real tap target
+============================================================ */
+function setupPhoto(photoId, imgId, circleId) {
+  var input  = document.getElementById(photoId);
+  var img    = document.getElementById(imgId);
+  var circle = document.getElementById(circleId);
 
-  /* ── PROFILE PHOTO UPLOADS (iOS-safe: input sits directly over ring) ── */
-  document.querySelectorAll('.photo-upload-btn').forEach(function (input) {
-    input.addEventListener('change', function () {
-      if (!this.files || !this.files[0]) return;
-      var reader = new FileReader();
-      var wrap = this.closest('.story-wrap');
-      reader.onload = function (ev) {
-        var img  = wrap.querySelector('.preview');
-        var plus = wrap.querySelector('.plus');
-        img.src = ev.target.result;
-        img.style.display = 'block';
-        plus.style.display = 'none';
-      };
-      reader.readAsDataURL(this.files[0]);
-    });
-  });
-
-  /* ── MAP UPLOAD + PAN/ZOOM ── */
-  var mapState = { x:0, y:0, scale:1 };
-
-  function applyMap() {
-    var img = document.getElementById('mapPreview');
-    img.style.transformOrigin = 'center center';
-    img.style.transform = 'translate('+mapState.x+'px,'+mapState.y+'px) scale('+mapState.scale+')';
-  }
-
-  document.getElementById('mapUpload').addEventListener('change', function () {
-    if (!this.files || !this.files[0]) return;
+  input.addEventListener('change', function() {
+    var file = this.files && this.files[0];
+    if (!file) return;
     var reader = new FileReader();
-    var self = this;
-    reader.onload = function (ev) {
-      var preview = document.getElementById('mapPreview');
-      var ph      = document.getElementById('mapPlaceholder');
-      var ctrls
+    reader.onload = function(e) {
+      img.src = e.target.result;
+      img.style.display = 'block';
+      var plus = circle.querySelector('.plus-icon');
+      if (plus) plus.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+    /* reset so same file can be re-picked */
+    this.value = '';
+  });
+}
+setupPhoto('photo1', 'img1', 'circle1');
+setupPhoto('photo2', 'img2', 'circle2');
+setupPhoto('photo3', 'img3', 'circle3');
+
+/* ============================================================
+   MAP UPLOAD + PAN/ZOOM
+============================================================ */
+var ms = { x:0, y:0, sc:1 };
+function applyMap() {
+  var img = document.getElementById('mapPreview');
+  img.style.transform = 'translate('+ms.x+'px,'+ms.y+'px) scale('+ms.sc+')';
+  img.style.transformOrigin = 'center center';
+}
+
+document.getElementById('mapInput').addEventListener('change', function() {
+  var file = this.files && this.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var prev  = document.getElementById('mapPreview');
+    var ph    = document.getElementById('mapPH');
+    var ctrls = document.getElementById('mapCtrls');
+    var inp   = document.getElementById('mapInput');
+    ms = {x:0,y:0,sc:1};
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+    applyMap();
+    ph.style.display = 'none';
+    ctrls.classList.add('show');
+    inp.classList.add('hidden'); /* hide input so controls are tappable */
+  };
+  reader.readAsDataURL(file);
+  this.value = '';
+});
+
+function mb(id, fn) {
+  document.getElementById(id).addEventListener('click', fn);
+}
+mb('mZI',  function(){ ms.sc = Math.min(ms.sc+0.15,4); applyMap(); });
+mb('mZO',  function(){ ms.sc = Math.max(ms.sc-0.15,0.4); applyMap(); });
+mb('mU',   function(){ ms.y -= 12; applyMap(); });
+mb('mD',   function(){ ms.y += 12; applyMap(); });
+mb('mL',   function(){ ms.x -= 12; applyMap(); });
+mb('mR',   function(){ ms.x += 12; applyMap(); });
+mb('mRst', function(){ ms={x:0,y:0,sc:1}; applyMap(); });
+mb('mChg', function(){
+  var inp = document.getElementById('mapInput');
+  inp.classList.remove('hidden');
+  /* small delay so iOS registers the new tap target */
+  setTimeout(function(){ inp.click(); }, 50);
+});
+
+/* touch drag on map */
+var dragStart = null;
+var mapPrev = document.getElementById('mapPreview');
+mapPrev.addEventListener('touchstart', function(e){ dragStart={x:e.touches[0].clientX,y:e.touches[0].clientY}; },{passive:true});
+mapPrev.addEventListener('touchmove', function(e){
+  if(!dragStart) return;
+  ms.x += e.touches[0].clientX - dragStart.x;
+  ms.y += e.touches[0].clientY - dragStart.y;
+  dragStart = {x:e.touches[0].clientX, y:e.touches[0].clientY};
+  applyMap();
+},{passive:true});
+mapPrev.addEventListener('touchend', function(){ dragStart=null; });
+
+/* ============================================================
+   ADDRESS — block Enter
+============================================================ */
+document.getElementById('addressField').addEventListener('keydown', function(e){
+  if(e.key==='E
+                
