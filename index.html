@@ -12,7 +12,7 @@ body{background:#e9e9ec;font-family:Arial,sans-serif;display:flex;justify-conten
 /* HEADER */
 .top{display:flex;justify-content:space-between;margin-bottom:15px}
 h1{font-size:22px;color:#000}
-#clock{background:#ddd;padding:5px 10px;border-radius:20px;font-size:14px;font-weight:bold}
+#clock{background:#ddd;padding:5px 10px;border-radius:20px;font-size:14px}
 
 /* ADDRESS */
 .address-box{background:white;border-radius:15px;padding:10px;margin-bottom:15px}
@@ -22,14 +22,14 @@ hr{margin:10px 0;border-color:#ccc}
 
 /* CARDS */
 .cards{display:flex;gap:5px;margin-bottom:15px}
-.card{flex:1;background:white;border-radius:15px;padding:12px 3px 15px;text-align:center;position:relative}
+.card{flex:1;background:white;border-radius:15px;padding:10px 3px;text-align:center;position:relative}
 .rank{position:absolute;top:5px;left:5px;background:gold;padding:2px 6px;border-radius:10px;font-size:10px;color:white}
 .gold .rank{background:#b38b3a}
 .silver .rank{background:#8e8e93}
 .bronze .rank{background:#9b5e2a}
 
 /* PHOTO */
-.photo-wrap{width:60px;height:60px;margin:20px auto 8px;position:relative}
+.photo-wrap{width:60px;height:60px;margin:20px auto 5px;position:relative}
 .ring-bg{width:100%;height:100%;border-radius:50%;padding:3px}
 .gold-ring{background:linear-gradient(45deg,gold,#ffe68f)}
 .silver-ring{background:linear-gradient(45deg,silver,white)}
@@ -41,30 +41,30 @@ hr{margin:10px 0;border-color:#ccc}
 
 .divider{height:1px;background:#ddd;margin:8px 0}
 
-/* TEXT INPUTS - FIXED: taller padding to prevent cutoff */
-.ci{width:100%;border:none;text-align:center;padding:6px 0;font-size:13px;background:transparent;font-weight:600}
-.cn{font-weight:bold;font-size:14px}
-.cp{font-size:12px;font-weight:bold}
-.cv{font-size:16px;font-weight:bold}
+/* TEXT INPUTS */
+.ci{width:100%;border:none;text-align:center;padding:3px 0;font-size:12px;background:transparent}
+.cn{font-weight:bold}
+.cp{font-size:10px}
+.cv{font-size:14px;font-weight:bold}
 .gt{color:#b38b3a}
-.st{color:#2c2c2e}
+.st{color:#555}
 .bt{color:#9b5e2a}
 
 /* NEEDS BOX */
-.needs-box{background:white;border-radius:15px;padding:12px;margin:15px 0}
-.needs-hdr{background:#333;color:white;padding:8px;border-radius:10px;margin-bottom:12px;font-size:12px;font-weight:bold}
-.needs-row{display:flex;align-items:center;padding:10px 5px;border-bottom:1px solid #eee}
-.ndot{width:22px;height:22px;border-radius:50%;background:gray;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin-right:8px}
+.needs-box{background:white;border-radius:15px;padding:10px;margin:15px 0}
+.needs-hdr{background:#333;color:white;padding:5px;border-radius:10px;margin-bottom:10px;font-size:11px}
+.needs-row{display:flex;align-items:center;padding:8px 5px;border-bottom:1px solid #eee}
+.ndot{width:20px;height:20px;border-radius:50%;background:gray;color:white;display:flex;align-items:center;justify-content:center;font-size:9px;margin-right:8px}
 .ndot.silver{background:#8e8e93}
 .ndot.bronze{background:#9b5e2a}
-.nname{flex:1;font-size:13px;font-weight:bold}
+.nname{flex:1;font-size:12px}
 .nright{text-align:right}
-.nnum{font-weight:bold;font-size:15px}
-.nlbl{font-size:9px;color:#999;font-weight:bold}
+.nnum{font-weight:bold;font-size:14px}
+.nlbl{font-size:8px;color:#999}
 
 /* MAP */
 .map-box{background:white;border-radius:15px;padding:15px;margin:15px 0}
-.map-title{text-align:center;font-size:12px;margin-bottom:10px;font-weight:bold}
+.map-title{text-align:center;font-size:12px;margin-bottom:10px}
 .map-container{width:100%;height:150px;background:#f0f0f0;border-radius:10px;position:relative;overflow:hidden}
 .map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .map-ph-plus{font-size:40px;color:#999}
@@ -72,27 +72,29 @@ hr{margin:10px 0;border-color:#ccc}
 #mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
 #mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .map-controls{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.map-btn{padding:5px 10px;background:#f0f0f0;border:none;border-radius:20px;font-size:11px;font-weight:bold}
+.map-btn{padding:5px 10px;background:#f0f0f0;border:none;border-radius:20px;font-size:11px}
 
 /* SAVE MENU */
-.menu-btn{width:100%;padding:12px;background:#007aff;color:white;border:none;border-radius:25px;margin-bottom:10px;font-size:15px;font-weight:bold}
+.menu-btn{width:100%;padding:10px;background:#007aff;color:white;border:none;border-radius:25px;margin-bottom:10px;font-size:14px}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000}
 .modal-content{background:white;width:90%;max-width:380px;margin:50px auto;border-radius:20px;padding:20px}
 .modal-title{font-size:18px;font-weight:bold;margin-bottom:15px}
 .location-item{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #eee}
-.delete-btn{color:red;padding:0 5px;font-weight:bold}
+.delete-btn{color:red;padding:0 5px}
 
 /* DOWNLOAD */
-#dlBtn{width:100%;padding:15px;background:black;color:white;border:none;border-radius:30px;font-size:16px;font-weight:bold;margin-top:10px}
+#dlBtn{width:100%;padding:15px;background:black;color:white;border:none;border-radius:30px;font-size:16px;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="wrapper">
+
  <!-- CAPTURE AREA -->
  <div id="captureArea">
+
   <div class="top">
    <h1>Election Results</h1>
-   <div id="clock">--:--:-- --</div>
+   <div id="clock">--:--:--</div>
   </div>
 
   <!-- ADDRESS -->
@@ -191,6 +193,7 @@ hr{margin:10px 0;border-color:#ccc}
     <button class="map-btn" onclick="resetMap()">⟲</button>
    </div>
   </div>
+
  </div> <!-- end capture -->
 
  <!-- SAVE MENU BUTTON -->
@@ -210,28 +213,16 @@ hr{margin:10px 0;border-color:#ccc}
 </div>
 
 <script>
-// ===== NEPAL TIME (UTC+5:45) 12-HOUR WITH AM/PM =====
-function updateNepalTime() {
-  const now = new Date();
-  
-  // Convert to Nepal Time (UTC+5:45)
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const npt = new Date(utc + (345 * 60000));
-  
-  let hours = npt.getHours();
-  const minutes = npt.getMinutes().toString().padStart(2, '0');
-  const seconds = npt.getSeconds().toString().padStart(2, '0');
-  
-  // Convert to 12-hour format
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12; // 0 becomes 12
-  const hoursStr = hours.toString().padStart(2, '0');
-  
-  document.getElementById('clock').innerText = `${hoursStr}:${minutes}:${seconds} ${ampm}`;
+// ===== CLOCK =====
+function updateClock() {
+  const d = new Date();
+  document.getElementById('clock').innerText = 
+    d.getHours().toString().padStart(2,'0') + ':' +
+    d.getMinutes().toString().padStart(2,'0') + ':' +
+    d.getSeconds().toString().padStart(2,'0');
 }
-setInterval(updateNepalTime, 1000);
-updateNepalTime();
+setInterval(updateClock, 1000);
+updateClock();
 
 // ===== PHOTO UPLOAD =====
 function uploadPhoto(cardNum) {
@@ -289,7 +280,7 @@ function updateAll() {
   document.getElementById('name1').value = sorted[0].name;
   document.getElementById('party1').value = sorted[0].party;
   document.getElementById('votes1').value = sorted[0].votes.toLocaleString();
-  if(sorted[0].img && sorted[0].img !== '') {
+  if(sorted[0].img) {
     document.getElementById('img1').src = sorted[0].img;
     document.getElementById('img1').style.display = 'block';
     document.querySelector('#circle1 .plus').style.display = 'none';
@@ -299,7 +290,7 @@ function updateAll() {
   document.getElementById('name2').value = sorted[1].name;
   document.getElementById('party2').value = sorted[1].party;
   document.getElementById('votes2').value = sorted[1].votes.toLocaleString();
-  if(sorted[1].img && sorted[1].img !== '') {
+  if(sorted[1].img) {
     document.getElementById('img2').src = sorted[1].img;
     document.getElementById('img2').style.display = 'block';
     document.querySelector('#circle2 .plus').style.display = 'none';
@@ -309,7 +300,7 @@ function updateAll() {
   document.getElementById('name3').value = sorted[2].name;
   document.getElementById('party3').value = sorted[2].party;
   document.getElementById('votes3').value = sorted[2].votes.toLocaleString();
-  if(sorted[2].img && sorted[2].img !== '') {
+  if(sorted[2].img) {
     document.getElementById('img3').src = sorted[2].img;
     document.getElementById('img3').style.display = 'block';
     document.querySelector('#circle3 .plus').style.display = 'none';
@@ -451,37 +442,37 @@ function saveLocation() {
 function loadLocation(name) {
   const data = JSON.parse(localStorage.getItem('election_' + name));
   
-  document.getElementById('name1').value = data.name1 || '';
-  document.getElementById('party1').value = data.party1 || '';
-  document.getElementById('votes1').value = data.votes1 || '0';
+  document.getElementById('name1').value = data.name1;
+  document.getElementById('party1').value = data.party1;
+  document.getElementById('votes1').value = data.votes1;
   
-  document.getElementById('name2').value = data.name2 || '';
-  document.getElementById('party2').value = data.party2 || '';
-  document.getElementById('votes2').value = data.votes2 || '0';
+  document.getElementById('name2').value = data.name2;
+  document.getElementById('party2').value = data.party2;
+  document.getElementById('votes2').value = data.votes2;
   
-  document.getElementById('name3').value = data.name3 || '';
-  document.getElementById('party3').value = data.party3 || '';
-  document.getElementById('votes3').value = data.votes3 || '0';
+  document.getElementById('name3').value = data.name3;
+  document.getElementById('party3').value = data.party3;
+  document.getElementById('votes3').value = data.votes3;
   
-  if(data.img1 && data.img1 !== '') {
+  if(data.img1) {
     document.getElementById('img1').src = data.img1;
     document.getElementById('img1').style.display = 'block';
     document.querySelector('#circle1 .plus').style.display = 'none';
   }
   
-  if(data.img2 && data.img2 !== '') {
+  if(data.img2) {
     document.getElementById('img2').src = data.img2;
     document.getElementById('img2').style.display = 'block';
     document.querySelector('#circle2 .plus').style.display = 'none';
   }
   
-  if(data.img3 && data.img3 !== '') {
+  if(data.img3) {
     document.getElementById('img3').src = data.img3;
     document.getElementById('img3').style.display = 'block';
     document.querySelector('#circle3 .plus').style.display = 'none';
   }
   
-  if(data.map && data.map !== '') {
+  if(data.map) {
     document.getElementById('mapImg').src = data.map;
     document.getElementById('mapImg').style.display = 'block';
     document.getElementById('mapPH').style.display = 'none';
@@ -499,38 +490,24 @@ function deleteLocation(name) {
   loadLocations();
 }
 
-// ===== DOWNLOAD - FIXED: NO STRETCH, NO CUTOFF =====
+// ===== DOWNLOAD (HIDE MAP CONTROLS) =====
 function downloadImage() {
   const btn = document.getElementById('dlBtn');
   const controls = document.getElementById('mapControls');
   const wasVisible = controls.style.display;
   
-  // Hide controls temporarily
   controls.style.display = 'none';
   btn.innerText = 'PROCESSING...';
   
-  const element = document.getElementById('captureArea');
-  
-  // Get exact dimensions
-  const width = element.offsetWidth;
-  const height = element.offsetHeight;
-  
-  html2canvas(element, {
+  html2canvas(document.getElementById('captureArea'), {
     scale: 2,
-    width: width,
-    height: height,
-    backgroundColor: '#f2f2f4',
-    logging: false,
-    allowTaint: true,
-    useCORS: true,
-    windowWidth: width,
-    windowHeight: height
+    backgroundColor: '#f2f2f4'
   }).then(canvas => {
     controls.style.display = wasVisible;
     btn.innerText = '⬇ DOWNLOAD JPG';
     
     const link = document.createElement('a');
-    link.download = 'election-results.jpg';
+    link.download = 'election.jpg';
     link.href = canvas.toDataURL('image/jpeg', 0.95);
     link.click();
   }).catch(() => {
