@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Election Results - Working</title>
+<title>Election Results - Fixed</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#e9e9ec;font-family:Arial,sans-serif;display:flex;justify-content:center}
@@ -24,7 +24,7 @@ hr{margin:10px 0;border-color:#ccc}
 .cards{display:flex;gap:5px;margin-bottom:15px}
 .card{flex:1;background:white;border-radius:15px;padding:10px 3px;text-align:center;position:relative}
 .rank{position:absolute;top:5px;left:5px;background:gold;padding:2px 6px;border-radius:10px;font-size:10px;color:white}
-.gold .rank{background:#b38b3a}
+.gold .rank{background:#b38a3b}
 .silver .rank{background:#8e8e93}
 .bronze .rank{background:#9b5e2a}
 
@@ -38,6 +38,7 @@ hr{margin:10px 0;border-color:#ccc}
 .circle img{width:100%;height:100%;object-fit:cover;display:none}
 .plus{font-size:20px;color:#999}
 .photo-input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.loading-spinner{display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.8);border-radius:50%;justify-content:center;align-items:center;font-size:12px}
 
 .divider{height:1px;background:#ddd;margin:8px 0}
 
@@ -46,7 +47,7 @@ hr{margin:10px 0;border-color:#ccc}
 .cn{font-weight:bold}
 .cp{font-size:10px}
 .cv{font-size:14px;font-weight:bold}
-.gt{color:#b38b3a}
+.gt{color:#b38a3b}
 .st{color:#555}
 .bt{color:#9b5e2a}
 
@@ -65,33 +66,40 @@ hr{margin:10px 0;border-color:#ccc}
 /* MAP */
 .map-box{background:white;border-radius:15px;padding:15px;margin:15px 0}
 .map-title{text-align:center;font-size:12px;margin-bottom:10px}
-.map-container{width:100%;height:150px;background:#f0f0f0;border-radius:10px;position:relative;overflow:hidden}
+.map-container{width:100%;height:150px;background:#f0f0f0;border-radius:10px;position:relative;overflow:hidden;touch-action:none}
 .map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .map-ph-plus{font-size:40px;color:#999}
 .map-ph-hint{font-size:10px;color:#999}
-#mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
+#mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none;touch-action:none}
 #mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
-.map-controls{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.map-controls{display:none;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
 .map-btn{padding:5px 10px;background:#f0f0f0;border:none;border-radius:20px;font-size:11px}
 
 /* SAVE MENU */
 .menu-btn{width:100%;padding:10px;background:#007aff;color:white;border:none;border-radius:25px;margin-bottom:10px;font-size:14px}
+.menu-btn:active{opacity:0.8}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000}
-.modal-content{background:white;width:90%;max-width:380px;margin:50px auto;border-radius:20px;padding:20px}
+.modal-content{background:white;width:90%;max-width:380px;margin:50px auto;border-radius:20px;padding:20px;max-height:80vh;overflow-y:auto}
 .modal-title{font-size:18px;font-weight:bold;margin-bottom:15px}
-.location-item{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #eee}
-.delete-btn{color:red;padding:0 5px}
+.location-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #eee}
+.location-item span:first-child{cursor:pointer;flex:1}
+.delete-btn{color:red;padding:0 5px;font-size:18px;cursor:pointer}
+.delete-btn:active{opacity:0.6}
+.empty-list{text-align:center;color:#999;padding:20px}
+.storage-warning{color:#ff3b30;font-size:12px;margin-top:5px;display:none}
 
 /* DOWNLOAD */
 #dlBtn{width:100%;padding:15px;background:black;color:white;border:none;border-radius:30px;font-size:16px;margin-top:10px}
+#dlBtn:disabled{opacity:0.5}
+.toast{position:fixed;bottom:20px;left:20px;right:20px;background:#333;color:white;padding:10px;border-radius:10px;text-align:center;z-index:2000;display:none;max-width:430px;margin:0 auto}
 </style>
 </head>
 <body>
 <div class="wrapper">
+ <div id="toast" class="toast"></div>
 
  <!-- CAPTURE AREA -->
  <div id="captureArea">
-
   <div class="top">
    <h1>Election Results</h1>
    <div id="clock">--:--:--</div>
@@ -104,60 +112,63 @@ hr{margin:10px 0;border-color:#ccc}
 
   <hr>
 
-  <!-- CARDS -->
+  <!-- CARDS with data attributes to preserve original values -->
   <div class="cards">
    <!-- 1ST -->
-   <div class="card gold" id="card1">
-    <div class="rank" id="rank1">1st</div>
+   <div class="card gold" data-original="card1">
+    <div class="rank">1st</div>
     <div class="photo-wrap">
      <div class="ring-bg gold-ring">
       <div class="circle" id="circle1">
        <span class="plus">+</span>
        <img id="img1">
+       <div class="loading-spinner" id="spinner1">⏳</div>
       </div>
      </div>
-     <input type="file" accept="image/*" class="photo-input" id="file1" onchange="uploadPhoto(1)">
+     <input type="file" accept="image/*" class="photo-input" data-card="1">
     </div>
     <div class="divider"></div>
-    <input class="ci cn gt" id="name1" value="THOMAS F." onkeyup="updateAll()">
-    <input class="ci cp gt" id="party1" value="PROGRESS" onkeyup="updateAll()">
-    <input class="ci cv gt" id="votes1" value="14250" onkeyup="updateAll()">
+    <input class="ci cn gt" id="name1" placeholder="Name" value="THOMAS F.">
+    <input class="ci cp gt" id="party1" placeholder="Party" value="PROGRESS">
+    <input class="ci cv gt" id="votes1" placeholder="Votes" value="14250" inputmode="numeric">
    </div>
 
    <!-- 2ND -->
-   <div class="card silver" id="card2">
-    <div class="rank" id="rank2">2nd</div>
+   <div class="card silver" data-original="card2">
+    <div class="rank">2nd</div>
     <div class="photo-wrap">
      <div class="ring-bg silver-ring">
       <div class="circle" id="circle2">
        <span class="plus">+</span>
        <img id="img2">
+       <div class="loading-spinner" id="spinner2">⏳</div>
       </div>
      </div>
-     <input type="file" accept="image/*" class="photo-input" id="file2" onchange="uploadPhoto(2)">
+     <input type="file" accept="image/*" class="photo-input" data-card="2">
     </div>
     <div class="divider"></div>
-    <input class="ci cn st" id="name2" value="LISA M." onkeyup="updateAll()">
-    <input class="ci cp st" id="party2" value="UNITY" onkeyup="updateAll()">
-    <input class="ci cv st" id="votes2" value="11230" onkeyup="updateAll()">
+    <input class="ci cn st" id="name2" placeholder="Name" value="LISA M.">
+    <input class="ci cp st" id="party2" placeholder="Party" value="UNITY">
+    <input class="ci cv st" id="votes2" placeholder="Votes" value="11230" inputmode="numeric">
    </div>
 
    <!-- 3RD -->
-   <div class="card bronze" id="card3">
-    <div class="rank" id="rank3">3rd</div>
+   <div class="card bronze" data-original="card3">
+    <div class="rank">3rd</div>
     <div class="photo-wrap">
      <div class="ring-bg bronze-ring">
       <div class="circle" id="circle3">
        <span class="plus">+</span>
        <img id="img3">
+       <div class="loading-spinner" id="spinner3">⏳</div>
       </div>
      </div>
-     <input type="file" accept="image/*" class="photo-input" id="file3" onchange="uploadPhoto(3)">
+     <input type="file" accept="image/*" class="photo-input" data-card="3">
     </div>
     <div class="divider"></div>
-    <input class="ci cn bt" id="name3" value="JAMES K." onkeyup="updateAll()">
-    <input class="ci cp bt" id="party3" value="HORIZON" onkeyup="updateAll()">
-    <input class="ci cv bt" id="votes3" value="9850" onkeyup="updateAll()">
+    <input class="ci cn bt" id="name3" placeholder="Name" value="JAMES K.">
+    <input class="ci cp bt" id="party3" placeholder="Party" value="HORIZON">
+    <input class="ci cv bt" id="votes3" placeholder="Votes" value="9850" inputmode="numeric">
    </div>
   </div>
 
@@ -179,40 +190,53 @@ hr{margin:10px 0;border-color:#ccc}
   <!-- MAP -->
   <div class="map-box">
    <div class="map-title">🗺 REGION MAP</div>
-   <div class="map-container">
+   <div class="map-container" id="mapContainer">
     <div class="map-ph" id="mapPH">
      <div class="map-ph-plus">+</div>
      <div class="map-ph-hint">Tap to add map</div>
     </div>
-    <img id="mapImg">
-    <input type="file" accept="image/*" id="mapFile" onchange="uploadMap()">
+    <img id="mapImg" draggable="false">
+    <input type="file" accept="image/*" id="mapFile">
    </div>
-   <div class="map-controls" id="mapControls" style="display:none">
-    <button class="map-btn" onclick="mapZoom(0.2)">➕</button>
-    <button class="map-btn" onclick="mapZoom(-0.2)">➖</button>
-    <button class="map-btn" onclick="resetMap()">⟲</button>
+   <div class="map-controls" id="mapControls">
+    <button class="map-btn" id="zoomIn">➕</button>
+    <button class="map-btn" id="zoomOut">➖</button>
+    <button class="map-btn" id="resetMap">⟲</button>
    </div>
   </div>
-
- </div> <!-- end capture -->
+ </div>
 
  <!-- SAVE MENU BUTTON -->
- <button class="menu-btn" onclick="openMenu()">📋 LOCATIONS MENU</button>
- <button id="dlBtn" onclick="downloadImage()">⬇ DOWNLOAD JPG</button>
+ <button class="menu-btn" id="menuBtn">📋 LOCATIONS MENU</button>
+ <button id="dlBtn">⬇ DOWNLOAD JPG</button>
 
  <!-- MODAL -->
- <div class="modal" id="menuModal" onclick="if(event.target===this) closeMenu()">
+ <div class="modal" id="menuModal">
   <div class="modal-content">
    <div class="modal-title">Saved Locations</div>
    <div id="locationsList"></div>
+   <div class="storage-warning" id="storageWarning">Storage almost full</div>
    <input type="text" id="locName" placeholder="New location name" style="width:100%;padding:8px;margin:10px 0;border-radius:10px;border:1px solid #ddd">
-   <button class="menu-btn" onclick="saveLocation()" style="margin:0">💾 SAVE CURRENT</button>
-   <button class="menu-btn" style="background:#666;margin-top:5px" onclick="closeMenu()">CLOSE</button>
+   <button class="menu-btn" id="saveLocationBtn">💾 SAVE CURRENT</button>
+   <button class="menu-btn" style="background:#666;margin-top:5px" id="closeMenuBtn">CLOSE</button>
   </div>
  </div>
 </div>
 
 <script>
+// Prevent zoom on double tap
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+
+// ===== TOAST NOTIFICATION =====
+function showToast(msg, duration = 2000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, duration);
+}
+
 // ===== CLOCK =====
 function updateClock() {
   const d = new Date();
@@ -224,302 +248,342 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ===== PHOTO UPLOAD =====
-function uploadPhoto(cardNum) {
-  const fileInput = document.getElementById('file' + cardNum);
-  const img = document.getElementById('img' + cardNum);
-  const circle = document.getElementById('circle' + cardNum);
-  
-  if(fileInput.files && fileInput.files[0]) {
+// ===== COMPRESS IMAGE =====
+function compressImage(file, maxSize = 100 * 1024) { // 100KB max
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Max dimensions
+        if (width > height) {
+          if (width > 300) {
+            height *= 300 / width;
+            width = 300;
+          }
+        } else {
+          if (height > 300) {
+            width *= 300 / height;
+            height = 300;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Compress
+        let quality = 0.7;
+        let dataUrl = canvas.toDataURL('image/jpeg', quality);
+        
+        // Reduce quality if still too large
+        while (dataUrl.length > maxSize && quality > 0.1) {
+          quality -= 0.1;
+          dataUrl = canvas.toDataURL('image/jpeg', quality);
+        }
+        
+        resolve(dataUrl);
+      };
+      img.onerror = reject;
       img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ===== PHOTO UPLOAD =====
+document.querySelectorAll('.photo-input').forEach(input => {
+  input.addEventListener('change', async function(e) {
+    const cardNum = this.dataset.card;
+    const file = this.files[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select an image file');
+      return;
+    }
+    
+    const spinner = document.getElementById(`spinner${cardNum}`);
+    const img = document.getElementById(`img${cardNum}`);
+    const circle = document.getElementById(`circle${cardNum}`);
+    
+    try {
+      spinner.style.display = 'flex';
+      
+      // Compress image
+      const compressedDataUrl = await compressImage(file);
+      
+      img.src = compressedDataUrl;
       img.style.display = 'block';
       circle.querySelector('.plus').style.display = 'none';
+      
+      showToast('Photo uploaded');
+    } catch (error) {
+      showToast('Failed to upload image');
+      console.error(error);
+    } finally {
+      spinner.style.display = 'none';
+      // Clear input
+      this.value = '';
     }
-    reader.readAsDataURL(fileInput.files[0]);
-  }
-}
+  });
+});
 
 // ===== GET VOTE NUMBERS =====
 function getVote(id) {
-  return parseInt(document.getElementById(id).value.replace(/[^0-9]/g,'')) || 0;
+  const val = document.getElementById(id).value;
+  const num = parseInt(val.replace(/[^0-9]/g, ''));
+  return isNaN(num) ? 0 : num;
 }
 
-// ===== UPDATE EVERYTHING =====
-function updateAll() {
-  // Get current values
-  const c1 = {
-    name: document.getElementById('name1').value,
-    party: document.getElementById('party1').value,
-    votes: getVote('votes1'),
-    img: document.getElementById('img1').src,
-    plus: document.querySelector('#circle1 .plus')
-  };
+// ===== FORMAT NUMBER =====
+function formatNumber(num) {
+  return num.toLocaleString();
+}
+
+// ===== UPDATE NEEDS ONLY (doesn't reorder cards) =====
+function updateNeeds() {
+  // Get current votes without reordering
+  const votes = [
+    getVote('votes1'),
+    getVote('votes2'),
+    getVote('votes3')
+  ];
   
-  const c2 = {
-    name: document.getElementById('name2').value,
-    party: document.getElementById('party2').value,
-    votes: getVote('votes2'),
-    img: document.getElementById('img2').src,
-    plus: document.querySelector('#circle2 .plus')
-  };
+  const names = [
+    document.getElementById('name1').value || 'Candidate 1',
+    document.getElementById('name2').value || 'Candidate 2',
+    document.getElementById('name3').value || 'Candidate 3'
+  ];
   
-  const c3 = {
-    name: document.getElementById('name3').value,
-    party: document.getElementById('party3').value,
-    votes: getVote('votes3'),
-    img: document.getElementById('img3').src,
-    plus: document.querySelector('#circle3 .plus')
-  };
+  // Create array of objects
+  const candidates = votes.map((votes, index) => ({
+    votes,
+    name: names[index],
+    originalIndex: index
+  }));
   
   // Sort by votes
-  let sorted = [c1, c2, c3].sort((a,b) => b.votes - a.votes);
+  candidates.sort((a, b) => b.votes - a.votes);
   
-  // Update card 1 (gold)
-  document.getElementById('name1').value = sorted[0].name;
-  document.getElementById('party1').value = sorted[0].party;
-  document.getElementById('votes1').value = sorted[0].votes.toLocaleString();
-  if(sorted[0].img) {
-    document.getElementById('img1').src = sorted[0].img;
-    document.getElementById('img1').style.display = 'block';
-    document.querySelector('#circle1 .plus').style.display = 'none';
-  }
+  // Update needs box with sorted data but don't reorder cards
+  document.getElementById('needName2').innerText = candidates[1].name;
+  document.getElementById('needName3').innerText = candidates[2].name;
   
-  // Update card 2 (silver)
-  document.getElementById('name2').value = sorted[1].name;
-  document.getElementById('party2').value = sorted[1].party;
-  document.getElementById('votes2').value = sorted[1].votes.toLocaleString();
-  if(sorted[1].img) {
-    document.getElementById('img2').src = sorted[1].img;
-    document.getElementById('img2').style.display = 'block';
-    document.querySelector('#circle2 .plus').style.display = 'none';
-  }
+  const need2 = Math.max(0, candidates[0].votes - candidates[1].votes + 1);
+  const need3 = Math.max(0, candidates[0].votes - candidates[2].votes + 1);
   
-  // Update card 3 (bronze)
-  document.getElementById('name3').value = sorted[2].name;
-  document.getElementById('party3').value = sorted[2].party;
-  document.getElementById('votes3').value = sorted[2].votes.toLocaleString();
-  if(sorted[2].img) {
-    document.getElementById('img3').src = sorted[2].img;
-    document.getElementById('img3').style.display = 'block';
-    document.querySelector('#circle3 .plus').style.display = 'none';
-  }
-  
-  // Update needs box
-  document.getElementById('needName2').innerText = sorted[1].name;
-  document.getElementById('needName3').innerText = sorted[2].name;
-  
-  const need2 = Math.max(0, sorted[0].votes - sorted[1].votes + 1);
-  const need3 = Math.max(0, sorted[0].votes - sorted[2].votes + 1);
-  
-  document.getElementById('needVotes2').innerText = need2.toLocaleString();
-  document.getElementById('needVotes3').innerText = need3.toLocaleString();
+  document.getElementById('needVotes2').innerText = formatNumber(need2);
+  document.getElementById('needVotes3').innerText = formatNumber(need3);
 }
+
+// Add input listeners for real-time updates
+['votes1', 'votes2', 'votes3', 'name1', 'name2', 'name3'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateNeeds);
+});
 
 // ===== MAP FUNCTIONS =====
 let mapScale = 1;
 let mapX = 0;
 let mapY = 0;
+let mapInitialized = false;
 
-function uploadMap() {
-  const file = document.getElementById('mapFile');
-  if(file.files && file.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = document.getElementById('mapImg');
-      img.src = e.target.result;
-      img.style.display = 'block';
-      document.getElementById('mapPH').style.display = 'none';
-      document.getElementById('mapControls').style.display = 'flex';
-      mapScale = 1;
-      mapX = 0;
-      mapY = 0;
+function initializeMap() {
+  if (mapInitialized) return;
+  
+  const mapImg = document.getElementById('mapImg');
+  const mapContainer = document.getElementById('mapContainer');
+  const mapFile = document.getElementById('mapFile');
+  const mapPH = document.getElementById('mapPH');
+  const mapControls = document.getElementById('mapControls');
+  
+  // File upload
+  mapFile.addEventListener('change', async function(e) {
+    const file = this.files[0];
+    if (!file) return;
+    
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select an image');
+      return;
+    }
+    
+    try {
+      const compressedDataUrl = await compressImage(file, 200 * 1024); // 200KB max for maps
+      mapImg.src = compressedDataUrl;
+      mapImg.style.display = 'block';
+      mapPH.style.display = 'none';
+      mapControls.style.display = 'flex';
+      resetMapTransform();
+      showToast('Map uploaded');
+    } catch (error) {
+      showToast('Failed to upload map');
+      console.error(error);
+    } finally {
+      this.value = '';
+    }
+  });
+  
+  // Touch events with proper cleanup
+  let touchStartX, touchStartY, touchStartDistance;
+  let isDragging = false;
+  
+  mapContainer.addEventListener('touchstart', (e) => {
+    if (!mapImg.src) return;
+    e.preventDefault();
+    
+    if (e.touches.length === 2) {
+      // Pinch zoom
+      touchStartDistance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    } else if (e.touches.length === 1) {
+      // Pan
+      isDragging = true;
+      touchStartX = e.touches[0].clientX - mapX;
+      touchStartY = e.touches[0].clientY - mapY;
+    }
+  });
+  
+  mapContainer.addEventListener('touchmove', (e) => {
+    if (!mapImg.src) return;
+    e.preventDefault();
+    
+    if (e.touches.length === 2) {
+      // Pinch zoom
+      const currentDistance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      
+      if (touchStartDistance) {
+        const scale = currentDistance / touchStartDistance;
+        mapScale = Math.max(0.5, Math.min(3, mapScale * scale));
+        updateMapTransform();
+      }
+      touchStartDistance = currentDistance;
+    } else if (e.touches.length === 1 && isDragging) {
+      // Pan
+      mapX = e.touches[0].clientX - touchStartX;
+      mapY = e.touches[0].clientY - touchStartY;
       updateMapTransform();
     }
-    reader.readAsDataURL(file.files[0]);
-  }
+  });
+  
+  mapContainer.addEventListener('touchend', (e) => {
+    isDragging = false;
+    touchStartDistance = null;
+  });
+  
+  // Button controls
+  document.getElementById('zoomIn').addEventListener('click', () => {
+    mapScale = Math.min(3, mapScale + 0.2);
+    updateMapTransform();
+  });
+  
+  document.getElementById('zoomOut').addEventListener('click', () => {
+    mapScale = Math.max(0.5, mapScale - 0.2);
+    updateMapTransform();
+  });
+  
+  document.getElementById('resetMap').addEventListener('click', resetMapTransform);
+  
+  mapInitialized = true;
 }
 
 function updateMapTransform() {
-  document.getElementById('mapImg').style.transform = 
-    `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
+  const mapImg = document.getElementById('mapImg');
+  mapImg.style.transform = `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
 }
 
-function mapZoom(delta) {
-  mapScale = Math.max(0.5, Math.min(3, mapScale + delta));
-  updateMapTransform();
-}
-
-function resetMap() {
+function resetMapTransform() {
   mapScale = 1;
   mapX = 0;
   mapY = 0;
   updateMapTransform();
 }
 
-// Touch drag
-let dragging = false;
-let startX, startY;
-
-document.getElementById('mapImg').addEventListener('touchstart', function(e) {
-  if(!this.src) return;
-  dragging = true;
-  startX = e.touches[0].clientX - mapX;
-  startY = e.touches[0].clientY - mapY;
-  e.preventDefault();
-});
-
-document.getElementById('mapImg').addEventListener('touchmove', function(e) {
-  if(!dragging) return;
-  mapX = e.touches[0].clientX - startX;
-  mapY = e.touches[0].clientY - startY;
-  updateMapTransform();
-  e.preventDefault();
-});
-
-document.getElementById('mapImg').addEventListener('touchend', function() {
-  dragging = false;
-});
+// Initialize map
+initializeMap();
 
 // ===== SAVE MENU =====
 function openMenu() {
   document.getElementById('menuModal').style.display = 'block';
   loadLocations();
+  checkStorageQuota();
 }
 
 function closeMenu() {
   document.getElementById('menuModal').style.display = 'none';
 }
 
+function checkStorageQuota() {
+  // Rough estimation - localStorage limit is ~5MB
+  let totalSize = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    totalSize += (localStorage.getItem(key)?.length || 0) * 2; // Approx bytes
+  }
+  
+  const warning = document.getElementById('storageWarning');
+  if (totalSize > 4 * 1024 * 1024) { // 4MB
+    warning.style.display = 'block';
+  } else {
+    warning.style.display = 'none';
+  }
+}
+
 function loadLocations() {
   const list = document.getElementById('locationsList');
   list.innerHTML = '';
   
-  for(let i = 0; i < localStorage.length; i++) {
+  let hasItems = false;
+  
+  for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if(key.startsWith('election_')) {
-      const data = JSON.parse(localStorage.getItem(key));
-      const name = key.replace('election_', '');
-      
-      const div = document.createElement('div');
-      div.className = 'location-item';
-      div.innerHTML = `
-        <span onclick="loadLocation('${name}')">📍 ${name}</span>
-        <span class="delete-btn" onclick="deleteLocation('${name}')">✕</span>
-      `;
-      list.appendChild(div);
+    if (key && key.startsWith('election_')) {
+      hasItems = true;
+      try {
+        const data = JSON.parse(localStorage.getItem(key));
+        const name = key.replace('election_', '');
+        
+        const div = document.createElement('div');
+        div.className = 'location-item';
+        div.innerHTML = `
+          <span onclick="loadLocation('${name.replace(/'/g, "\\'")}')">📍 ${name}</span>
+          <span class="delete-btn" onclick="deleteLocation('${name.replace(/'/g, "\\'")}', event)">✕</span>
+        `;
+        list.appendChild(div);
+      } catch (e) {
+        // Remove corrupted data
+        localStorage.removeItem(key);
+      }
     }
   }
+  
+  if (!hasItems) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-list';
+    empty.innerText = 'No saved locations';
+    list.appendChild(empty);
+  }
 }
 
-function saveLocation() {
-  const name = document.getElementById('locName').value;
-  if(!name) return alert('Enter name');
-  
-  const data = {
-    name1: document.getElementById('name1').value,
-    party1: document.getElementById('party1').value,
-    votes1: document.getElementById('votes1').value,
-    img1: document.getElementById('img1').src,
-    name2: document.getElementById('name2').value,
-    party2: document.getElementById('party2').value,
-    votes2: document.getElementById('votes2').value,
-    img2: document.getElementById('img2').src,
-    name3: document.getElementById('name3').value,
-    party3: document.getElementById('party3').value,
-    votes3: document.getElementById('votes3').value,
-    img3: document.getElementById('img3').src,
-    map: document.getElementById('mapImg').src,
-    address: document.getElementById('addrInp').value
-  };
-  
-  localStorage.setItem('election_' + name, JSON.stringify(data));
-  document.getElementById('locName').value = '';
-  loadLocations();
-}
-
-function loadLocation(name) {
-  const data = JSON.parse(localStorage.getItem('election_' + name));
-  
-  document.getElementById('name1').value = data.name1;
-  document.getElementById('party1').value = data.party1;
-  document.getElementById('votes1').value = data.votes1;
-  
-  document.getElementById('name2').value = data.name2;
-  document.getElementById('party2').value = data.party2;
-  document.getElementById('votes2').value = data.votes2;
-  
-  document.getElementById('name3').value = data.name3;
-  document.getElementById('party3').value = data.party3;
-  document.getElementById('votes3').value = data.votes3;
-  
-  if(data.img1) {
-    document.getElementById('img1').src = data.img1;
-    document.getElementById('img1').style.display = 'block';
-    document.querySelector('#circle1 .plus').style.display = 'none';
+async function saveLocation() {
+  const name = document.getElementById('locName').value.trim();
+  if (!name) {
+    showToast('Enter a location name');
+    return;
   }
   
-  if(data.img2) {
-    document.getElementById('img2').src = data.img2;
-    document.getElementById('img2').style.display = 'block';
-    document.querySelector('#circle2 .plus').style.display = 'none';
-  }
-  
-  if(data.img3) {
-    document.getElementById('img3').src = data.img3;
-    document.getElementById('img3').style.display = 'block';
-    document.querySelector('#circle3 .plus').style.display = 'none';
-  }
-  
-  if(data.map) {
-    document.getElementById('mapImg').src = data.map;
-    document.getElementById('mapImg').style.display = 'block';
-    document.getElementById('mapPH').style.display = 'none';
-    document.getElementById('mapControls').style.display = 'flex';
-  }
-  
-  document.getElementById('addrInp').value = data.address || '';
-  
-  closeMenu();
-  updateAll();
-}
-
-function deleteLocation(name) {
-  localStorage.removeItem('election_' + name);
-  loadLocations();
-}
-
-// ===== DOWNLOAD (HIDE MAP CONTROLS) =====
-function downloadImage() {
-  const btn = document.getElementById('dlBtn');
-  const controls = document.getElementById('mapControls');
-  const wasVisible = controls.style.display;
-  
-  controls.style.display = 'none';
-  btn.innerText = 'PROCESSING...';
-  
-  html2canvas(document.getElementById('captureArea'), {
-    scale: 2,
-    backgroundColor: '#f2f2f4'
-  }).then(canvas => {
-    controls.style.display = wasVisible;
-    btn.innerText = '⬇ DOWNLOAD JPG';
-    
-    const link = document.createElement('a');
-    link.download = 'election.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
-    link.click();
-  }).catch(() => {
-    controls.style.display = wasVisible;
-    btn.innerText = '⬇ DOWNLOAD JPG';
-    alert('Try again');
-  });
-}
-
-// Initial update
-setTimeout(updateAll, 100);
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body>
-</html>
+  // Show saving indicator
+  const saveBtn = document.getElementById('saveLocationBtn');
+  const originalText = saveBtn.innerText;
+  saveBtn.i
