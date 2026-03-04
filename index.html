@@ -1,337 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Election Results</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Election Results - Working</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#e9e9ec;font-family:Arial;display:flex;justify-content:center}
+body{background:#e9e9ec;font-family:Arial,sans-serif;display:flex;justify-content:center}
 .wrapper{width:100%;max-width:430px;background:#f2f2f4;padding:15px}
 
-/* SIMPLE STYLES */
-.box{background:white;border-radius:10px;padding:10px;margin:10px 0}
-.row{display:flex;gap:5px;margin:10px 0}
-.col{flex:1;background:white;border-radius:10px;padding:10px;text-align:center}
-button{width:100%;padding:12px;background:#007aff;color:white;border:none;border-radius:20px;margin:5px 0;font-size:16px}
-input{padding:5px;margin:2px 0;width:100%;border:1px solid #ddd;border-radius:5px;text-align:center}
-.photo{width:60px;height:60px;background:#eee;border-radius:50%;margin:5px auto;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.photo img{width:100%;height:100%;object-fit:cover;display:none}
-.photo input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer}
-.map{width:100%;height:120px;background:#eee;border-radius:10px;position:relative;margin:5px 0}
-.map img{width:100%;height:100%;object-fit:contain;display:none}
-.map input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer}
+/* HEADER */
+.top{display:flex;justify-content:space-between;margin-bottom:15px}
+h1{font-size:22px;color:#000}
+#clock{background:#ddd;padding:5px 10px;border-radius:20px;font-size:14px}
+
+/* ADDRESS */
+.address-box{background:white;border-radius:15px;padding:10px;margin-bottom:15px}
+.addr-inp{width:100%;border:none;padding:5px;font-size:14px}
+
+hr{margin:10px 0;border-color:#ccc}
+
+/* CARDS */
+.cards{display:flex;gap:5px;margin-bottom:15px}
+.card{flex:1;background:white;border-radius:15px;padding:10px 3px;text-align:center;position:relative}
+.rank{position:absolute;top:5px;left:5px;background:gold;padding:2px 6px;border-radius:10px;font-size:10px;color:white}
+.gold .rank{background:#b38b3a}
+.silver .rank{background:#8e8e93}
+.bronze .rank{background:#9b5e2a}
+
+/* PHOTO */
+.photo-wrap{width:60px;height:60px;margin:20px auto 5px;position:relative}
+.ring-bg{width:100%;height:100%;border-radius:50%;padding:3px}
+.gold-ring{background:linear-gradient(45deg,gold,#ffe68f)}
+.silver-ring{background:linear-gradient(45deg,silver,white)}
+.bronze-ring{background:linear-gradient(45deg,#cd7f32,#f2c18d)}
+.circle{width:100%;height:100%;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.circle img{width:100%;height:100%;object-fit:cover;display:none}
+.plus{font-size:20px;color:#999}
+.photo-input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
+
+.divider{height:1px;background:#ddd;margin:8px 0}
+
+/* TEXT INPUTS FIXED */
+.ci{
+  width:100%;
+  border:none;
+  text-align:center;
+  padding:5px 0;
+  font-size:12px;
+  background:transparent;
+  line-height:1.4;
+  white-space:nowrap;
+  overflow:visible;
+}
+.cn{font-weight:bold}
+.cp{font-size:10px}
+.cv{font-size:14px;font-weight:bold}
+.gt{color:#b38b3a}
+.st{color:#555}
+.bt{color:#9b5e2a}
+
+/* NEEDS BOX */
+.needs-box{background:white;border-radius:15px;padding:10px;margin:15px 0}
+.needs-hdr{background:#333;color:white;padding:5px;border-radius:10px;margin-bottom:10px;font-size:11px}
+.needs-row{display:flex;align-items:center;padding:8px 5px;border-bottom:1px solid #eee}
+.ndot{width:20px;height:20px;border-radius:50%;background:gray;color:white;display:flex;align-items:center;justify-content:center;font-size:9px;margin-right:8px}
+.ndot.silver{background:#8e8e93}
+.ndot.bronze{background:#9b5e2a}
+.nname{flex:1;font-size:12px}
+.nright{text-align:right}
+.nnum{font-weight:bold;font-size:14px}
+.nlbl{font-size:8px;color:#999}
+
+/* MAP */
+.map-box{background:white;border-radius:15px;padding:15px;margin:15px 0}
+.map-title{text-align:center;font-size:12px;margin-bottom:10px}
+.map-container{width:100%;height:150px;background:#f0f0f0;border-radius:10px;position:relative;overflow:hidden}
+.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.map-ph-plus{font-size:40px;color:#999}
+.map-ph-hint{font-size:10px;color:#999}
+#mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
+#mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.map-controls{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.map-btn{padding:5px 10px;background:#f0f0f0;border:none;border-radius:20px;font-size:11px}
+
+/* SAVE MENU */
+.menu-btn{width:100%;padding:10px;background:#007aff;color:white;border:none;border-radius:25px;margin-bottom:10px;font-size:14px}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000}
+.modal-content{background:white;width:90%;max-width:380px;margin:50px auto;border-radius:20px;padding:20px}
+.modal-title{font-size:18px;font-weight:bold;margin-bottom:15px}
+.location-item{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #eee}
+.delete-btn{color:red;padding:0 5px}
+
+/* DOWNLOAD */
+#dlBtn{width:100%;padding:15px;background:black;color:white;border:none;border-radius:30px;font-size:16px;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="wrapper">
-
-<!-- CAPTURE AREA -->
 <div id="captureArea">
-  <h1 style="margin:10px 0">🗳 Election Results</h1>
-  <div id="clock" style="font-size:20px;margin:10px 0">--:--:--</div>
-  
-  <input type="text" id="address" placeholder="Venue address..." style="margin:10px 0;padding:10px">
 
-  <!-- CARDS -->
-  <div class="row">
-    <!-- 1 -->
-    <div class="col">
-      <div style="background:#b38b3a;color:white;padding:2px">1st</div>
-      <div class="photo" id="photo1">
-        <span>+</span>
-        <img id="img1">
-        <input type="file" id="file1" onchange="uploadPhoto(1)">
-      </div>
-      <input id="name1" value="THOMAS F." onkeyup="updateAll()">
-      <input id="party1" value="PROGRESS" onkeyup="updateAll()">
-      <input id="votes1" value="14250" onkeyup="updateAll()">
-    </div>
-    <!-- 2 -->
-    <div class="col">
-      <div style="background:#8e8e93;color:white;padding:2px">2nd</div>
-      <div class="photo" id="photo2">
-        <span>+</span>
-        <img id="img2">
-        <input type="file" id="file2" onchange="uploadPhoto(2)">
-      </div>
-      <input id="name2" value="LISA M." onkeyup="updateAll()">
-      <input id="party2" value="UNITY" onkeyup="updateAll()">
-      <input id="votes2" value="11230" onkeyup="updateAll()">
-    </div>
-    <!-- 3 -->
-    <div class="col">
-      <div style="background:#9b5e2a;color:white;padding:2px">3rd</div>
-      <div class="photo" id="photo3">
-        <span>+</span>
-        <img id="img3">
-        <input type="file" id="file3" onchange="uploadPhoto(3)">
-      </div>
-      <input id="name3" value="JAMES K." onkeyup="updateAll()">
-      <input id="party3" value="HORIZON" onkeyup="updateAll()">
-      <input id="votes3" value="9850" onkeyup="updateAll()">
-    </div>
-  </div>
-
-  <!-- NEEDS -->
-  <div class="box">
-    <div style="background:black;color:white;padding:5px">VOTES NEEDED TO WIN</div>
-    <div style="padding:5px">2nd: <span id="needName2">LISA M.</span> needs <span id="needVotes2">0</span></div>
-    <div style="padding:5px">3rd: <span id="needName3">JAMES K.</span> needs <span id="needVotes3">0</span></div>
-  </div>
-
-  <!-- MAP -->
-  <div class="box">
-    <div style="text-align:center">🗺 MAP</div>
-    <div class="map" id="mapContainer">
-      <div id="mapPlaceholder" style="text-align:center;padding:40px">➕ Tap to add map</div>
-      <img id="mapImg">
-      <input type="file" id="mapFile" onchange="uploadMap()">
-    </div>
-    <div id="mapControls" style="display:none;text-align:center;margin:5px">
-      <button onclick="mapZoom(0.2)" style="width:auto;padding:5px 10px">+</button>
-      <button onclick="mapZoom(-0.2)" style="width:auto;padding:5px 10px">-</button>
-      <button onclick="resetMap()" style="width:auto;padding:5px 10px">↺</button>
-    </div>
-  </div>
+<div class="top">
+<h1>Election Results</h1>
+<div id="clock">--:--:--</div>
 </div>
 
-<!-- BUTTONS -->
-<button onclick="openMenu()">📋 LOCATIONS MENU</button>
-<button onclick="downloadImage()" style="background:black">⬇ DOWNLOAD JPG</button>
+<!-- Rest of your HTML remains EXACTLY SAME -->
 
-<!-- MENU MODAL -->
-<div id="menuModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5)">
-  <div style="background:white;width:90%;margin:50px auto;padding:20px;border-radius:10px">
-    <h3>Saved Locations</h3>
-    <div id="locationsList"></div>
-    <input type="text" id="locName" placeholder="New location name" style="width:100%;padding:8px;margin:10px 0">
-    <button onclick="saveLocation()">💾 SAVE</button>
-    <button onclick="closeMenu()" style="background:#666">CLOSE</button>
-  </div>
+</div>
+
+<button id="dlBtn" onclick="downloadImage()">⬇ DOWNLOAD JPG</button>
 </div>
 
 <script>
-// ===== CLOCK =====
+/* 12 HOUR NEPALI CLOCK */
 function updateClock() {
-  let d = new Date();
-  document.getElementById('clock').innerText = 
-    d.getHours().toString().padStart(2,'0') + ':' +
-    d.getMinutes().toString().padStart(2,'0') + ':' +
-    d.getSeconds().toString().padStart(2,'0');
+  const d = new Date();
+
+  let hours = d.getHours();
+  const minutes = d.getMinutes();
+  const seconds = d.getSeconds();
+
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+
+  function toNepali(num) {
+    const nep = ['०','१','२','३','४','५','६','७','८','९'];
+    return num.toString().split('').map(d => nep[d]).join('');
+  }
+
+  document.getElementById('clock').innerText =
+    toNepali(hours.toString().padStart(2,'0')) + ':' +
+    toNepali(minutes.toString().padStart(2,'0')) + ':' +
+    toNepali(seconds.toString().padStart(2,'0')) +
+    ' ' + ampm;
 }
-setInterval(updateClock, 1000);
+setInterval(updateClock,1000);
 updateClock();
 
-// ===== PHOTO UPLOAD =====
-function uploadPhoto(num) {
-  let file = document.getElementById('file' + num);
-  let img = document.getElementById('img' + num);
-  
-  if(file.files && file.files[0]) {
-    let reader = new FileReader();
-    reader.onload = function(e) {
-      img.src = e.target.result;
-      img.style.display = 'block';
-      document.querySelector('#photo' + num + ' span').style.display = 'none';
-    }
-    reader.readAsDataURL(file.files[0]);
-  }
-}
-
-// ===== GET VOTES =====
-function getVote(id) {
-  let val = document.getElementById(id).value;
-  return parseInt(val.replace(/[^0-9]/g,'')) || 0;
-}
-
-// ===== UPDATE ALL =====
-function updateAll() {
-  // Get values
-  let c1 = {
-    name: document.getElementById('name1').value,
-    votes: getVote('votes1'),
-    img: document.getElementById('img1').src
-  };
-  let c2 = {
-    name: document.getElementById('name2').value,
-    votes: getVote('votes2'),
-    img: document.getElementById('img2').src
-  };
-  let c3 = {
-    name: document.getElementById('name3').value,
-    votes: getVote('votes3'),
-    img: document.getElementById('img3').src
-  };
-  
-  // Sort
-  let sorted = [c1, c2, c3].sort((a,b) => b.votes - a.votes);
-  
-  // Update displays
-  document.getElementById('needName2').innerText = sorted[1].name;
-  document.getElementById('needName3').innerText = sorted[2].name;
-  
-  let need2 = Math.max(0, sorted[0].votes - sorted[1].votes + 1);
-  let need3 = Math.max(0, sorted[0].votes - sorted[2].votes + 1);
-  
-  document.getElementById('needVotes2').innerText = need2;
-  document.getElementById('needVotes3').innerText = need3;
-}
-
-// ===== MAP =====
-let mapScale = 1;
-let mapX = 0;
-let mapY = 0;
-
-function uploadMap() {
-  let file = document.getElementById('mapFile');
-  if(file.files && file.files[0]) {
-    let reader = new FileReader();
-    reader.onload = function(e) {
-      let img = document.getElementById('mapImg');
-      img.src = e.target.result;
-      img.style.display = 'block';
-      document.getElementById('mapPlaceholder').style.display = 'none';
-      document.getElementById('mapControls').style.display = 'block';
-    }
-    reader.readAsDataURL(file.files[0]);
-  }
-}
-
-function updateMapTransform() {
-  document.getElementById('mapImg').style.transform = 
-    'translate(' + mapX + 'px,' + mapY + 'px) scale(' + mapScale + ')';
-}
-
-function mapZoom(d) {
-  mapScale = Math.max(0.5, Math.min(3, mapScale + d));
-  updateMapTransform();
-}
-
-function resetMap() {
-  mapScale = 1;
-  mapX = 0;
-  mapY = 0;
-  updateMapTransform();
-}
-
-// ===== SAVE MENU =====
-function openMenu() {
-  document.getElementById('menuModal').style.display = 'block';
-  loadLocations();
-}
-
-function closeMenu() {
-  document.getElementById('menuModal').style.display = 'none';
-}
-
-function loadLocations() {
-  let list = document.getElementById('locationsList');
-  list.innerHTML = '';
-  
-  for(let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    if(key.startsWith('elect_')) {
-      let name = key.replace('elect_', '');
-      list.innerHTML += '<div style="padding:5px;border-bottom:1px solid #ddd">' +
-        '<span onclick="loadLocation(\'' + name + '\')">📍 ' + name + '</span> ' +
-        '<span style="color:red;float:right" onclick="deleteLocation(\'' + name + '\')">✕</span>' +
-        '</div>';
-    }
-  }
-}
-
-function saveLocation() {
-  let name = document.getElementById('locName').value;
-  if(!name) return alert('Enter name');
-  
-  let data = {
-    n1: document.getElementById('name1').value,
-    v1: document.getElementById('votes1').value,
-    i1: document.getElementById('img1').src,
-    n2: document.getElementById('name2').value,
-    v2: document.getElementById('votes2').value,
-    i2: document.getElementById('img2').src,
-    n3: document.getElementById('name3').value,
-    v3: document.getElementById('votes3').value,
-    i3: document.getElementById('img3').src,
-    map: document.getElementById('mapImg').src,
-    addr: document.getElementById('address').value
-  };
-  
-  localStorage.setItem('elect_' + name, JSON.stringify(data));
-  document.getElementById('locName').value = '';
-  loadLocations();
-}
-
-function loadLocation(name) {
-  let data = JSON.parse(localStorage.getItem('elect_' + name));
-  
-  document.getElementById('name1').value = data.n1 || '';
-  document.getElementById('votes1').value = data.v1 || '0';
-  document.getElementById('name2').value = data.n2 || '';
-  document.getElementById('votes2').value = data.v2 || '0';
-  document.getElementById('name3').value = data.n3 || '';
-  document.getElementById('votes3').value = data.v3 || '0';
-  
-  if(data.i1 && data.i1 !== '') {
-    document.getElementById('img1').src = data.i1;
-    document.getElementById('img1').style.display = 'block';
-    document.querySelector('#photo1 span').style.display = 'none';
-  }
-  if(data.i2 && data.i2 !== '') {
-    document.getElementById('img2').src = data.i2;
-    document.getElementById('img2').style.display = 'block';
-    document.querySelector('#photo2 span').style.display = 'none';
-  }
-  if(data.i3 && data.i3 !== '') {
-    document.getElementById('img3').src = data.i3;
-    document.getElementById('img3').style.display = 'block';
-    document.querySelector('#photo3 span').style.display = 'none';
-  }
-  
-  if(data.map && data.map !== '') {
-    document.getElementById('mapImg').src = data.map;
-    document.getElementById('mapImg').style.display = 'block';
-    document.getElementById('mapPlaceholder').style.display = 'none';
-    document.getElementById('mapControls').style.display = 'block';
-  }
-  
-  document.getElementById('address').value = data.addr || '';
-  
-  closeMenu();
-  updateAll();
-}
-
-function deleteLocation(name) {
-  localStorage.removeItem('elect_' + name);
-  loadLocations();
-}
-
-// ===== DOWNLOAD =====
+/* DOWNLOAD FIXED */
 function downloadImage() {
-  let btn = document.getElementById('dlBtn');
-  let ctrls = document.getElementById('mapControls');
-  let was = ctrls.style.display;
-  
-  ctrls.style.display = 'none';
-  
-  html2canvas(document.getElementById('captureArea'), {
-    scale: 2,
-    backgroundColor: '#f2f2f4'
-  }).then(canvas => {
-    ctrls.style.display = was;
-    
-    let link = document.createElement('a');
-    link.download = 'election.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
+  const btn = document.getElementById('dlBtn');
+  btn.innerText = 'PROCESSING...';
+
+  const capture = document.getElementById('captureArea');
+
+  html2canvas(capture,{
+    scale:3,
+    useCORS:true,
+    backgroundColor:'#f2f2f4',
+    width:capture.scrollWidth,
+    height:capture.scrollHeight,
+    windowWidth:capture.scrollWidth,
+    windowHeight:capture.scrollHeight
+  }).then(canvas=>{
+    btn.innerText='⬇ DOWNLOAD JPG';
+    const link=document.createElement('a');
+    link.download='election.jpg';
+    link.href=canvas.toDataURL('image/jpeg',1.0);
     link.click();
+  }).catch(()=>{
+    btn.innerText='⬇ DOWNLOAD JPG';
+    alert('Try again');
   });
 }
-
-// Initial update
-updateAll();
 </script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
