@@ -2,727 +2,366 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Election 2082 - Live Colors</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Election Poster</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:#e9e9ec;font-family:Arial,sans-serif;display:flex;justify-content:center}
-.wrapper{width:100%;max-width:430px;background:#f2f2f4;padding:15px}
 
-/* HEADER */
-.top{display:flex;justify-content:space-between;margin-bottom:15px}
-h1{font-size:22px;color:#000}
-#clock{background:#ddd;padding:5px 10px;border-radius:20px;font-size:14px;white-space:nowrap}
-
-/* ADDRESS */
-.address-box{background:white;border-radius:15px;padding:10px;margin-bottom:15px}
-.addr-inp{width:100%;border:none;padding:8px 5px;font-size:14px;background:transparent}
-
-hr{margin:10px 0;border-color:#ccc}
-
-/* ELECTION TITLE */
-.election-title{
-  text-align:center;
-  font-size:24px;
-  font-weight:bold;
-  margin:10px 0 15px;
-  color:#000;
-  letter-spacing:1px;
-}
-.election-title span{
-  display:inline-block;
-  border-bottom:2px solid #333;
-  padding-bottom:5px;
+body{
+background:#1c1c1c;
+font-family:Arial, sans-serif;
+display:flex;
+justify-content:center;
+padding:20px;
 }
 
-/* PARTY LOGOS - KIND 1 */
-.party-logos{
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  background:white;
-  border-radius:20px;
-  padding:20px 10px;
-  margin-bottom:10px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.05);
-}
-.logo-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:8px;
-}
-.logo-circle{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  background:#f0f0f0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  position:relative;
-  cursor:pointer;
-  border:2px solid transparent;
-}
-.logo-circle.rsp{ border-color:#FF6B6B; }
-.logo-circle.nc{ border-color:#4ECDC4; }
-.logo-circle.uml{ border-color:#FFD93D; }
-.logo-circle.rpp{ border-color:#6C5CE7; }
-
-.logo-circle img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:none;
-  position:absolute;
-  top:0;
-  left:0;
-}
-.logo-circle .plus{
-  font-size:24px;
-  color:#999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  height:100%;
-}
-.logo-input{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  opacity:0;
-  cursor:pointer;
-  z-index:10;
-}
-.party-name{
-  font-size:14px;
-  font-weight:bold;
-}
-.party-name.rsp{ color:#FF6B6B; }
-.party-name.nc{ color:#4ECDC4; }
-.party-name.uml{ color:#FFD93D; }
-.party-name.rpp{ color:#6C5CE7; }
-
-/* SHARE DATE */
-.share-date{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:white;
-  border-radius:20px;
-  padding:12px 20px;
-  margin:10px 0;
-  font-size:16px;
-}
-.share-label{
-  font-weight:bold;
-  color:#333;
-}
-.date-value{
-  color:#666;
-  background:#f0f0f0;
-  padding:5px 15px;
-  border-radius:20px;
-  font-size:14px;
-  cursor:pointer;
-}
-.date-value input{
-  width:100px;
-  border:none;
-  background:transparent;
-  text-align:center;
-  font-size:14px;
-  padding:2px;
+.wrapper{
+width:420px;
+background:#ffffff;
+border-radius:15px;
+padding:15px;
 }
 
-/* VOTE BARS - KIND 2 WITH COLOR CHANGING */
-.vote-section{
-  background:white;
-  border-radius:20px;
-  padding:20px;
-  margin:10px 0;
-}
-.vote-row{
-  display:flex;
-  align-items:center;
-  margin-bottom:20px;
-  gap:10px;
-}
-.vote-row:last-child{ margin-bottom:0; }
-
-.vote-party{
-  width:50px;
-  font-weight:bold;
-  font-size:16px;
-}
-.vote-party.rsp{ color:#FF6B6B; }
-.vote-party.nc{ color:#4ECDC4; }
-.vote-party.uml{ color:#FFD93D; }
-.vote-party.rpp{ color:#6C5CE7; }
-
-.vote-bar-container{
-  flex:1;
-  height:40px;
-  background:#f0f0f0;
-  border-radius:20px;
-  overflow:hidden;
-  position:relative;
-  cursor:pointer;
-}
-.vote-bar{
-  height:100%;
-  width:0%;
-  border-radius:20px;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  padding-right:10px;
-  color:white;
-  font-weight:bold;
-  font-size:14px;
-  white-space:nowrap;
-  transition:width 0.2s, background 0.2s;
-}
-.vote-file-input{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  opacity:0;
-  cursor:pointer;
-  z-index:5;
-}
-.vote-count{
-  min-width:70px;
-  text-align:right;
-}
-.vote-count input{
-  width:70px;
-  border:1px solid #ddd;
-  border-radius:15px;
-  padding:8px 5px;
-  text-align:center;
-  font-size:14px;
-  background:white;
+.poster-header{
+text-align:center;
+font-size:22px;
+font-weight:bold;
+background:linear-gradient(#caa54a,#f2d07d);
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
 }
 
-/* STATUS */
-.status-section{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:white;
-  border-radius:20px;
-  padding:15px 20px;
-  margin:10px 0;
-  font-size:18px;
-  font-weight:bold;
-}
-.status-proudly{ color:#FF6B6B; }
-.status-confused{ color:#6C5CE7; }
-.status-proudly input, .status-confused input{
-  border:none;
-  background:transparent;
-  font-size:18px;
-  font-weight:bold;
-  width:100px;
-  text-align:center;
-}
-.status-proudly input{ color:#FF6B6B; }
-.status-confused input{ color:#6C5CE7; }
-
-/* MAP - KIND 3 */
-.map-box{background:white;border-radius:20px;padding:15px;margin:10px 0}
-.map-title{text-align:center;font-size:14px;margin-bottom:10px;color:#666}
-.map-container{width:100%;height:150px;background:#f0f0f0;border-radius:15px;position:relative;overflow:hidden}
-.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-.map-ph-plus{font-size:40px;color:#999}
-.map-ph-hint{font-size:10px;color:#999}
-#mapImg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:none;
-  cursor:move;
-}
-#mapFile{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  opacity:0;
-  cursor:pointer;
-  z-index:20;
-}
-.map-controls{
-  display:flex;
-  gap:5px;
-  justify-content:center;
-  margin-top:10px;
-  flex-wrap:wrap;
-}
-.map-btn{
-  padding:8px 15px;
-  background:#f0f0f0;
-  border:none;
-  border-radius:25px;
-  font-size:12px;
-  cursor:pointer;
-  -webkit-appearance:none;
+.region{
+width:100%;
+border:none;
+border-bottom:2px solid #444;
+font-size:16px;
+padding:5px;
+margin-bottom:15px;
 }
 
-/* BUTTONS */
-.menu-btn, #dlBtn{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:30px;
-  margin:5px 0;
-  font-size:16px;
-  cursor:pointer;
-  -webkit-appearance:none;
+.candidates{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
-.menu-btn{ background:#007aff; color:white; }
-#dlBtn{ background:black; color:white; }
 
-/* MODAL */
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000}
-.modal-content{background:white;width:90%;max-width:380px;margin:50px auto;border-radius:25px;padding:20px;max-height:80vh;overflow-y:auto}
-.modal-title{font-size:20px;font-weight:bold;margin-bottom:15px}
-.location-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 10px;
-  border-bottom:1px solid #eee;
-  cursor:pointer;
+.card{
+background:#f7f7f7;
+border-radius:10px;
+padding:10px;
+text-align:center;
 }
-.delete-btn{ color:#ff3b30; padding:5px 15px; font-size:18px; }
-#locName{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:15px;
-  border:1px solid #ddd;
-  font-size:14px;
+
+.circle{
+width:70px;
+height:70px;
+border-radius:50%;
+background:#e3e3e3;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+cursor:pointer;
 }
-.save-btn, .close-btn{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:25px;
-  margin:5px 0;
-  font-size:14px;
-  cursor:pointer;
-  color:white;
+
+.circle img{
+width:100%;
+height:100%;
+object-fit:cover;
 }
-.save-btn{ background:#007aff; }
-.close-btn{ background:#666; }
+
+.symbol{
+width:35px;
+height:35px;
+margin:5px auto;
+display:block;
+}
+
+.name{
+width:100%;
+border:none;
+border-bottom:1px solid #999;
+text-align:center;
+margin:5px 0;
+}
+
+.vote{
+width:70px;
+text-align:center;
+font-size:16px;
+margin-top:5px;
+}
+
+.rank{
+font-weight:bold;
+margin-top:3px;
+}
+
+.poll{
+margin-top:15px;
+}
+
+.poll-row{
+display:flex;
+align-items:center;
+gap:8px;
+margin:6px 0;
+}
+
+.bar{
+flex:1;
+background:#ddd;
+height:18px;
+border-radius:20px;
+overflow:hidden;
+}
+
+.bar div{
+height:100%;
+width:0%;
+background:#3aa74c;
+}
+
+.map{
+margin-top:15px;
+text-align:center;
+}
+
+.map img{
+width:100%;
+border-radius:10px;
+}
+
+.buttons{
+margin-top:15px;
+display:flex;
+gap:10px;
+}
+
+button{
+flex:1;
+padding:10px;
+border:none;
+background:#333;
+color:white;
+border-radius:8px;
+}
+
 </style>
 </head>
+
 <body>
-<div class="wrapper">
 
- <!-- CAPTURE AREA -->
- <div id="captureArea">
+<div class="wrapper" id="poster">
 
-  <div class="top">
-   <h1>Election Results</h1>
-   <div id="clock">--:--:-- NPT</div>
-  </div>
+<div class="poster-header">ELECTION UPDATE</div>
 
-  <div class="address-box">
-   <input class="addr-inp" id="addrInp" placeholder="Election venue...">
-  </div>
+<input class="region" id="region" placeholder="Region">
 
-  <hr>
+<div class="candidates">
 
-  <div class="election-title">
-   <span>ELECTION UPDATE 2082</span>
-  </div>
+<div class="card" data-id="1">
+<div class="circle" onclick="uploadPhoto(1)">
+<img id="photo1">
+</div>
 
-  <!-- ===== KIND 1: PARTY LOGOS (4 PHOTOS) ===== -->
-  <div class="party-logos">
-   <!-- RSP -->
-   <div class="logo-item">
-    <div class="logo-circle rsp" id="logoRSP">
-     <span class="plus" id="plusRSP">+</span>
-     <img id="imgRSP">
-     <input type="file" accept="image/*" class="logo-input" id="fileRSP" onchange="uploadLogo('RSP')">
-    </div>
-    <div class="party-name rsp">RSP</div>
-   </div>
-   
-   <!-- NC -->
-   <div class="logo-item">
-    <div class="logo-circle nc" id="logoNC">
-     <span class="plus" id="plusNC">+</span>
-     <img id="imgNC">
-     <input type="file" accept="image/*" class="logo-input" id="fileNC" onchange="uploadLogo('NC')">
-    </div>
-    <div class="party-name nc">NC</div>
-   </div>
-   
-   <!-- UML -->
-   <div class="logo-item">
-    <div class="logo-circle uml" id="logoUML">
-     <span class="plus" id="plusUML">+</span>
-     <img id="imgUML">
-     <input type="file" accept="image/*" class="logo-input" id="fileUML" onchange="uploadLogo('UML')">
-    </div>
-    <div class="party-name uml">UML</div>
-   </div>
-   
-   <!-- RPP -->
-   <div class="logo-item">
-    <div class="logo-circle rpp" id="logoRPP">
-     <span class="plus" id="plusRPP">+</span>
-     <img id="imgRPP">
-     <input type="file" accept="image/*" class="logo-input" id="fileRPP" onchange="uploadLogo('RPP')">
-    </div>
-    <div class="party-name rpp">RPP</div>
-   </div>
-  </div>
+<input type="file" id="file1" hidden accept="image/*" onchange="loadPhoto(1)">
 
-  <!-- SHARE DATE (editable) -->
-  <div class="share-date">
-   <span class="share-label">공유 날짜:</span>
-   <span class="date-value" id="shareDate" onclick="editDate()">
-    <input type="text" id="dateInput" value="2082/01/15" style="display:none;">
-    <span id="dateDisplay">2082/01/15</span>
-   </span>
-  </div>
+<input type="file" accept="image/*" onchange="loadSymbol(1)">
+<img id="symbol1" class="symbol">
 
-  <!-- ===== KIND 2: VOTE BARS WITH COLOR CHANGING ===== -->
-  <div class="vote-section">
-   <!-- RSP -->
-   <div class="vote-row">
-    <div class="vote-party rsp">RSP</div>
-    <div class="vote-bar-container">
-     <div class="vote-bar" id="barRSP" style="width:75%">75%</div>
-     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteRSP" onchange="uploadVoteImage('RSP')" multiple>
-    </div>
-    <div class="vote-count">
-     <input type="text" id="countRSP" value="75" onkeyup="updateBar('RSP')" placeholder="%">
-    </div>
-   </div>
-   
-   <!-- NC -->
-   <div class="vote-row">
-    <div class="vote-party nc">NC</div>
-    <div class="vote-bar-container">
-     <div class="vote-bar" id="barNC" style="width:45%">45%</div>
-     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteNC" onchange="uploadVoteImage('NC')" multiple>
-    </div>
-    <div class="vote-count">
-     <input type="text" id="countNC" value="45" onkeyup="updateBar('NC')" placeholder="%">
-    </div>
-   </div>
-   
-   <!-- UML -->
-   <div class="vote-row">
-    <div class="vote-party uml">UML</div>
-    <div class="vote-bar-container">
-     <div class="vote-bar" id="barUML" style="width:30%">30%</div>
-     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteUML" onchange="uploadVoteImage('UML')" multiple>
-    </div>
-    <div class="vote-count">
-     <input type="text" id="countUML" value="30" onkeyup="updateBar('UML')" placeholder="%">
-    </div>
-   </div>
-   
-   <!-- RPP -->
-   <div class="vote-row">
-    <div class="vote-party rpp">RPP</div>
-    <div class="vote-bar-container">
-     <div class="vote-bar" id="barRPP" style="width:15%">15%</div>
-     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteRPP" onchange="uploadVoteImage('RPP')" multiple>
-    </div>
-    <div class="vote-count">
-     <input type="text" id="countRPP" value="15" onkeyup="updateBar('RPP')" placeholder="%">
-    </div>
-   </div>
-  </div>
+<input class="name" placeholder="Candidate">
 
-  <!-- PROUDLY CONFUSED (editable) -->
-  <div class="status-section">
-   <span class="status-proudly"><input type="text" id="proudlyText" value="proudly" style="color:#FF6B6B;"></span>
-   <span class="status-confused"><input type="text" id="confusedText" value="confused" style="color:#6C5CE7;"></span>
-  </div>
+<input class="vote" id="vote1" type="number" value="0" oninput="updateAll()">
 
-  <!-- ===== KIND 3: MAP PHOTO ===== -->
-  <div class="map-box">
-   <div class="map-title">🗺 REGION MAP (tap to add/change photo)</div>
-   <div class="map-container">
-    <div class="map-ph" id="mapPH">
-     <div class="map-ph-plus">+</div>
-     <div class="map-ph-hint">Tap to add map</div>
-    </div>
-    <img id="mapImg" draggable="false">
-    <input type="file" accept="image/*" id="mapFile" onchange="uploadMap()">
-   </div>
-   <div class="map-controls" id="mapControls" style="display:none">
-    <button class="map-btn" onclick="mapZoom(0.2)">➕ Zoom In</button>
-    <button class="map-btn" onclick="mapZoom(-0.2)">➖ Zoom Out</button>
-    <button class="map-btn" onclick="resetMap()">⟲ Reset</button>
-   </div>
-  </div>
+<div class="rank" id="rank1">#1</div>
 
- </div> <!-- end capture -->
+</div>
 
- <!-- MENU BUTTONS -->
- <button class="menu-btn" onclick="openMenu()">📋 LOCATIONS MENU (SAVE/LOAD ALL)</button>
- <button id="dlBtn" onclick="downloadImage()">⬇ DOWNLOAD JPG</button>
+<div class="card" data-id="2">
+<div class="circle" onclick="uploadPhoto(2)">
+<img id="photo2">
+</div>
 
- <!-- MODAL -->
- <div class="modal" id="menuModal" onclick="if(event.target===this) closeMenu()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-   <div class="modal-title">Saved Locations</div>
-   <div id="locationsList" style="min-height:50px;max-height:300px;overflow-y:auto;margin-bottom:10px"></div>
-   <input type="text" id="locName" placeholder="Enter location name">
-   <button class="save-btn" onclick="saveLocation()">💾 SAVE CURRENT</button>
-   <button class="close-btn" onclick="closeMenu()">CLOSE</button>
-  </div>
- </div>
+<input type="file" id="file2" hidden accept="image/*" onchange="loadPhoto(2)">
+
+<input type="file" accept="image/*" onchange="loadSymbol(2)">
+<img id="symbol2" class="symbol">
+
+<input class="name" placeholder="Candidate">
+
+<input class="vote" id="vote2" type="number" value="0" oninput="updateAll()">
+
+<div class="rank" id="rank2">#2</div>
+
+</div>
+
+<div class="card" data-id="3">
+<div class="circle" onclick="uploadPhoto(3)">
+<img id="photo3">
+</div>
+
+<input type="file" id="file3" hidden accept="image/*" onchange="loadPhoto(3)">
+
+<input type="file" accept="image/*" onchange="loadSymbol(3)">
+<img id="symbol3" class="symbol">
+
+<input class="name" placeholder="Candidate">
+
+<input class="vote" id="vote3" type="number" value="0" oninput="updateAll()">
+
+<div class="rank" id="rank3">#3</div>
+
+</div>
+
+<div class="card" data-id="4">
+<div class="circle" onclick="uploadPhoto(4)">
+<img id="photo4">
+</div>
+
+<input type="file" id="file4" hidden accept="image/*" onchange="loadPhoto(4)">
+
+<input type="file" accept="image/*" onchange="loadSymbol(4)">
+<img id="symbol4" class="symbol">
+
+<input class="name" placeholder="Candidate">
+
+<input class="vote" id="vote4" type="number" value="0" oninput="updateAll()">
+
+<div class="rank" id="rank4">#4</div>
+
+</div>
+
+</div>
+
+
+<div class="poll">
+
+<div class="poll-row">
+<span>A</span>
+<div class="bar"><div id="bar1"></div></div>
+<input id="poll1" type="number" value="0" oninput="updatePoll()">
+</div>
+
+<div class="poll-row">
+<span>B</span>
+<div class="bar"><div id="bar2"></div></div>
+<input id="poll2" type="number" value="0" oninput="updatePoll()">
+</div>
+
+</div>
+
+<div class="map">
+
+<input type="file" accept="image/*" onchange="loadMap(event)">
+<img id="mapimg">
+
+</div>
+
+<div class="buttons">
+<button onclick="saveData()">Save</button>
+<button onclick="downloadImage()">Download</button>
+</div>
+
 </div>
 
 <script>
-// ===== NEPAL TIME (NPT) =====
-function updateClock() {
-  const d = new Date();
-  
-  // Nepal Time is UTC+5:45
-  const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  const nepaliTime = new Date(utc + (3600000 * 5) + (2700000)); // 5hrs 45min = 5.75hrs
-  
-  // Format: YYYY/MM/DD HH:MM:SS
-  const year = nepaliTime.getFullYear();
-  const month = (nepaliTime.getMonth() + 1).toString().padStart(2,'0');
-  const day = nepaliTime.getDate().toString().padStart(2,'0');
-  const hours = nepaliTime.getHours().toString().padStart(2,'0');
-  const minutes = nepaliTime.getMinutes().toString().padStart(2,'0');
-  const seconds = nepaliTime.getSeconds().toString().padStart(2,'0');
-  
-  document.getElementById('clock').innerText = `${year}/${month}/${day} ${hours}:${minutes}:${seconds} NPT`;
-}
-setInterval(updateClock, 1000);
-updateClock();
 
-// ===== KIND 1: PARTY LOGO UPLOAD =====
-function uploadLogo(party) {
-  const fileInput = document.getElementById('file' + party);
-  const img = document.getElementById('img' + party);
-  const plus = document.getElementById('plus' + party);
-  
-  if(fileInput.files && fileInput.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      img.src = e.target.result;
-      img.style.display = 'block';
-      if (plus) plus.style.display = 'none';
-    }
-    reader.readAsDataURL(fileInput.files[0]);
-  }
+function uploadPhoto(n){
+document.getElementById("file"+n).click()
 }
 
-// ===== KIND 2: VOTE BAR FUNCTIONS WITH COLOR CHANGING =====
-function updateBar(party) {
-  const input = document.getElementById('count' + party);
-  const bar = document.getElementById('bar' + party);
-  let val = parseInt(input.value) || 0;
-  val = Math.min(100, Math.max(0, val));
-  
-  // Update width
-  bar.style.width = val + '%';
-  bar.innerText = val + '%';
-  input.value = val;
-  
-  // Change color based on value
-  if (val < 30) {
-    // Low vote - RED
-    bar.style.background = '#ff4444';
-  } else if (val < 60) {
-    // Medium vote - ORANGE/YELLOW
-    bar.style.background = '#ffaa44';
-  } else {
-    // High vote - GREEN (varies intensity)
-    // Calculate green intensity: lighter for 60%, darker for 100%
-    const intensity = Math.floor(40 + (val - 60) * 1.5); // 40-100 range
-    bar.style.background = `rgb(0, ${intensity + 100}, 0)`; // 100-200 green range
-  }
+function loadPhoto(n){
+let file=document.getElementById("file"+n).files[0]
+let reader=new FileReader()
+reader.onload=e=>{
+document.getElementById("photo"+n).src=e.target.result
+}
+reader.readAsDataURL(file)
 }
 
-function uploadVoteImage(party) {
-  // This allows attaching images to vote bars
-  const fileInput = document.getElementById('fileVote' + party);
-  if(fileInput.files && fileInput.files[0]) {
-    console.log('Vote image attached for', party);
-  }
+function loadSymbol(n){
+let file=event.target.files[0]
+let reader=new FileReader()
+reader.onload=e=>{
+document.getElementById("symbol"+n).src=e.target.result
+}
+reader.readAsDataURL(file)
 }
 
-// Initialize all bars with colors
-function initAllBars() {
-  updateBar('RSP');
-  updateBar('NC');
-  updateBar('UML');
-  updateBar('RPP');
+function loadMap(event){
+let file=event.target.files[0]
+let reader=new FileReader()
+reader.onload=e=>{
+document.getElementById("mapimg").src=e.target.result
+}
+reader.readAsDataURL(file)
 }
 
-// ===== DATE EDIT =====
-function editDate() {
-  const display = document.getElementById('dateDisplay');
-  const input = document.getElementById('dateInput');
-  display.style.display = 'none';
-  input.style.display = 'inline-block';
-  input.value = display.innerText;
-  input.focus();
-  
-  input.onblur = function() {
-    display.innerText = input.value;
-    display.style.display = 'inline';
-    input.style.display = 'none';
-  };
-  
-  input.onkeypress = function(e) {
-    if(e.key === 'Enter') input.blur();
-  };
+function updateAll(){
+
+let votes=[
+{ id:1,v:parseInt(vote1.value)||0},
+{ id:2,v:parseInt(vote2.value)||0},
+{ id:3,v:parseInt(vote3.value)||0},
+{ id:4,v:parseInt(vote4.value)||0}
+]
+
+votes.sort((a,b)=>b.v-a.v)
+
+votes.forEach((item,index)=>{
+document.getElementById("rank"+item.id).innerText="#"+(index+1)
+})
+
 }
 
-// ===== KIND 3: MAP FUNCTIONS =====
-let mapScale = 1, mapX = 0, mapY = 0, dragging = false, startX, startY;
+function updatePoll(){
 
-function uploadMap() {
-  const file = document.getElementById('mapFile');
-  if(file.files && file.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = document.getElementById('mapImg');
-      img.src = e.target.result;
-      img.style.display = 'block';
-      document.getElementById('mapPH').style.display = 'none';
-      document.getElementById('mapControls').style.display = 'flex';
-      mapScale = 1; mapX = 0; mapY = 0;
-      updateMapTransform();
-    }
-    reader.readAsDataURL(file.files[0]);
-  }
+let p1=parseInt(poll1.value)||0
+let p2=parseInt(poll2.value)||0
+
+let total=p1+p2
+
+if(total==0)return
+
+bar1.style.width=(p1/total*100)+"%"
+bar2.style.width=(p2/total*100)+"%"
+
 }
 
-function updateMapTransform() {
-  document.getElementById('mapImg').style.transform = `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
+function saveData(){
+
+let data=document.getElementById("poster").innerHTML
+localStorage.setItem("posterData",data)
+
 }
 
-function mapZoom(delta) {
-  mapScale = Math.max(0.5, Math.min(3, mapScale + delta));
-  updateMapTransform();
+window.onload=function(){
+
+let saved=localStorage.getItem("posterData")
+if(saved){
+document.getElementById("poster").innerHTML=saved
 }
 
-function resetMap() {
-  mapScale = 1; mapX = 0; mapY = 0;
-  updateMapTransform();
 }
 
-// Touch drag for map
-document.getElementById('mapImg').addEventListener('touchstart', function(e) {
-  if(!this.src) return;
-  dragging = true;
-  startX = e.touches[0].clientX - mapX;
-  startY = e.touches[0].clientY - mapY;
-  e.preventDefault();
-});
+function downloadImage(){
 
-document.getElementById('mapImg').addEventListener('touchmove', function(e) {
-  if(!dragging) return;
-  mapX = e.touches[0].clientX - startX;
-  mapY = e.touches[0].clientY - startY;
-  updateMapTransform();
-  e.preventDefault();
-});
+html2canvas(document.getElementById("poster")).then(canvas=>{
+let link=document.createElement("a")
+link.download="poster.png"
+link.href=canvas.toDataURL()
+link.click()
+})
 
-document.getElementById('mapImg').addEventListener('touchend', function() {
-  dragging = false;
-});
-
-// ===== SAVE/LOAD MENU =====
-function openMenu() {
-  document.getElementById('menuModal').style.display = 'block';
-  loadLocations();
 }
 
-function closeMenu() {
-  document.getElementById('menuModal').style.display = 'none';
-}
+</script>
 
-function loadLocations() {
-  const list = document.getElementById('locationsList');
-  list.innerHTML = '';
-  let hasItems = false;
-  
-  for(let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if(key && key.startsWith('election_')) {
-      hasItems = true;
-      const name = key.replace('election_', '');
-      const div = document.createElement('div');
-      div.className = 'location-item';
-      
-      const nameSpan = document.createElement('span');
-      nameSpan.innerText = '📍 ' + name;
-      nameSpan.onclick = function() { loadLocation(name); };
-      
-      const deleteSpan = document.createElement('span');
-      deleteSpan.className = 'delete-btn';
-      deleteSpan.innerText = '✕';
-      deleteSpan.onclick = function(e) {
-        e.stopPropagation();
-        if(confirm('Delete this location?')) {
-          localStorage.removeItem('election_' + name);
-          loadLocations();
-        }
-      };
-      
-      div.appendChild(nameSpan);
-      div.appendChild(deleteSpan);
-      list.appendChild(div);
-    }
-  }
-  
-  if (!hasItems) {
-    list.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">No saved locations</div>';
-  }
-}
-
-function saveLocation() {
-  const name = document.getElementById('locName').value.trim();
-  if(!name) return alert('Enter location name');
-  
-  const data = {
-    // Party logos
-    imgRSP: document.getElementById('imgRSP').src || '',
-    imgNC: document.getElementById('imgNC').src || '',
-    imgUML: document.getElementById('imgUML').src || '',
-    imgRPP: document.getElementById('imgRPP').src || '',
-    
-    // Vote percentages
-    countRSP: document.getElementById('countRSP').value,
-    countNC: document.getElementById('countNC').value,
-    countUML: document.getElementById('countUML').value,
-    countRPP: document.getElementById('countRPP').value,
-    
-    // Status text
-    proudly: document.getElementById('proudlyText').value,
-    confused: document.getElementById('confusedText').value,
-    
-    // Map
-    map: document.getElementById('mapImg').src || '',
-    
-    // Other
-    address: document.getElementById('addrInp').value,
-    date: document.getElementById('dateDisplay').i
+</body>
+</html>
