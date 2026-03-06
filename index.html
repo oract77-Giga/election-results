@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Election Update 2082</title>
+<title>Election 2082 - Live Colors</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{background:#e9e9ec;font-family:Arial,sans-serif;display:flex;justify-content:center}
@@ -16,11 +16,11 @@ h1{font-size:22px;color:#000}
 
 /* ADDRESS */
 .address-box{background:white;border-radius:15px;padding:10px;margin-bottom:15px}
-.addr-inp{width:100%;border:none;padding:8px 5px;font-size:14px;background:transparent;-webkit-appearance:none;appearance:none}
+.addr-inp{width:100%;border:none;padding:8px 5px;font-size:14px;background:transparent}
 
 hr{margin:10px 0;border-color:#ccc}
 
-/* ELECTION TITLE - NEW */
+/* ELECTION TITLE */
 .election-title{
   text-align:center;
   font-size:24px;
@@ -35,7 +35,7 @@ hr{margin:10px 0;border-color:#ccc}
   padding-bottom:5px;
 }
 
-/* PARTY LOGOS ROW - EXACT FORMAT */
+/* PARTY LOGOS - KIND 1 */
 .party-logos{
   display:flex;
   justify-content:space-around;
@@ -75,11 +75,18 @@ hr{margin:10px 0;border-color:#ccc}
   height:100%;
   object-fit:cover;
   display:none;
+  position:absolute;
+  top:0;
+  left:0;
 }
 .logo-circle .plus{
   font-size:24px;
   color:#999;
   display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
 }
 .logo-input{
   position:absolute;
@@ -89,7 +96,7 @@ hr{margin:10px 0;border-color:#ccc}
   height:100%;
   opacity:0;
   cursor:pointer;
-  z-index:5;
+  z-index:10;
 }
 .party-name{
   font-size:14px;
@@ -100,7 +107,7 @@ hr{margin:10px 0;border-color:#ccc}
 .party-name.uml{ color:#FFD93D; }
 .party-name.rpp{ color:#6C5CE7; }
 
-/* SHARE DATE ROW */
+/* SHARE DATE */
 .share-date{
   display:flex;
   justify-content:space-between;
@@ -121,9 +128,18 @@ hr{margin:10px 0;border-color:#ccc}
   padding:5px 15px;
   border-radius:20px;
   font-size:14px;
+  cursor:pointer;
+}
+.date-value input{
+  width:100px;
+  border:none;
+  background:transparent;
+  text-align:center;
+  font-size:14px;
+  padding:2px;
 }
 
-/* VOTE BARS SECTION */
+/* VOTE BARS - KIND 2 WITH COLOR CHANGING */
 .vote-section{
   background:white;
   border-radius:20px;
@@ -160,9 +176,7 @@ hr{margin:10px 0;border-color:#ccc}
 .vote-bar{
   height:100%;
   width:0%;
-  background:linear-gradient(90deg, #4CAF50, #45a049);
   border-radius:20px;
-  transition:width 0.3s;
   display:flex;
   align-items:center;
   justify-content:flex-end;
@@ -171,8 +185,9 @@ hr{margin:10px 0;border-color:#ccc}
   font-weight:bold;
   font-size:14px;
   white-space:nowrap;
+  transition:width 0.2s, background 0.2s;
 }
-.vote-input{
+.vote-file-input{
   position:absolute;
   top:0;
   left:0;
@@ -183,23 +198,20 @@ hr{margin:10px 0;border-color:#ccc}
   z-index:5;
 }
 .vote-count{
-  min-width:60px;
+  min-width:70px;
   text-align:right;
-  font-weight:bold;
-  font-size:14px;
 }
 .vote-count input{
   width:70px;
   border:1px solid #ddd;
   border-radius:15px;
-  padding:5px 8px;
+  padding:8px 5px;
   text-align:center;
   font-size:14px;
   background:white;
-  -webkit-appearance:none;
 }
 
-/* STATUS SECTION */
+/* STATUS */
 .status-section{
   display:flex;
   justify-content:space-between;
@@ -213,45 +225,72 @@ hr{margin:10px 0;border-color:#ccc}
 }
 .status-proudly{ color:#FF6B6B; }
 .status-confused{ color:#6C5CE7; }
+.status-proudly input, .status-confused input{
+  border:none;
+  background:transparent;
+  font-size:18px;
+  font-weight:bold;
+  width:100px;
+  text-align:center;
+}
+.status-proudly input{ color:#FF6B6B; }
+.status-confused input{ color:#6C5CE7; }
 
-/* MAP SECTION */
+/* MAP - KIND 3 */
 .map-box{background:white;border-radius:20px;padding:15px;margin:10px 0}
 .map-title{text-align:center;font-size:14px;margin-bottom:10px;color:#666}
 .map-container{width:100%;height:150px;background:#f0f0f0;border-radius:15px;position:relative;overflow:hidden}
-.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
 .map-ph-plus{font-size:40px;color:#999}
 .map-ph-hint{font-size:10px;color:#999}
-#mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
-#mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:10}
-.map-controls{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.map-btn{padding:8px 15px;background:#f0f0f0;border:none;border-radius:25px;font-size:12px;cursor:pointer}
+#mapImg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:none;
+  cursor:move;
+}
+#mapFile{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+  z-index:20;
+}
+.map-controls{
+  display:flex;
+  gap:5px;
+  justify-content:center;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.map-btn{
+  padding:8px 15px;
+  background:#f0f0f0;
+  border:none;
+  border-radius:25px;
+  font-size:12px;
+  cursor:pointer;
+  -webkit-appearance:none;
+}
 
-/* SAVE MENU */
-.menu-btn{
+/* BUTTONS */
+.menu-btn, #dlBtn{
   width:100%;
   padding:15px;
-  background:#007aff;
-  color:white;
   border:none;
   border-radius:30px;
-  margin:10px 0;
+  margin:5px 0;
   font-size:16px;
   cursor:pointer;
   -webkit-appearance:none;
 }
-.menu-btn:active{opacity:0.8}
-
-#dlBtn{
-  width:100%;
-  padding:15px;
-  background:black;
-  color:white;
-  border:none;
-  border-radius:30px;
-  font-size:16px;
-  margin-top:5px;
-  cursor:pointer;
-}
+.menu-btn{ background:#007aff; color:white; }
+#dlBtn{ background:black; color:white; }
 
 /* MODAL */
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000}
@@ -265,8 +304,7 @@ hr{margin:10px 0;border-color:#ccc}
   border-bottom:1px solid #eee;
   cursor:pointer;
 }
-.location-item:active{background:#f5f5f5}
-.delete-btn{color:#ff3b30;padding:5px 15px;font-size:18px}
+.delete-btn{ color:#ff3b30; padding:5px 15px; font-size:18px; }
 #locName{
   width:100%;
   padding:12px;
@@ -274,30 +312,19 @@ hr{margin:10px 0;border-color:#ccc}
   border-radius:15px;
   border:1px solid #ddd;
   font-size:14px;
-  -webkit-appearance:none;
 }
-.save-btn{
-  background:#007aff;
-  color:white;
+.save-btn, .close-btn{
+  width:100%;
+  padding:12px;
   border:none;
   border-radius:25px;
-  padding:12px;
-  width:100%;
-  font-size:14px;
   margin:5px 0;
+  font-size:14px;
   cursor:pointer;
-}
-.close-btn{
-  background:#666;
   color:white;
-  border:none;
-  border-radius:25px;
-  padding:12px;
-  width:100%;
-  font-size:14px;
-  margin:5px 0;
-  cursor:pointer;
 }
+.save-btn{ background:#007aff; }
+.close-btn{ background:#666; }
 </style>
 </head>
 <body>
@@ -311,26 +338,24 @@ hr{margin:10px 0;border-color:#ccc}
    <div id="clock">--:--:-- NPT</div>
   </div>
 
-  <!-- ADDRESS -->
   <div class="address-box">
    <input class="addr-inp" id="addrInp" placeholder="Election venue...">
   </div>
 
   <hr>
 
-  <!-- ELECTION TITLE 2082 -->
   <div class="election-title">
    <span>ELECTION UPDATE 2082</span>
   </div>
 
-  <!-- PARTY LOGOS ROW - RSP, NC, UML, RPP -->
+  <!-- ===== KIND 1: PARTY LOGOS (4 PHOTOS) ===== -->
   <div class="party-logos">
    <!-- RSP -->
    <div class="logo-item">
     <div class="logo-circle rsp" id="logoRSP">
      <span class="plus" id="plusRSP">+</span>
      <img id="imgRSP">
-     <input type="file" accept="image/*" class="logo-input" id="fileRSP" onchange="uploadPartyLogo('RSP')">
+     <input type="file" accept="image/*" class="logo-input" id="fileRSP" onchange="uploadLogo('RSP')">
     </div>
     <div class="party-name rsp">RSP</div>
    </div>
@@ -340,7 +365,7 @@ hr{margin:10px 0;border-color:#ccc}
     <div class="logo-circle nc" id="logoNC">
      <span class="plus" id="plusNC">+</span>
      <img id="imgNC">
-     <input type="file" accept="image/*" class="logo-input" id="fileNC" onchange="uploadPartyLogo('NC')">
+     <input type="file" accept="image/*" class="logo-input" id="fileNC" onchange="uploadLogo('NC')">
     </div>
     <div class="party-name nc">NC</div>
    </div>
@@ -350,7 +375,7 @@ hr{margin:10px 0;border-color:#ccc}
     <div class="logo-circle uml" id="logoUML">
      <span class="plus" id="plusUML">+</span>
      <img id="imgUML">
-     <input type="file" accept="image/*" class="logo-input" id="fileUML" onchange="uploadPartyLogo('UML')">
+     <input type="file" accept="image/*" class="logo-input" id="fileUML" onchange="uploadLogo('UML')">
     </div>
     <div class="party-name uml">UML</div>
    </div>
@@ -360,97 +385,100 @@ hr{margin:10px 0;border-color:#ccc}
     <div class="logo-circle rpp" id="logoRPP">
      <span class="plus" id="plusRPP">+</span>
      <img id="imgRPP">
-     <input type="file" accept="image/*" class="logo-input" id="fileRPP" onchange="uploadPartyLogo('RPP')">
+     <input type="file" accept="image/*" class="logo-input" id="fileRPP" onchange="uploadLogo('RPP')">
     </div>
     <div class="party-name rpp">RPP</div>
    </div>
   </div>
 
-  <!-- SHARE DATE ROW -->
+  <!-- SHARE DATE (editable) -->
   <div class="share-date">
    <span class="share-label">공유 날짜:</span>
-   <span class="date-value" id="shareDate">2082/01/15</span>
+   <span class="date-value" id="shareDate" onclick="editDate()">
+    <input type="text" id="dateInput" value="2082/01/15" style="display:none;">
+    <span id="dateDisplay">2082/01/15</span>
+   </span>
   </div>
 
-  <!-- VOTE BARS SECTION -->
+  <!-- ===== KIND 2: VOTE BARS WITH COLOR CHANGING ===== -->
   <div class="vote-section">
    <!-- RSP -->
    <div class="vote-row">
     <div class="vote-party rsp">RSP</div>
-    <div class="vote-bar-container" onclick="document.getElementById('votesRSP').click()">
+    <div class="vote-bar-container">
      <div class="vote-bar" id="barRSP" style="width:75%">75%</div>
-     <input type="file" accept="image/*" class="vote-input" id="votesRSP" onchange="updateVoteFromFile('RSP')" multiple>
+     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteRSP" onchange="uploadVoteImage('RSP')" multiple>
     </div>
     <div class="vote-count">
-     <input type="text" id="countRSP" value="75%" onkeyup="updateVoteBar('RSP')" placeholder="75%">
+     <input type="text" id="countRSP" value="75" onkeyup="updateBar('RSP')" placeholder="%">
     </div>
    </div>
    
    <!-- NC -->
    <div class="vote-row">
     <div class="vote-party nc">NC</div>
-    <div class="vote-bar-container" onclick="document.getElementById('votesNC').click()">
+    <div class="vote-bar-container">
      <div class="vote-bar" id="barNC" style="width:45%">45%</div>
-     <input type="file" accept="image/*" class="vote-input" id="votesNC" onchange="updateVoteFromFile('NC')" multiple>
+     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteNC" onchange="uploadVoteImage('NC')" multiple>
     </div>
     <div class="vote-count">
-     <input type="text" id="countNC" value="45%" onkeyup="updateVoteBar('NC')" placeholder="45%">
+     <input type="text" id="countNC" value="45" onkeyup="updateBar('NC')" placeholder="%">
     </div>
    </div>
    
    <!-- UML -->
    <div class="vote-row">
     <div class="vote-party uml">UML</div>
-    <div class="vote-bar-container" onclick="document.getElementById('votesUML').click()">
+    <div class="vote-bar-container">
      <div class="vote-bar" id="barUML" style="width:30%">30%</div>
-     <input type="file" accept="image/*" class="vote-input" id="votesUML" onchange="updateVoteFromFile('UML')" multiple>
+     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteUML" onchange="uploadVoteImage('UML')" multiple>
     </div>
     <div class="vote-count">
-     <input type="text" id="countUML" value="30%" onkeyup="updateVoteBar('UML')" placeholder="30%">
+     <input type="text" id="countUML" value="30" onkeyup="updateBar('UML')" placeholder="%">
     </div>
    </div>
    
    <!-- RPP -->
    <div class="vote-row">
     <div class="vote-party rpp">RPP</div>
-    <div class="vote-bar-container" onclick="document.getElementById('votesRPP').click()">
+    <div class="vote-bar-container">
      <div class="vote-bar" id="barRPP" style="width:15%">15%</div>
-     <input type="file" accept="image/*" class="vote-input" id="votesRPP" onchange="updateVoteFromFile('RPP')" multiple>
+     <input type="file" accept="image/*" class="vote-file-input" id="fileVoteRPP" onchange="uploadVoteImage('RPP')" multiple>
     </div>
     <div class="vote-count">
-     <input type="text" id="countRPP" value="15%" onkeyup="updateVoteBar('RPP')" placeholder="15%">
+     <input type="text" id="countRPP" value="15" onkeyup="updateBar('RPP')" placeholder="%">
     </div>
    </div>
   </div>
 
-  <!-- PROUDLY CONFUSED SECTION -->
+  <!-- PROUDLY CONFUSED (editable) -->
   <div class="status-section">
-   <span class="status-proudly">proudly</span>
-   <span class="status-confused">confused</span>
+   <span class="status-proudly"><input type="text" id="proudlyText" value="proudly" style="color:#FF6B6B;"></span>
+   <span class="status-confused"><input type="text" id="confusedText" value="confused" style="color:#6C5CE7;"></span>
   </div>
 
-  <!-- MAP -->
+  <!-- ===== KIND 3: MAP PHOTO ===== -->
   <div class="map-box">
-   <div class="map-title">🗺 REGION MAP</div>
+   <div class="map-title">🗺 REGION MAP (tap to add/change photo)</div>
    <div class="map-container">
     <div class="map-ph" id="mapPH">
      <div class="map-ph-plus">+</div>
      <div class="map-ph-hint">Tap to add map</div>
     </div>
-    <img id="mapImg">
+    <img id="mapImg" draggable="false">
     <input type="file" accept="image/*" id="mapFile" onchange="uploadMap()">
    </div>
    <div class="map-controls" id="mapControls" style="display:none">
-    <button class="map-btn" onclick="mapZoom(0.2)">➕</button>
-    <button class="map-btn" onclick="mapZoom(-0.2)">➖</button>
-    <button class="map-btn" onclick="resetMap()">⟲</button>
+    <button class="map-btn" onclick="mapZoom(0.2)">➕ Zoom In</button>
+    <button class="map-btn" onclick="mapZoom(-0.2)">➖ Zoom Out</button>
+    <button class="map-btn" onclick="resetMap()">⟲ Reset</button>
    </div>
   </div>
 
  </div> <!-- end capture -->
 
- <!-- SAVE MENU BUTTON -->
- <button class="menu-btn" onclick="openMenu()">📋 LOCATIONS MENU</button>
+ <!-- MENU BUTTONS -->
+ <button class="menu-btn" onclick="openMenu()">📋 LOCATIONS MENU (SAVE/LOAD ALL)</button>
  <button id="dlBtn" onclick="downloadImage()">⬇ DOWNLOAD JPG</button>
 
  <!-- MODAL -->
@@ -458,7 +486,7 @@ hr{margin:10px 0;border-color:#ccc}
   <div class="modal-content" onclick="event.stopPropagation()">
    <div class="modal-title">Saved Locations</div>
    <div id="locationsList" style="min-height:50px;max-height:300px;overflow-y:auto;margin-bottom:10px"></div>
-   <input type="text" id="locName" placeholder="New location name">
+   <input type="text" id="locName" placeholder="Enter location name">
    <button class="save-btn" onclick="saveLocation()">💾 SAVE CURRENT</button>
    <button class="close-btn" onclick="closeMenu()">CLOSE</button>
   </div>
@@ -466,28 +494,29 @@ hr{margin:10px 0;border-color:#ccc}
 </div>
 
 <script>
-// ===== NEPAL TIME =====
+// ===== NEPAL TIME (NPT) =====
 function updateClock() {
   const d = new Date();
-  const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  const nepaliTime = new Date(utc + (3600000 * 5) + (2700000));
   
-  let hours = nepaliTime.getHours();
+  // Nepal Time is UTC+5:45
+  const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+  const nepaliTime = new Date(utc + (3600000 * 5) + (2700000)); // 5hrs 45min = 5.75hrs
+  
+  // Format: YYYY/MM/DD HH:MM:SS
+  const year = nepaliTime.getFullYear();
+  const month = (nepaliTime.getMonth() + 1).toString().padStart(2,'0');
+  const day = nepaliTime.getDate().toString().padStart(2,'0');
+  const hours = nepaliTime.getHours().toString().padStart(2,'0');
   const minutes = nepaliTime.getMinutes().toString().padStart(2,'0');
   const seconds = nepaliTime.getSeconds().toString().padStart(2,'0');
   
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  
-  document.getElementById('clock').innerText = 
-    `${hours.toString().padStart(2,'0')}:${minutes}:${seconds} ${ampm} NPT`;
+  document.getElementById('clock').innerText = `${year}/${month}/${day} ${hours}:${minutes}:${seconds} NPT`;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ===== PARTY LOGO UPLOAD =====
-function uploadPartyLogo(party) {
+// ===== KIND 1: PARTY LOGO UPLOAD =====
+function uploadLogo(party) {
   const fileInput = document.getElementById('file' + party);
   const img = document.getElementById('img' + party);
   const plus = document.getElementById('plus' + party);
@@ -503,27 +532,71 @@ function uploadPartyLogo(party) {
   }
 }
 
-// ===== VOTE BAR FUNCTIONS =====
-function updateVoteBar(party) {
+// ===== KIND 2: VOTE BAR FUNCTIONS WITH COLOR CHANGING =====
+function updateBar(party) {
   const input = document.getElementById('count' + party);
   const bar = document.getElementById('bar' + party);
-  let val = input.value.replace(/[^0-9]/g, '');
-  val = Math.min(100, Math.max(0, parseInt(val) || 0));
+  let val = parseInt(input.value) || 0;
+  val = Math.min(100, Math.max(0, val));
+  
+  // Update width
   bar.style.width = val + '%';
   bar.innerText = val + '%';
-  input.value = val + '%';
+  input.value = val;
+  
+  // Change color based on value
+  if (val < 30) {
+    // Low vote - RED
+    bar.style.background = '#ff4444';
+  } else if (val < 60) {
+    // Medium vote - ORANGE/YELLOW
+    bar.style.background = '#ffaa44';
+  } else {
+    // High vote - GREEN (varies intensity)
+    // Calculate green intensity: lighter for 60%, darker for 100%
+    const intensity = Math.floor(40 + (val - 60) * 1.5); // 40-100 range
+    bar.style.background = `rgb(0, ${intensity + 100}, 0)`; // 100-200 green range
+  }
 }
 
-function updateVoteFromFile(party) {
-  // This function is triggered when vote bar is clicked
-  // You can customize what happens when file input is used
-  console.log('Vote bar clicked for ' + party);
+function uploadVoteImage(party) {
+  // This allows attaching images to vote bars
+  const fileInput = document.getElementById('fileVote' + party);
+  if(fileInput.files && fileInput.files[0]) {
+    console.log('Vote image attached for', party);
+  }
 }
 
-// ===== MAP FUNCTIONS =====
-let mapScale = 1;
-let mapX = 0;
-let mapY = 0;
+// Initialize all bars with colors
+function initAllBars() {
+  updateBar('RSP');
+  updateBar('NC');
+  updateBar('UML');
+  updateBar('RPP');
+}
+
+// ===== DATE EDIT =====
+function editDate() {
+  const display = document.getElementById('dateDisplay');
+  const input = document.getElementById('dateInput');
+  display.style.display = 'none';
+  input.style.display = 'inline-block';
+  input.value = display.innerText;
+  input.focus();
+  
+  input.onblur = function() {
+    display.innerText = input.value;
+    display.style.display = 'inline';
+    input.style.display = 'none';
+  };
+  
+  input.onkeypress = function(e) {
+    if(e.key === 'Enter') input.blur();
+  };
+}
+
+// ===== KIND 3: MAP FUNCTIONS =====
+let mapScale = 1, mapX = 0, mapY = 0, dragging = false, startX, startY;
 
 function uploadMap() {
   const file = document.getElementById('mapFile');
@@ -535,9 +608,7 @@ function uploadMap() {
       img.style.display = 'block';
       document.getElementById('mapPH').style.display = 'none';
       document.getElementById('mapControls').style.display = 'flex';
-      mapScale = 1;
-      mapX = 0;
-      mapY = 0;
+      mapScale = 1; mapX = 0; mapY = 0;
       updateMapTransform();
     }
     reader.readAsDataURL(file.files[0]);
@@ -545,8 +616,7 @@ function uploadMap() {
 }
 
 function updateMapTransform() {
-  document.getElementById('mapImg').style.transform = 
-    `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
+  document.getElementById('mapImg').style.transform = `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
 }
 
 function mapZoom(delta) {
@@ -555,13 +625,11 @@ function mapZoom(delta) {
 }
 
 function resetMap() {
-  mapScale = 1;
-  mapX = 0;
-  mapY = 0;
+  mapScale = 1; mapX = 0; mapY = 0;
   updateMapTransform();
 }
 
-// Touch events for map
+// Touch drag for map
 document.getElementById('mapImg').addEventListener('touchstart', function(e) {
   if(!this.src) return;
   dragging = true;
@@ -582,11 +650,7 @@ document.getElementById('mapImg').addEventListener('touchend', function() {
   dragging = false;
 });
 
-// Drag variables
-let dragging = false;
-let startX, startY;
-
-// ===== SAVE MENU FUNCTIONS =====
+// ===== SAVE/LOAD MENU =====
 function openMenu() {
   document.getElementById('menuModal').style.display = 'block';
   loadLocations();
@@ -606,7 +670,6 @@ function loadLocations() {
     if(key && key.startsWith('election_')) {
       hasItems = true;
       const name = key.replace('election_', '');
-      
       const div = document.createElement('div');
       div.className = 'location-item';
       
@@ -619,7 +682,10 @@ function loadLocations() {
       deleteSpan.innerText = '✕';
       deleteSpan.onclick = function(e) {
         e.stopPropagation();
-        deleteLocation(name);
+        if(confirm('Delete this location?')) {
+          localStorage.removeItem('election_' + name);
+          loadLocations();
+        }
       };
       
       div.appendChild(nameSpan);
@@ -635,10 +701,7 @@ function loadLocations() {
 
 function saveLocation() {
   const name = document.getElementById('locName').value.trim();
-  if(!name) {
-    alert('Please enter a location name');
-    return;
-  }
+  if(!name) return alert('Enter location name');
   
   const data = {
     // Party logos
@@ -653,71 +716,13 @@ function saveLocation() {
     countUML: document.getElementById('countUML').value,
     countRPP: document.getElementById('countRPP').value,
     
+    // Status text
+    proudly: document.getElementById('proudlyText').value,
+    confused: document.getElementById('confusedText').value,
+    
     // Map
     map: document.getElementById('mapImg').src || '',
-    address: document.getElementById('addrInp').value || '',
     
-    // Share date
-    shareDate: document.getElementById('shareDate').innerText
-  };
-  
-  try {
-    localStorage.setItem('election_' + name, JSON.stringify(data));
-    document.getElementById('locName').value = '';
-    loadLocations();
-    alert('Location saved!');
-  } catch(e) {
-    alert('Error saving');
-  }
-}
-
-function loadLocation(name) {
-  try {
-    const data = JSON.parse(localStorage.getItem('election_' + name));
-    if (!data) return;
-    
-    // Restore logos
-    function restoreLogo(party, src) {
-      const img = document.getElementById('img' + party);
-      const plus = document.getElementById('plus' + party);
-      if (src && src !== '' && src !== 'about:blank') {
-        img.src = src;
-        img.style.display = 'block';
-        if (plus) plus.style.display = 'none';
-      }
-    }
-    
-    restoreLogo('RSP', data.imgRSP);
-    restoreLogo('NC', data.imgNC);
-    restoreLogo('UML', data.imgUML);
-    restoreLogo('RPP', data.imgRPP);
-    
-    // Restore vote percentages
-    if(data.countRSP) {
-      document.getElementById('countRSP').value = data.countRSP;
-      updateVoteBar('RSP');
-    }
-    if(data.countNC) {
-      document.getElementById('countNC').value = data.countNC;
-      updateVoteBar('NC');
-    }
-    if(data.countUML) {
-      document.getElementById('countUML').value = data.countUML;
-      updateVoteBar('UML');
-    }
-    if(data.countRPP) {
-      document.getElementById('countRPP').value = data.countRPP;
-      updateVoteBar('RPP');
-    }
-    
-    // Restore map
-    if(data.map && data.map !== '') {
-      document.getElementById('mapImg').src = data.map;
-      document.getElementById('mapImg').style.display = 'block';
-      document.getElementById('mapPH').style.display = 'none';
-      document.getElementById('mapControls').style.display = 'flex';
-    }
-    
-    document.getElementById('addrInp').value = data.address || '';
-    if(data.shareDate) document.getElementById('shareDate').innerText = data.shareDate;
-  
+    // Other
+    address: document.getElementById('addrInp').value,
+    date: document.getElementById('dateDisplay').i
