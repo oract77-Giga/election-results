@@ -2,616 +2,234 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Election Results - Fixed Save</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Election Update</title>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#e9e9ec;font-family:Arial,sans-serif;display:flex;justify-content:center}
-.wrapper{width:100%;max-width:430px;background:#f2f2f4;padding:15px}
+
+body{
+background:#111;
+display:flex;
+justify-content:center;
+font-family:serif;
+}
+
+.wrapper{
+width:420px;
+padding:10px;
+}
+
+/* POSTER */
+
+.poster{
+background:#f5e2b8;
+padding:20px;
+border-radius:10px;
+color:#3b2b1a;
+box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
 
 /* HEADER */
-.top{display:flex;justify-content:space-between;margin-bottom:15px}
-h1{font-size:22px;color:#000}
-#clock{background:#ddd;padding:5px 10px;border-radius:20px;font-size:14px;white-space:nowrap}
 
-/* ADDRESS */
-.address-box{background:white;border-radius:15px;padding:10px;margin-bottom:15px}
-.addr-inp{width:100%;border:none;padding:5px;font-size:14px;background:transparent}
-
-hr{margin:10px 0;border-color:#ccc}
-
-/* CARDS */
-.cards{display:flex;gap:5px;margin-bottom:15px}
-.card{
-  flex:1; background:white; border-radius:15px; padding:12px 3px 8px; 
-  text-align:center; position:relative; min-height:220px;
-  display:flex; flex-direction:column;
+.header{
+text-align:center;
+font-size:24px;
+font-weight:bold;
+margin-bottom:15px;
 }
-.rank{position:absolute;top:5px;left:5px;background:gold;padding:2px 6px;border-radius:10px;font-size:10px;color:white;z-index:2}
-.gold .rank{background:#b38a3a} 
-.silver .rank{background:#8e8e93}
-.bronze .rank{background:#9b5e2a}
 
-/* PHOTO */
-.photo-wrap{width:60px;height:60px;margin:15px auto 8px;position:relative;flex-shrink:0}
-.ring-bg{width:100%;height:100%;border-radius:50%;padding:3px;box-sizing:border-box}
-.gold-ring{background:linear-gradient(45deg,gold,#ffe68f)}
-.silver-ring{background:linear-gradient(45deg,silver,white)}
-.bronze-ring{background:linear-gradient(45deg,#cd7f32,#f2c18d)}
-.circle{
-  width:100%; height:100%; border-radius:50%; background:#f0f0f0;
-  display:flex; align-items:center; justify-content:center; overflow:hidden;
-  position:relative;
+/* PARTY ROW */
+
+.party-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
 }
-.circle img{
-  width:100%; height:100%; object-fit:cover; display:none;
-  position:absolute; top:0; left:0;
+
+.party{
+text-align:center;
+font-size:12px;
 }
-.circle .plus{
-  font-size:20px; color:#999; z-index:2;
-  display:flex; align-items:center; justify-content:center;
-  width:100%; height:100%;
+
+.party img{
+width:40px;
+height:40px;
+display:block;
+margin:auto;
 }
-.photo-input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:5}
 
-.divider{height:1px;background:#ddd;margin:8px 0;flex-shrink:0}
+/* CANDIDATES */
 
-/* TEXT INPUTS */
-.ci{
-  width:100%;
-  border:none;
-  text-align:center;
-  padding:3px 2px;
-  background:transparent;
-  word-break:break-word;
-  white-space:normal;
-  line-height:1.4;
-  resize:none;
-  overflow:visible;
-  display:block;
-  min-height:24px;
+.candidate{
+display:flex;
+align-items:center;
+margin-bottom:12px;
 }
-.cn{font-weight:bold;font-size:12px;margin:2px 0}
-.cp{
-  font-size:10px; 
-  margin:2px 0;
-  min-height:28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+
+.candidate img{
+width:55px;
+height:55px;
+border-radius:50%;
+margin-right:10px;
+object-fit:cover;
+border:2px solid #3b2b1a;
 }
-.cv{font-size:13px;font-weight:bold;margin:2px 0}
-.gt{color:#b38a3a}
-.st{color:#555}
-.bt{color:#9b5e2a}
 
-/* NEEDS BOX */
-.needs-box{background:white;border-radius:15px;padding:10px;margin:15px 0}
-.needs-hdr{background:#333;color:white;padding:5px;border-radius:10px;margin-bottom:10px;font-size:11px}
-.needs-row{display:flex;align-items:center;padding:8px 5px;border-bottom:1px solid #eee}
-.ndot{width:20px;height:20px;border-radius:50%;background:gray;color:white;display:flex;align-items:center;justify-content:center;font-size:9px;margin-right:8px;flex-shrink:0}
-.ndot.silver{background:#8e8e93}
-.ndot.bronze{background:#9b5e2a}
-.nname{flex:1;font-size:12px;word-break:break-word;padding-right:5px}
-.nright{text-align:right;flex-shrink:0}
-.nnum{font-weight:bold;font-size:14px}
-.nlbl{font-size:8px;color:#999}
+.name{
+font-weight:bold;
+font-size:16px;
+}
 
-/* MAP */
-.map-box{background:white;border-radius:15px;padding:15px;margin:15px 0}
-.map-title{text-align:center;font-size:12px;margin-bottom:10px}
-.map-container{width:100%;height:150px;background:#f0f0f0;border-radius:10px;position:relative;overflow:hidden}
-.map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.map-ph-plus{font-size:40px;color:#999}
-.map-ph-hint{font-size:10px;color:#999}
-#mapImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
-#mapFile{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
-.map-controls{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.map-btn{padding:5px 10px;background:#f0f0f0;border:none;border-radius:20px;font-size:11px}
+.partyname{
+font-size:13px;
+}
 
-/* SAVE MENU - FIXED */
-.menu-btn{width:100%;padding:10px;background:#007aff;color:white;border:none;border-radius:25px;margin-bottom:10px;font-size:14px;cursor:pointer}
-.menu-btn:active{opacity:0.8}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000}
-.modal-content{background:white;width:90%;max-width:380px;margin:50px auto;border-radius:20px;padding:20px;max-height:80vh;overflow-y:auto}
-.modal-title{font-size:18px;font-weight:bold;margin-bottom:15px}
-.location-item{display:flex;justify-content:space-between;align-items:center;padding:12px 10px;border-bottom:1px solid #eee;cursor:pointer}
-.location-item:hover{background:#f5f5f5}
-.location-item span:first-child{flex:1;font-size:14px}
-.delete-btn{color:#ff3b30;padding:5px 10px;font-size:16px;font-weight:bold;border-radius:5px}
-.delete-btn:hover{background:#ffeeed}
-#locName{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:1px solid #ddd;font-size:14px}
-.save-btn{background:#007aff;color:white;border:none;border-radius:25px;padding:12px;width:100%;font-size:14px;margin:5px 0;cursor:pointer}
-.close-btn{background:#666;color:white;border:none;border-radius:25px;padding:12px;width:100%;font-size:14px;margin:5px 0;cursor:pointer}
+/* RESULT BOX */
 
-/* DOWNLOAD */
-#dlBtn{width:100%;padding:15px;background:black;color:white;border:none;border-radius:30px;font-size:16px;margin-top:10px;cursor:pointer}
-#dlBtn:active{opacity:0.8}
+.result{
+background:#2f2f2f;
+color:white;
+padding:10px;
+border-radius:8px;
+margin-top:10px;
+}
+
+.result-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:5px;
+}
+
+/* BUTTON */
+
+button{
+margin-top:15px;
+width:100%;
+padding:10px;
+font-size:16px;
+border:none;
+border-radius:6px;
+background:#c62828;
+color:white;
+cursor:pointer;
+}
+
 </style>
 </head>
+
 <body>
+
 <div class="wrapper">
 
- <!-- CAPTURE AREA -->
- <div id="captureArea">
+<div id="captureArea" class="poster">
 
-  <div class="top">
-   <h1>Election Results</h1>
-   <div id="clock">--:--:-- NPT</div>
-  </div>
+<div class="header">
+ELECTION UPDATE 2082
+</div>
 
-  <!-- ADDRESS -->
-  <div class="address-box">
-   <input class="addr-inp" id="addrInp" placeholder="Election venue...">
-  </div>
+<div class="party-row">
 
-  <hr>
+<div class="party">
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Nepali_Congress_tree.svg">
+NC
+</div>
 
-  <!-- CARDS -->
-  <div class="cards">
-   <!-- 1ST -->
-   <div class="card gold" id="card1">
-    <div class="rank" id="rank1">1st</div>
-    <div class="photo-wrap">
-     <div class="ring-bg gold-ring">
-      <div class="circle" id="circle1">
-       <span class="plus" id="plus1">+</span>
-       <img id="img1">
-      </div>
-     </div>
-     <input type="file" accept="image/*" class="photo-input" id="file1" onchange="uploadPhoto(1)">
-    </div>
-    <div class="divider"></div>
-    <input class="ci cn gt" id="name1" value="THOMAS F." onkeyup="updateAll()" placeholder="Name">
-    <input class="ci cp gt" id="party1" value="PROGRESS" onkeyup="updateAll()" placeholder="Party">
-    <input class="ci cv gt" id="votes1" value="14250" onkeyup="updateAll()" placeholder="Votes">
-   </div>
+<div class="party">
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/CPN-UML_sun.svg">
+UML
+</div>
 
-   <!-- 2ND -->
-   <div class="card silver" id="card2">
-    <div class="rank" id="rank2">2nd</div>
-    <div class="photo-wrap">
-     <div class="ring-bg silver-ring">
-      <div class="circle" id="circle2">
-       <span class="plus" id="plus2">+</span>
-       <img id="img2">
-      </div>
-     </div>
-     <input type="file" accept="image/*" class="photo-input" id="file2" onchange="uploadPhoto(2)">
-    </div>
-    <div class="divider"></div>
-    <input class="ci cn st" id="name2" value="LISA M." onkeyup="updateAll()" placeholder="Name">
-    <input class="ci cp st" id="party2" value="UNITY" onkeyup="updateAll()" placeholder="Party">
-    <input class="ci cv st" id="votes2" value="11230" onkeyup="updateAll()" placeholder="Votes">
-   </div>
+<div class="party">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/RSP_bell.svg">
+RSP
+</div>
 
-   <!-- 3RD -->
-   <div class="card bronze" id="card3">
-    <div class="rank" id="rank3">3rd</div>
-    <div class="photo-wrap">
-     <div class="ring-bg bronze-ring">
-      <div class="circle" id="circle3">
-       <span class="plus" id="plus3">+</span>
-       <img id="img3">
-      </div>
-     </div>
-     <input type="file" accept="image/*" class="photo-input" id="file3" onchange="uploadPhoto(3)">
-    </div>
-    <div class="divider"></div>
-    <input class="ci cn bt" id="name3" value="JAMES K." onkeyup="updateAll()" placeholder="Name">
-    <input class="ci cp bt" id="party3" value="HORIZON" onkeyup="updateAll()" placeholder="Party">
-    <input class="ci cv bt" id="votes3" value="9850" onkeyup="updateAll()" placeholder="Votes">
-   </div>
-  </div>
+<div class="party">
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Maoist_Centre_symbol.svg">
+MC
+</div>
 
-  <!-- NEEDS TO WIN -->
-  <div class="needs-box">
-   <div class="needs-hdr">🗳 VOTES NEEDED TO WIN</div>
-   <div class="needs-row">
-    <div class="ndot silver">2</div>
-    <div class="nname" id="needName2">LISA M.</div>
-    <div class="nright"><span class="nnum" id="needVotes2">0</span><div class="nlbl">needed</div></div>
-   </div>
-   <div class="needs-row">
-    <div class="ndot bronze">3</div>
-    <div class="nname" id="needName3">JAMES K.</div>
-    <div class="nright"><span class="nnum" id="needVotes3">0</span><div class="nlbl">needed</div></div>
-   </div>
-  </div>
+</div>
 
-  <!-- MAP -->
-  <div class="map-box">
-   <div class="map-title">🗺 REGION MAP</div>
-   <div class="map-container">
-    <div class="map-ph" id="mapPH">
-     <div class="map-ph-plus">+</div>
-     <div class="map-ph-hint">Tap to add map</div>
-    </div>
-    <img id="mapImg">
-    <input type="file" accept="image/*" id="mapFile" onchange="uploadMap()">
-   </div>
-   <div class="map-controls" id="mapControls" style="display:none">
-    <button class="map-btn" onclick="mapZoom(0.2)">➕</button>
-    <button class="map-btn" onclick="mapZoom(-0.2)">➖</button>
-    <button class="map-btn" onclick="resetMap()">⟲</button>
-   </div>
-  </div>
+<!-- Candidates -->
 
- </div> <!-- end capture -->
+<div class="candidate">
+<img src="https://i.imgur.com/1XK0K0E.jpeg">
+<div>
+<div class="name">Candidate Name</div>
+<div class="partyname">Party Name</div>
+</div>
+</div>
 
- <!-- SAVE MENU BUTTON -->
- <button class="menu-btn" onclick="openMenu()">📋 LOCATIONS MENU</button>
- <button id="dlBtn" onclick="downloadImage()">⬇ DOWNLOAD JPG</button>
+<div class="candidate">
+<img src="https://i.imgur.com/1XK0K0E.jpeg">
+<div>
+<div class="name">Candidate Name</div>
+<div class="partyname">Party Name</div>
+</div>
+</div>
 
- <!-- MODAL - FIXED STRUCTURE -->
- <div class="modal" id="menuModal" onclick="if(event.target===this) closeMenu()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-   <div class="modal-title">Saved Locations</div>
-   <div id="locationsList" style="min-height:50px;max-height:300px;overflow-y:auto;margin-bottom:10px"></div>
-   <input type="text" id="locName" placeholder="New location name">
-   <button class="save-btn" onclick="saveLocation()">💾 SAVE CURRENT</button>
-   <button class="close-btn" onclick="closeMenu()">CLOSE</button>
-  </div>
- </div>
+<div class="candidate">
+<img src="https://i.imgur.com/1XK0K0E.jpeg">
+<div>
+<div class="name">Candidate Name</div>
+<div class="partyname">Party Name</div>
+</div>
+</div>
+
+<div class="candidate">
+<img src="https://i.imgur.com/1XK0K0E.jpeg">
+<div>
+<div class="name">Candidate Name</div>
+<div class="partyname">Party Name</div>
+</div>
+</div>
+
+<!-- RESULT -->
+
+<div class="result">
+
+<div class="result-row">
+<span>COUNTING</span>
+<span>12345</span>
+</div>
+
+<div class="result-row">
+<span>LEADING</span>
+<span>Candidate Name</span>
+</div>
+
+<div class="result-row">
+<span>LEAD</span>
+<span>+2300</span>
+</div>
+
+</div>
+
+</div>
+
+<button onclick="capture()">Download Poster</button>
+
 </div>
 
 <script>
-// ===== NEPAL TIME (NPT) 12-HOUR FORMAT =====
-function updateClock() {
-  const d = new Date();
-  const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  const nepaliTime = new Date(utc + (3600000 * 5) + (2700000)); // +5:45
-  
-  let hours = nepaliTime.getHours();
-  const minutes = nepaliTime.getMinutes().toString().padStart(2,'0');
-  const seconds = nepaliTime.getSeconds().toString().padStart(2,'0');
-  
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  
-  document.getElementById('clock').innerText = 
-    `${hours.toString().padStart(2,'0')}:${minutes}:${seconds} ${ampm} NPT`;
-}
-setInterval(updateClock, 1000);
-updateClock();
 
-// ===== PHOTO UPLOAD =====
-function uploadPhoto(cardNum) {
-  const fileInput = document.getElementById('file' + cardNum);
-  const img = document.getElementById('img' + cardNum);
-  const plus = document.getElementById('plus' + cardNum);
-  
-  if(fileInput.files && fileInput.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      img.src = e.target.result;
-      img.style.display = 'block';
-      if (plus) plus.style.display = 'none';
-    }
-    reader.readAsDataURL(fileInput.files[0]);
-  }
+function capture(){
+
+html2canvas(document.querySelector("#captureArea")).then(canvas=>{
+
+let link=document.createElement("a")
+link.download="election-update.png"
+link.href=canvas.toDataURL()
+link.click()
+
+})
+
 }
 
-// ===== GET VOTE NUMBERS =====
-function getVote(id) {
-  return parseInt(document.getElementById(id).value.replace(/[^0-9]/g,'')) || 0;
-}
-
-// ===== UPDATE EVERYTHING =====
-function updateAll() {
-  const c1 = {
-    name: document.getElementById('name1').value,
-    party: document.getElementById('party1').value,
-    votes: getVote('votes1'),
-    img: document.getElementById('img1').src
-  };
-  
-  const c2 = {
-    name: document.getElementById('name2').value,
-    party: document.getElementById('party2').value,
-    votes: getVote('votes2'),
-    img: document.getElementById('img2').src
-  };
-  
-  const c3 = {
-    name: document.getElementById('name3').value,
-    party: document.getElementById('party3').value,
-    votes: getVote('votes3'),
-    img: document.getElementById('img3').src
-  };
-  
-  let sorted = [c1, c2, c3].sort((a,b) => b.votes - a.votes);
-  
-  function applyCard(index, data) {
-    document.getElementById('name' + index).value = data.name || '';
-    document.getElementById('party' + index).value = data.party || '';
-    document.getElementById('votes' + index).value = data.votes ? data.votes.toLocaleString() : '0';
-    
-    const img = document.getElementById('img' + index);
-    const plus = document.getElementById('plus' + index);
-    
-    if (data.img && data.img !== '' && data.img !== 'about:blank' && !data.img.includes('undefined')) {
-      img.src = data.img;
-      img.style.display = 'block';
-      if (plus) plus.style.display = 'none';
-    } else {
-      img.src = '';
-      img.style.display = 'none';
-      if (plus) plus.style.display = 'flex';
-    }
-  }
-  
-  applyCard(1, sorted[0]);
-  applyCard(2, sorted[1]);
-  applyCard(3, sorted[2]);
-  
-  document.getElementById('needName2').innerText = sorted[1].name || '—';
-  document.getElementById('needName3').innerText = sorted[2].name || '—';
-  
-  const need2 = Math.max(0, sorted[0].votes - sorted[1].votes + 1);
-  const need3 = Math.max(0, sorted[0].votes - sorted[2].votes + 1);
-  
-  document.getElementById('needVotes2').innerText = need2.toLocaleString();
-  document.getElementById('needVotes3').innerText = need3.toLocaleString();
-}
-
-// ===== MAP FUNCTIONS =====
-let mapScale = 1;
-let mapX = 0;
-let mapY = 0;
-
-function uploadMap() {
-  const file = document.getElementById('mapFile');
-  if(file.files && file.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = document.getElementById('mapImg');
-      img.src = e.target.result;
-      img.style.display = 'block';
-      document.getElementById('mapPH').style.display = 'none';
-      document.getElementById('mapControls').style.display = 'flex';
-      mapScale = 1;
-      mapX = 0;
-      mapY = 0;
-      updateMapTransform();
-    }
-    reader.readAsDataURL(file.files[0]);
-  }
-}
-
-function updateMapTransform() {
-  document.getElementById('mapImg').style.transform = 
-    `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
-}
-
-function mapZoom(delta) {
-  mapScale = Math.max(0.5, Math.min(3, mapScale + delta));
-  updateMapTransform();
-}
-
-function resetMap() {
-  mapScale = 1;
-  mapX = 0;
-  mapY = 0;
-  updateMapTransform();
-}
-
-// Touch drag
-let dragging = false;
-let startX, startY;
-
-document.getElementById('mapImg').addEventListener('touchstart', function(e) {
-  if(!this.src) return;
-  dragging = true;
-  startX = e.touches[0].clientX - mapX;
-  startY = e.touches[0].clientY - mapY;
-  e.preventDefault();
-});
-
-document.getElementById('mapImg').addEventListener('touchmove', function(e) {
-  if(!dragging) return;
-  mapX = e.touches[0].clientX - startX;
-  mapY = e.touches[0].clientY - startY;
-  updateMapTransform();
-  e.preventDefault();
-});
-
-document.getElementById('mapImg').addEventListener('touchend', function() {
-  dragging = false;
-});
-
-// ===== SAVE MENU - FIXED & CONSISTENT =====
-function openMenu() {
-  document.getElementById('menuModal').style.display = 'block';
-  loadLocations(); // Load immediately when opening
-}
-
-function closeMenu() {
-  document.getElementById('menuModal').style.display = 'none';
-}
-
-function loadLocations() {
-  const list = document.getElementById('locationsList');
-  list.innerHTML = '';
-  
-  let hasItems = false;
-  
-  for(let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if(key && key.startsWith('election_')) {
-      hasItems = true;
-      const name = key.replace('election_', '');
-      
-      const div = document.createElement('div');
-      div.className = 'location-item';
-      
-      // Name span
-      const nameSpan = document.createElement('span');
-      nameSpan.innerText = '📍 ' + name;
-      nameSpan.onclick = (function(n) {
-        return function() { loadLocation(n); };
-      })(name);
-      
-      // Delete button
-      const deleteSpan = document.createElement('span');
-      deleteSpan.className = 'delete-btn';
-      deleteSpan.innerText = '✕';
-      deleteSpan.onclick = function(e) {
-        e.stopPropagation();
-        deleteLocation(name);
-      };
-      
-      div.appendChild(nameSpan);
-      div.appendChild(deleteSpan);
-      list.appendChild(div);
-    }
-  }
-  
-  if (!hasItems) {
-    list.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">No saved locations</div>';
-  }
-}
-
-function saveLocation() {
-  const name = document.getElementById('locName').value.trim();
-  if(!name) {
-    alert('Please enter a location name');
-    return;
-  }
-  
-  // Collect all current data
-  const data = {
-    name1: document.getElementById('name1').value,
-    party1: document.getElementById('party1').value,
-    votes1: document.getElementById('votes1').value,
-    img1: document.getElementById('img1').src || '',
-    name2: document.getElementById('name2').value,
-    party2: document.getElementById('party2').value,
-    votes2: document.getElementById('votes2').value,
-    img2: document.getElementById('img2').src || '',
-    name3: document.getElementById('name3').value,
-    party3: document.getElementById('party3').value,
-    votes3: document.getElementById('votes3').value,
-    img3: document.getElementById('img3').src || '',
-    map: document.getElementById('mapImg').src || '',
-    address: document.getElementById('addrInp').value || ''
-  };
-  
-  try {
-    localStorage.setItem('election_' + name, JSON.stringify(data));
-    document.getElementById('locName').value = '';
-    loadLocations(); // Refresh list
-    alert('Location saved successfully!');
-  } catch(e) {
-    alert('Error saving location');
-  }
-}
-
-function loadLocation(name) {
-  try {
-    const data = JSON.parse(localStorage.getItem('election_' + name));
-    if (!data) return;
-    
-    // Restore all fields
-    document.getElementById('name1').value = data.name1 || '';
-    document.getElementById('party1').value = data.party1 || '';
-    document.getElementById('votes1').value = data.votes1 || '0';
-    
-    document.getElementById('name2').value = data.name2 || '';
-    document.getElementById('party2').value = data.party2 || '';
-    document.getElementById('votes2').value = data.votes2 || '0';
-    
-    document.getElementById('name3').value = data.name3 || '';
-    document.getElementById('party3').value = data.party3 || '';
-    document.getElementById('votes3').value = data.votes3 || '0';
-    
-    document.getElementById('addrInp').value = data.address || '';
-    
-    // Restore images
-    function restoreImage(cardNum, src) {
-      const img = document.getElementById('img' + cardNum);
-      const plus = document.getElementById('plus' + cardNum);
-      if (src && src !== '' && src !== 'about:blank' && !src.includes('undefined')) {
-        img.src = src;
-        img.style.display = 'block';
-        if (plus) plus.style.display = 'none';
-      } else {
-        img.src = '';
-        img.style.display = 'none';
-        if (plus) plus.style.display = 'flex';
-      }
-    }
-    
-    restoreImage(1, data.img1);
-    restoreImage(2, data.img2);
-    restoreImage(3, data.img3);
-    
-    // Restore map
-    const mapImg = document.getElementById('mapImg');
-    const mapPH = document.getElementById('mapPH');
-    const mapControls = document.getElementById('mapControls');
-    
-    if (data.map && data.map !== '' && !data.map.includes('undefined')) {
-      mapImg.src = data.map;
-      mapImg.style.display = 'block';
-      mapPH.style.display = 'none';
-      mapControls.style.display = 'flex';
-    } else {
-      mapImg.src = '';
-      mapImg.style.display = 'none';
-      mapPH.style.display = 'flex';
-      mapControls.style.display = 'none';
-    }
-    
-    closeMenu();
-    updateAll(); // Refresh calculations
-    
-  } catch(e) {
-    alert('Error loading location');
-  }
-}
-
-function deleteLocation(name) {
-  if (confirm('Delete this location?')) {
-    localStorage.removeItem('election_' + name);
-    loadLocations(); // Refresh list
-  }
-}
-
-// ===== DOWNLOAD =====
-function downloadImage() {
-  const btn = document.getElementById('dlBtn');
-  const controls = document.getElementById('mapControls');
-  const wasVisible = controls.style.display;
-  
-  controls.style.display = 'none';
-  btn.innerText = 'PROCESSING...';
-  
-  html2canvas(document.getElementById('captureArea'), {
-    scale: 2,
-    backgroundColor: '#f2f2f4',
-    allowTaint: false,
-    useCORS: true,
-    logging: false
-  }).then(canvas => {
-    controls.style.display = wasVisible;
-    btn.innerText = '⬇ DOWNLOAD JPG';
-    
-    const link = document.createElement('a');
-    link.download = 'election-nepal.jpg';
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
-    link.click();
-  }).catch(() => {
-    controls.style.display = wasVisible;
-    btn.innerText = '⬇ DOWNLOAD JPG';
-    alert('Please try again');
-  });
-}
-
-// Initialize
-setTimeout(updateAll, 100);
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </body>
 </html>
