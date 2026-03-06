@@ -3,153 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Election Poster</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<title>Election Poll</title>
 
 <style>
 
 body{
-background:#1c1c1c;
-font-family:Arial, sans-serif;
-display:flex;
-justify-content:center;
-padding:20px;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial;
+background:#f2f2f7;
+margin:0;
+padding:0;
 }
 
-.wrapper{
-width:420px;
-background:#ffffff;
-border-radius:15px;
+header{
+background:white;
 padding:15px;
-}
-
-.poster-header{
 text-align:center;
-font-size:22px;
-font-weight:bold;
-background:linear-gradient(#caa54a,#f2d07d);
-padding:10px;
-border-radius:10px;
-margin-bottom:10px;
+font-size:20px;
+font-weight:600;
+border-bottom:1px solid #ddd;
 }
 
-.region{
-width:100%;
-border:none;
-border-bottom:2px solid #444;
-font-size:16px;
-padding:5px;
-margin-bottom:15px;
-}
-
-.candidates{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
+.container{
+padding:15px;
+max-width:500px;
+margin:auto;
 }
 
 .card{
-background:#f7f7f7;
-border-radius:10px;
-padding:10px;
-text-align:center;
-}
-
-.circle{
-width:70px;
-height:70px;
-border-radius:50%;
-background:#e3e3e3;
-margin:auto;
+background:white;
+border-radius:16px;
+padding:15px;
+margin-bottom:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
 display:flex;
 align-items:center;
-justify-content:center;
-overflow:hidden;
-cursor:pointer;
+justify-content:space-between;
 }
 
-.circle img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-.symbol{
-width:35px;
-height:35px;
-margin:5px auto;
-display:block;
-}
-
-.name{
-width:100%;
-border:none;
-border-bottom:1px solid #999;
-text-align:center;
-margin:5px 0;
-}
-
-.vote{
-width:70px;
-text-align:center;
-font-size:16px;
-margin-top:5px;
-}
-
-.rank{
-font-weight:bold;
-margin-top:3px;
-}
-
-.poll{
-margin-top:15px;
-}
-
-.poll-row{
+.party{
 display:flex;
 align-items:center;
-gap:8px;
-margin:6px 0;
-}
-
-.bar{
-flex:1;
-background:#ddd;
-height:18px;
-border-radius:20px;
-overflow:hidden;
-}
-
-.bar div{
-height:100%;
-width:0%;
-background:#3aa74c;
-}
-
-.map{
-margin-top:15px;
-text-align:center;
-}
-
-.map img{
-width:100%;
-border-radius:10px;
-}
-
-.buttons{
-margin-top:15px;
-display:flex;
 gap:10px;
 }
 
-button{
-flex:1;
-padding:10px;
-border:none;
-background:#333;
-color:white;
+.party img{
+width:36px;
+height:36px;
 border-radius:8px;
+object-fit:contain;
+}
+
+.voteBtn{
+background:#007aff;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:10px;
+font-size:14px;
+}
+
+.voteBtn:active{
+transform:scale(.96);
+}
+
+.resultBar{
+height:8px;
+background:#e5e5ea;
+border-radius:10px;
+margin-top:5px;
+overflow:hidden;
+}
+
+.resultFill{
+height:100%;
+background:#007aff;
+width:0%;
+}
+
+.percent{
+font-size:13px;
+color:#555;
+}
+
+.exportBtn{
+margin-top:20px;
+width:100%;
+background:black;
+color:white;
+border:none;
+padding:14px;
+border-radius:14px;
+font-size:16px;
+}
+
+footer{
+text-align:center;
+font-size:12px;
+color:#999;
+margin-top:25px;
 }
 
 </style>
@@ -157,209 +108,122 @@ border-radius:8px;
 
 <body>
 
-<div class="wrapper" id="poster">
+<header>Election Poll</header>
 
-<div class="poster-header">ELECTION UPDATE</div>
-
-<input class="region" id="region" placeholder="Region">
-
-<div class="candidates">
-
-<div class="card" data-id="1">
-<div class="circle" onclick="uploadPhoto(1)">
-<img id="photo1">
-</div>
-
-<input type="file" id="file1" hidden accept="image/*" onchange="loadPhoto(1)">
-
-<input type="file" accept="image/*" onchange="loadSymbol(1)">
-<img id="symbol1" class="symbol">
-
-<input class="name" placeholder="Candidate">
-
-<input class="vote" id="vote1" type="number" value="0" oninput="updateAll()">
-
-<div class="rank" id="rank1">#1</div>
+<div class="container" id="pollContainer">
 
 </div>
 
-<div class="card" data-id="2">
-<div class="circle" onclick="uploadPhoto(2)">
-<img id="photo2">
-</div>
+<button class="exportBtn" onclick="exportResults()">Export Result</button>
 
-<input type="file" id="file2" hidden accept="image/*" onchange="loadPhoto(2)">
-
-<input type="file" accept="image/*" onchange="loadSymbol(2)">
-<img id="symbol2" class="symbol">
-
-<input class="name" placeholder="Candidate">
-
-<input class="vote" id="vote2" type="number" value="0" oninput="updateAll()">
-
-<div class="rank" id="rank2">#2</div>
-
-</div>
-
-<div class="card" data-id="3">
-<div class="circle" onclick="uploadPhoto(3)">
-<img id="photo3">
-</div>
-
-<input type="file" id="file3" hidden accept="image/*" onchange="loadPhoto(3)">
-
-<input type="file" accept="image/*" onchange="loadSymbol(3)">
-<img id="symbol3" class="symbol">
-
-<input class="name" placeholder="Candidate">
-
-<input class="vote" id="vote3" type="number" value="0" oninput="updateAll()">
-
-<div class="rank" id="rank3">#3</div>
-
-</div>
-
-<div class="card" data-id="4">
-<div class="circle" onclick="uploadPhoto(4)">
-<img id="photo4">
-</div>
-
-<input type="file" id="file4" hidden accept="image/*" onchange="loadPhoto(4)">
-
-<input type="file" accept="image/*" onchange="loadSymbol(4)">
-<img id="symbol4" class="symbol">
-
-<input class="name" placeholder="Candidate">
-
-<input class="vote" id="vote4" type="number" value="0" oninput="updateAll()">
-
-<div class="rank" id="rank4">#4</div>
-
-</div>
-
-</div>
-
-
-<div class="poll">
-
-<div class="poll-row">
-<span>A</span>
-<div class="bar"><div id="bar1"></div></div>
-<input id="poll1" type="number" value="0" oninput="updatePoll()">
-</div>
-
-<div class="poll-row">
-<span>B</span>
-<div class="bar"><div id="bar2"></div></div>
-<input id="poll2" type="number" value="0" oninput="updatePoll()">
-</div>
-
-</div>
-
-<div class="map">
-
-<input type="file" accept="image/*" onchange="loadMap(event)">
-<img id="mapimg">
-
-</div>
-
-<div class="buttons">
-<button onclick="saveData()">Save</button>
-<button onclick="downloadImage()">Download</button>
-</div>
-
-</div>
+<footer>Mobile Poll System</footer>
 
 <script>
 
-function uploadPhoto(n){
-document.getElementById("file"+n).click()
+const parties=[
+{
+name:"Congress",
+logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Nepali_Congress_flag.svg/512px-Nepali_Congress_flag.svg.png",
+votes:0
+},
+{
+name:"UML",
+logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/CPN-UML_flag.svg/512px-CPN-UML_flag.svg.png",
+votes:0
+},
+{
+name:"Maoist",
+logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/CPN-Maoist_Centre_flag.svg/512px-CPN-Maoist_Centre_flag.svg.png",
+votes:0
+},
+{
+name:"RSP",
+logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Rastriya_Swatantra_Party_flag.svg/512px-Rastriya_Swatantra_Party_flag.svg.png",
+votes:0
 }
-
-function loadPhoto(n){
-let file=document.getElementById("file"+n).files[0]
-let reader=new FileReader()
-reader.onload=e=>{
-document.getElementById("photo"+n).src=e.target.result
-}
-reader.readAsDataURL(file)
-}
-
-function loadSymbol(n){
-let file=event.target.files[0]
-let reader=new FileReader()
-reader.onload=e=>{
-document.getElementById("symbol"+n).src=e.target.result
-}
-reader.readAsDataURL(file)
-}
-
-function loadMap(event){
-let file=event.target.files[0]
-let reader=new FileReader()
-reader.onload=e=>{
-document.getElementById("mapimg").src=e.target.result
-}
-reader.readAsDataURL(file)
-}
-
-function updateAll(){
-
-let votes=[
-{ id:1,v:parseInt(vote1.value)||0},
-{ id:2,v:parseInt(vote2.value)||0},
-{ id:3,v:parseInt(vote3.value)||0},
-{ id:4,v:parseInt(vote4.value)||0}
 ]
 
-votes.sort((a,b)=>b.v-a.v)
+function renderPoll(){
 
-votes.forEach((item,index)=>{
-document.getElementById("rank"+item.id).innerText="#"+(index+1)
+const container=document.getElementById("pollContainer")
+container.innerHTML=""
+
+let totalVotes=parties.reduce((a,b)=>a+b.votes,0)
+
+parties.forEach((party,i)=>{
+
+let percent=totalVotes===0?0:((party.votes/totalVotes)*100).toFixed(1)
+
+container.innerHTML+=`
+
+<div class="card">
+
+<div class="party">
+<img src="${party.logo}">
+<div>
+<div>${party.name}</div>
+<div class="percent">${percent}%</div>
+<div class="resultBar">
+<div class="resultFill" style="width:${percent}%"></div>
+</div>
+</div>
+</div>
+
+<button class="voteBtn" onclick="vote(${i})">Vote</button>
+
+</div>
+
+`
+
 })
 
 }
 
-function updatePoll(){
+function vote(i){
 
-let p1=parseInt(poll1.value)||0
-let p2=parseInt(poll2.value)||0
+parties[i].votes++
 
-let total=p1+p2
+localStorage.setItem("pollData",JSON.stringify(parties))
 
-if(total==0)return
-
-bar1.style.width=(p1/total*100)+"%"
-bar2.style.width=(p2/total*100)+"%"
+renderPoll()
 
 }
 
-function saveData(){
+function loadData(){
 
-let data=document.getElementById("poster").innerHTML
-localStorage.setItem("posterData",data)
+let saved=localStorage.getItem("pollData")
 
-}
-
-window.onload=function(){
-
-let saved=localStorage.getItem("posterData")
 if(saved){
-document.getElementById("poster").innerHTML=saved
-}
 
-}
+let data=JSON.parse(saved)
 
-function downloadImage(){
-
-html2canvas(document.getElementById("poster")).then(canvas=>{
-let link=document.createElement("a")
-link.download="poster.png"
-link.href=canvas.toDataURL()
-link.click()
+data.forEach((p,i)=>{
+parties[i].votes=p.votes
 })
 
 }
+
+}
+
+function exportResults(){
+
+let text="Election Result\n\n"
+
+parties.forEach(p=>{
+text+=p.name+" : "+p.votes+" votes\n"
+})
+
+let blob=new Blob([text],{type:"text/plain"})
+
+let link=document.createElement("a")
+link.href=URL.createObjectURL(blob)
+link.download="result.txt"
+link.click()
+
+}
+
+loadData()
+renderPoll()
 
 </script>
 
